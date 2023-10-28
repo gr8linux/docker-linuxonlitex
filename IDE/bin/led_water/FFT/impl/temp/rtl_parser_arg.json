@@ -1,0 +1,41 @@
+{
+ "Device" : "GW2A-18C",
+ "Files" : [
+  {
+   "Path" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/src/FFT_Top/fft.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/src/counter.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/src/deUstb.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/src/downCnt.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/src/gowin_rpll.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/src/testfft.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/src/testfft_top.v",
+   "Type" : "verilog"
+  }
+ ],
+ "IncludePath" : [
+
+ ],
+ "LoopLimit" : 2000,
+ "ResultFile" : "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/led_water/FFT/impl/temp/rtl_parser.result",
+ "Top" : "testfft_top",
+ "VerilogStd" : "sysv",
+ "VhdlStd" : "vhdl_93"
+}

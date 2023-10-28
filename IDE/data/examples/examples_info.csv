@@ -1,0 +1,5 @@
+can|Can design, ciphertext source code|Verilog|GW2A-18|C|GW2A-LV18PG256C8/I7|Y|Y|Y|N|Y
+FIFO_HS_9C|FIFO HS IP design, ciphertext source code|Verilog|GW1N-9|C|GW1N-LV9QN48C6/I5|Y|Y|Y|Y|Y
+FFT|FFT IP design, ciphertext source code|Verilog|GW2A-18|C|GW2A-LV18PG256C8/I7|Y|Y|Y|N|Y
+mjb_npu|NPU IP design|Verilog|GW2AR-18|C|GW2AR-LV18QN88PC8/I7|Y|Y|N|N|Y
+led_water|Led water design|Verilog|GW1NSR-4C||GW1NSR-LV4CQN48PC6/I5|Y|N|N|N|N

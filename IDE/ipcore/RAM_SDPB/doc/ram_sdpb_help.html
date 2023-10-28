@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../../../data/ipcores/mkdown.css" />
+<title>SDPB</title></head>
+<body class="markdown-body">
+<h1>SDPB</h1>
+<hr />
+<h2>Information</h2>
+<p><strong>Type:</strong> SDPB<br />
+<strong>Vendor:</strong> GOWIN Semiconductor<br />
+<strong>Summary:</strong> B-SRAM can be configured as Semi dual-port Block SRAM (SDPB). In this mode, the design supports different read and write data widths (port A for writing and port B for reading). It can be initialized by a memory initialization file. And also, it supports three working modes including two read modes (bypass and pipeline), and one write mode (normal).<br />
+In SDPB mode, the primitives SDPB and SDPX9B can be used. The primitives support multiple data widths and address depths(Depth x width): SDPB--16Kx1, 8Kx2, 4Kx4, 2Kx8, 1Kx16, 512x32; SDPX9B--2Kx9, 1Kx18, 512x36.<br />
+NOTE: The value of Depth*Width of port A must be the same as that of port B. <br />
+<strong>Devices:</strong> GW5AT   </p>
+<h2>Options</h2>
+<h3>Port A</h3>
+<ul>
+<li><strong>Address Depth</strong> - Set the size of the address depth.  </li>
+<li><strong>Data Width</strong> - Set the size of the Data width.  </li>
+</ul>
+<h3>Port B</h3>
+<ul>
+<li><strong>Address Depth</strong> - Set the size of the address depth.  </li>
+<li><strong>Data Width</strong> - Set the size of the Data width.  </li>
+<li><strong>Read Mode</strong> - Set whether the read mode is bypass mode or pipeline mode.  </li>
+</ul>
+<h3>Byte Enable</h3>
+<ul>
+<li><strong>Byte Enable</strong> -Set whether to use byte enable function or not.  </li>
+<li><strong>Byte Size</strong> -Set whether the byte size is 8 bit or 9 bit if the byte enable checkbox selected.  </li>
+<li><strong>Note</strong> </li>
+<li>If Data Width--A is not equal to Data Width--B or Data Width&lt;=8, byte enable function is invalid;  </li>
+<li>If Data Width=9, only 8 bit is valid;  </li>
+<li>If Data Width&gt;9, both 8 bit and 9 bit are valid.  </li>
+</ul>
+<h3>Resources Usage</h3>
+<ul>
+<li><strong>Calculate</strong> - Calculate the resource usage in the design and display results below.  </li>
+<li><strong>SDPB Usage</strong> - Display the number of SDPB used.  </li>
+<li><strong>DFF Usage</strong> - Display the number of DFF used.  </li>
+<li><strong>LUT Usage</strong> - Display the number of LUT used.  </li>
+<li><strong>MUX Usage</strong> - Display the number of MUX used.  </li>
+</ul>
+<h3>Reset Mode</h3>
+<ul>
+<li><strong>Reset Mode</strong> - Set whether the reset mode is synchronous mode or asynchronous mode.  </li>
+</ul>
+<h3>Initialization</h3>
+<ul>
+<li><strong>Memory Initialization File</strong> - Set the memory initialization file (.mi) path.  </li>
+<li><strong>Dimension Match</strong> - Set which port's dimensions the memory initialization file should conform to.  </li>
+</ul>
+</body>
+</html>

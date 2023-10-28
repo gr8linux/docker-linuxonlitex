@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="HyperRAM Memory Interface embedded" id="hyperram_emb" version= "1.0" category="Soft IP Core|Memory Control|PSRAM Memory Interface">HyperRAM Memory Interface embedded</ip>
+    <target module="HyperRAM_Memory_Interface_Top">hyperram_memory_interface</target>
+    <docs>
+        <doc type="summary">/doc/hyperram_emb.html</doc>
+        <doc type="help">/doc/hyperram_emb_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>

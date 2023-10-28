@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="PSRAM Memory Interface HS" id="psram_hs" version= "1.0" category="Soft IP Core|Memory Control|PSRAM Memory Interface">PSRAM Memory Interface HS</ip>
+    <target module="PSRAM_Memory_Interface_HS_Top">psram_memory_interface_hs</target>
+    <docs>
+        <doc type="summary">/doc/psramhs.html</doc>
+        <doc type="help">/doc/psramhs_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>

@@ -1,0 +1,16 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW1N-9C" pn="GW1N-LV9QN48C6/I5">gw1n9c-000</Device>
+    <FileList>
+        <File path="src/fifo_hs/fifo_hs.v" type="file.verilog" enable="1"/>
+        <File path="src/rstn_gen.v" type="file.verilog" enable="1"/>
+        <File path="src/test_fifo.v" type="file.verilog" enable="1"/>
+        <File path="src/FIFO_HS_9C.cst" type="file.cst" enable="1"/>
+        <File path="src/FIFO_HS_9C.sdc" type="file.sdc" enable="1"/>
+        <File path="src/FIFO_HS_9C.rao" type="file.gao" enable="1"/>
+        <File path="src/FIFO_HS_9C.gpa" type="file.gpa" enable="1"/>
+    </FileList>
+</Project>

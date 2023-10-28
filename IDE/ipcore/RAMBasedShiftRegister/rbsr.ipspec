@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="RAM Based Shift Register" version= "1.2" id="ram_based_shift_register" category="Soft IP Core|Memory Control">RAM Based Shift Register</ip>
+    <target module="RAM_based_shift_reg_top">RAM_based_shift_reg_top</target>
+    <docs>
+        <doc type="summary">/doc/ram_based_shift_register.html</doc>
+        <doc type="help">/doc/ram_based_shift_register_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>

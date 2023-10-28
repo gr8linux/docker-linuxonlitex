@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="testfft_top" Register="211" Alu="88" Lut="553" Dsp="2" Bsram="6">
+ <SubModule name="pll_fft"/>
+ <SubModule name="cntInst2" Register="33" Alu="31" Lut="13"/>
+ <SubModule name="deUstb_inst" Register="6" Lut="6"/>
+ <SubModule name="deUstb_rst" Register="6" Lut="6"/>
+ <SubModule name="u_testfft" Register="10" Alu="9" Lut="1">
+  <SubModule name="U_GW_ROM" Bsram="1"/>
+ </SubModule>
+ <SubModule name="outCrt" Register="3" Lut="4"/>
+</Module>

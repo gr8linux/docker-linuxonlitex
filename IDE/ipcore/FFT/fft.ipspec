@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="FFT" id="fft" version= "1.4" category="Soft IP Core|DSP and Mathematics">FFT</ip>
+    <target module="FFT_Top">fft</target>
+    <docs>
+        <doc type="summary">/doc/fft.html</doc>
+        <doc type="help">/doc/fft_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>

@@ -1,0 +1,87 @@
+GowinSynthesis start
+Running parser ...
+Analyzing Verilog file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_crc32.v'
+Analyzing Verilog file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_match.v'
+Analyzing included file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_define.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_match.v":327)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_match.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_match.v":327)
+Analyzing Verilog file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_mem_ctrl.v'
+Analyzing included file 'ao_0/gw_ao_top_define.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_mem_ctrl.v":150)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_mem_ctrl.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_mem_ctrl.v":150)
+Analyzing Verilog file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v'
+Analyzing included file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_define.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Analyzing included file 'ao_0/gw_ao_top_define.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Analyzing included file 'ao_0/gw_ao_expression.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Analyzing included file 'ao_0/gw_ao_parameter.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":2738)
+Analyzing Verilog file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v'
+Analyzing included file 'ao_control/gw_con_top_define.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v":377)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v":377)
+Analyzing included file 'ao_control/gw_con_parameter.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v":377)
+Back to file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v":377)
+Analyzing Verilog file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/gw_jtag.v'
+Analyzing Verilog file '/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v'
+Compiling module 'gw_gao'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":1)
+Compiling module 'GW_JTAG'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/gw_jtag.v":1)
+Compiling module '**'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_CON/gw_con_top.v":0)
+Compiling module '**'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_top.v":0)
+Compiling module '**'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_mem_ctrl.v":0)
+Extracting RAM for identifier '**'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_mem_ctrl.v":0)
+Compiling module '**'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_crc32.v":0)
+Compiling module '**'("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/data/ipcores/GAO/GW_AO_0/gw_ao_match.v":0)
+NOTE  (EX0101) : Current top module is "gw_gao"
+[5%] Running netlist conversion ...
+WARN  (CV0016) : Input out[55] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":144)
+WARN  (CV0016) : Input out[54] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":145)
+WARN  (CV0016) : Input out[53] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":146)
+WARN  (CV0016) : Input out[52] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":147)
+WARN  (CV0016) : Input out[51] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":148)
+WARN  (CV0016) : Input out[50] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":149)
+WARN  (CV0016) : Input out[49] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":150)
+WARN  (CV0016) : Input out[48] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":151)
+WARN  (CV0016) : Input out[47] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":152)
+WARN  (CV0016) : Input out[46] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":153)
+WARN  (CV0016) : Input out[45] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":154)
+WARN  (CV0016) : Input out[44] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":155)
+WARN  (CV0016) : Input out[43] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":156)
+WARN  (CV0016) : Input out[42] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":157)
+WARN  (CV0016) : Input out[41] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":158)
+WARN  (CV0016) : Input out[40] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":159)
+WARN  (CV0016) : Input out[26] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":160)
+WARN  (CV0016) : Input out[25] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":161)
+WARN  (CV0016) : Input out[24] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":162)
+WARN  (CV0016) : Input out[23] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":163)
+WARN  (CV0016) : Input out[22] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":164)
+WARN  (CV0016) : Input out[21] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":165)
+WARN  (CV0016) : Input out[20] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":166)
+WARN  (CV0016) : Input out[19] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":167)
+WARN  (CV0016) : Input out[18] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":168)
+WARN  (CV0016) : Input out[17] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":169)
+WARN  (CV0016) : Input out[16] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":170)
+WARN  (CV0016) : Input out[15] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":171)
+WARN  (CV0016) : Input out[14] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":172)
+WARN  (CV0016) : Input out[13] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":173)
+WARN  (CV0016) : Input out[12] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":174)
+WARN  (CV0016) : Input out[11] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":175)
+WARN  (CV0016) : Input out[28] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":176)
+WARN  (CV0016) : Input out[32] is unused("/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gw_gao_top.v":177)
+Running device independent optimization ...
+[10%] Optimizing Phase 0 completed
+[15%] Optimizing Phase 1 completed
+[25%] Optimizing Phase 2 completed
+Running inference ...
+[30%] Inferring Phase 0 completed
+[40%] Inferring Phase 1 completed
+[50%] Inferring Phase 2 completed
+[55%] Inferring Phase 3 completed
+Running technical mapping ...
+[60%] Tech-Mapping Phase 0 completed
+[65%] Tech-Mapping Phase 1 completed
+[75%] Tech-Mapping Phase 2 completed
+[80%] Tech-Mapping Phase 3 completed
+[90%] Tech-Mapping Phase 4 completed
+[95%] Generate netlist file "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gao.v" completed
+[100%] Generate report file "/home/mohammad/Documents/sipeed-primer_20k/Gowin-App/IDE/bin/FFT/impl/gao/gao_syn.rpt.html" completed
+GowinSynthesis finish

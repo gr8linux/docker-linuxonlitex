@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="SPDIF RX" id="spdif_rx" version= "1.2" category="Soft IP Core|Multimedia">SPDIF RX</ip>
+    <target module="SPDIF_RX_Top">spdif_rx</target>
+    <docs>
+        <doc type="summary">/doc/spdif_rx.html</doc>
+        <doc type="help">/doc/spdif_rx_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>

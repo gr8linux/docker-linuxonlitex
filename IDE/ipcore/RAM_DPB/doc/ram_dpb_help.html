@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../../../data/ipcores/mkdown.css" />
+<title>DPB</title></head>
+<body class="markdown-body">
+<h1>DPB</h1>
+<hr />
+<h2>Information</h2>
+<p><strong>Type:</strong> DPB <br />
+<strong>Vendor:</strong> GOWIN Semiconductor<br />
+<strong>Summary:</strong> B-SRAM can be configured as Dual-port Block SRAM (DPB). In this mode, the design support different data widths. Both port A and port B can read or write. It can be initialized by a memory initialization file. And also, it supports five working modes including two read modes (bypass and pipeline), and three write modes (normal, write-through, and read-before-write).     <br />
+In DPB mode, the primitives DPB and DPX9B can be used. The primitives support multiple data widths and address depth (Depth x Width): DPB--16Kx1, 8Kx2, 4Kx4, 2Kx8, 1Kx16; DPX9B--2Kx9, 1Kx18. <br />
+NOTE: The value of Depth*Width of port A must be the same as that of port B.    <br />
+<strong>Devices:</strong> GW5AT  </p>
+<h2>Options</h2>
+<h3>Port A</h3>
+<ul>
+<li><strong>Address Depth</strong> - Set the size of the address depth.  </li>
+<li><strong>Data Width</strong> - Set the size of the Data width.  </li>
+<li><strong>Read Mode</strong> - Set whether the read mode is bypass mode or pipeline mode.  </li>
+<li><strong>Write Mode</strong> - Set the write mode as normal mode, write-through mode or read-before-write mode.  </li>
+</ul>
+<h3>Port B</h3>
+<ul>
+<li><strong>Address Depth</strong> - Set the size of the address depth.  </li>
+<li><strong>Data Width</strong> - Set the size of the Data width.  </li>
+<li><strong>Read Mode</strong> - Set whether the read mode is bypass mode or pipeline mode.  </li>
+<li><strong>Write Mode</strong> - Set the write mode as normal mode, write-through mode or read-before-write mode.  </li>
+</ul>
+<h3>Optimization</h3>
+<ul>
+<li>Select whether to optimize the module for minimum area or maximum speed.  </li>
+</ul>
+<h3>Byte Enable</h3>
+<ul>
+<li><strong>Byte Enable</strong> -Set whether to use byte enable function or not.  </li>
+<li><strong>Byte Size</strong> -Set whether the byte size is 8 bit or 9 bit if the byte enable checkbox selected.  </li>
+<li><strong>Note</strong> </li>
+<li>If Data Width--A is not equal to Data Width--B or Data Width&lt;=8, byte enable function is invalid;  </li>
+<li>If Data Width=9, only 8 bit is valid;  </li>
+<li>If Data Width&gt;9, both 8 bit and 9 bit are valid.  </li>
+</ul>
+<h3>Resources Usage</h3>
+<ul>
+<li><strong>Calculate</strong> - Calculate the resource usage in the design and display results below.  </li>
+<li><strong>DPB Usage</strong> - Display the number of DPB used.  </li>
+<li><strong>DFF Usage</strong> - Display the number of DFF used.  </li>
+<li><strong>LUT Usage</strong> - Display the number of LUT used.  </li>
+<li><strong>MUX Usage</strong> - Display the number of MUX used.  </li>
+</ul>
+<h3>Reset Mode</h3>
+<ul>
+<li><strong>Reset Mode</strong> - Set whether the reset mode is synchronous mode or asynchronous mode.  </li>
+</ul>
+<h3>Initialization</h3>
+<ul>
+<li><strong>Memory Initialization File</strong> - Set the memory initialization file (.mi) path.  </li>
+<li><strong>Dimension Match</strong> - Set which port's dimensions the memory initialization file should conform to.  </li>
+</ul>
+</body>
+</html>
