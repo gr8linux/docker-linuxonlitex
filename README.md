@@ -51,3 +51,4 @@ To just build your requried image you could run it something like below
 ```
 docker run -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex python -m litex_boards.targets.sipeed_tang_primer_20k --l2-size 512  --build --cpu-type vexriscv_smp --cpu-variant linux --build  --with-spi-sdcard --with-wishbone-memory
 ```
+![alt text](https://github.com/gr8linux/docker-linuxonlitex/blob/master/doc/ScreenShot1.png)
