@@ -63,7 +63,7 @@ You might like to have the board and know how it is looklike
 **The board**
 You could buy the board directly from Amazon or Aliexpress if you like 
 Just search Sipeed tang primer 20k
-![Board Picture](https://github.com/gr8linux/docker-linuxonlitex/blob/master/doc/ScreenShot1.png)
+![Board Picture](https://github.com/gr8linux/docker-linuxonlitex/blob/master/doc/ScreenShot2.png)
 **The Gowin IDE**
 You need to download it from the Gowin site:
 [Download eda tools](https://www.gowinsemi.com/en/support/download_eda/)
