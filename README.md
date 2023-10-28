@@ -44,11 +44,27 @@ You can then load it using OpenFPGALoader. OpenFPGALoader is already included in
 
 This setup provides a convenient environment for compiling Linux for your Sipeed Tang Primer 20k FPGA board, keeping everything self-contained within the Docker container.
 
-**Sample build without run the docker**
+**Sample build without run the command inside docker**
 
 To just build your requried image you could run it something like below
 
 ```
 docker run -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex python -m litex_boards.targets.sipeed_tang_primer_20k --l2-size 512  --build --cpu-type vexriscv_smp --cpu-variant linux --build  --with-spi-sdcard --with-wishbone-memory
 ```
-![alt text](https://github.com/gr8linux/docker-linuxonlitex/blob/master/doc/ScreenShot1.png)
+![Build Process](https://github.com/gr8linux/docker-linuxonlitex/blob/master/doc/ScreenShot1.png)
+
+Or if you like to load it directly
+```
+
+docker run --privileged -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex python -m litex_boards.targets.sipeed_tang_primer_20k --l2-size 512  --build --cpu-type vexriscv_smp --cpu-variant linux --build  --with-spi-sdcard --with-wishbone-memory --load
+```
+**What is next**
+You might like to have the board and know how it is looklike
+**The board**
+You could buy the board directly from Amazon or Aliexpress if you like 
+Just search Sipeed tang primer 20k
+![Board Picture](https://github.com/gr8linux/docker-linuxonlitex/blob/master/doc/ScreenShot1.png)
+**The Gowin IDE**
+You need to download it from the Gowin site:
+[Download eda tools](https://www.gowinsemi.com/en/support/download_eda/)
+
