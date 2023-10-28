@@ -24,7 +24,15 @@ This Dockerfile assumes you've put your Gowin IDE files inside the IDE folder (I
    cd ~/src/mybuildarea
    docker run -it --rm -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex
    ```
-
+4. After that you need to run the below or your prefered config inside the container 
+   ```
+   ./make.py --board=sipeed_tang_primer_20k --toolchain=gowin --build
+   ```
+   if the build was finished without any error you shoud see your file inside the build directory 
+5. Exit the docker and run the below command to load/flash it into your board
+   ```
+   openFPGALoader ./gateware/sipeed_tang_primer_20k.fs
+   ```
 You can then load it using OpenFPGALoader. OpenFPGALoader is already included in the image, and if you run in privileged mode, you can run it inside the container itself.
 
 This setup provides a convenient environment for compiling Linux for your Sipeed Tang Primer 20k FPGA board, keeping everything self-contained within the Docker container.
