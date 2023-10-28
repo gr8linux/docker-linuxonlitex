@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     apt-transport-https \
     gnupg \
+    cmake \
     git  # Install Git
 
 # Install Meson
@@ -61,5 +62,41 @@ RUN apt-get update && apt-get install -y sbt
 # Copy the IDE folder into the Docker image
 RUN mkdir /IDE
 COPY ./IDE /IDE
+
+# Build and install openFPGALoader
+
+WORKDIR /root
+# Add this line to install SWIG and other required dependencies
+# Add this line to install SWIG and other required dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    gzip \
+    libftdi1-2 \
+    libftdi1-dev \
+    libhidapi-hidraw0 \
+    libhidapi-dev \
+    libudev-dev \
+    zlib1g-dev \
+    cmake \
+    pkg-config \
+    make \
+    g++ \
+    swig \
+    libreadline-dev
+
+RUN git clone https://github.com/trabucayre/openFPGALoader && \
+    cd openFPGALoader && \
+    mkdir build && cd build && cmake ..
+
+WORKDIR /root/openFPGALoader/build
+RUN make all
+RUN cp openFPGALoader /usr/local/bin
+WORKDIR /root
+
+WORKDIR /home/
+
+RUN git clone https://github.com/litex-hub/linux-on-litex-vexriscv.git
+ENV JAVA_OPTS="-Xmx4g -Xms2g -XX:MaxMetaspaceSize=512m"
+WORKDIR /home/linux-on-litex-vexriscv
 
 # Define the entry point or any other custom instructions
