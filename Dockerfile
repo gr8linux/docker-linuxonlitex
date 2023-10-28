@@ -67,7 +67,6 @@ COPY ./IDE /IDE
 
 WORKDIR /root
 # Add this line to install SWIG and other required dependencies
-# Add this line to install SWIG and other required dependencies
 RUN apt-get update && apt-get install -y \
     git \
     gzip \
@@ -84,6 +83,8 @@ RUN apt-get update && apt-get install -y \
     swig \
     libreadline-dev
 
+# Install the openFPGALoader form repository
+
 RUN git clone https://github.com/trabucayre/openFPGALoader && \
     cd openFPGALoader && \
     mkdir build && cd build && cmake ..
@@ -94,9 +95,14 @@ RUN cp openFPGALoader /usr/local/bin
 WORKDIR /root
 
 WORKDIR /home/
-
+# Just clone the linux-on-litex repo on /home 
 RUN git clone https://github.com/litex-hub/linux-on-litex-vexriscv.git
 ENV JAVA_OPTS="-Xmx4g -Xms2g -XX:MaxMetaspaceSize=512m"
+# Add the USB tools to the docker 
+RUN apt-get update && apt-get install -y usbutils
+# Fix the python link
+RUN ln -s /usr/bin/python3 /usr/bin/python
+# Let the /home/linux-on-litex-vexriscv be the default when login to the docker
 WORKDIR /home/linux-on-litex-vexriscv
 
 # Define the entry point or any other custom instructions
