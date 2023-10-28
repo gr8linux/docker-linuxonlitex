@@ -58,6 +58,11 @@ Or if you like to load it directly
 
 docker run --privileged -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex python -m litex_boards.targets.sipeed_tang_primer_20k --l2-size 512  --build --cpu-type vexriscv_smp --cpu-variant linux --build  --with-spi-sdcard --with-wishbone-memory --load
 ```
+Or just let linux-on-litex make file do that for you
+
+```
+docker run --privileged -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex ./make.py --board=sipeed_tang_primer_20k --toolchain=gowin --build --load
+```
 **What is next**
 
 You might like to have the board and know how it is looklike
