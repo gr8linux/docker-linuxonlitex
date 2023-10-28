@@ -44,7 +44,7 @@ RUN mkdir /usr/local/riscv
 RUN cp -r riscv64-*/* /usr/local/riscv
 
 # Add Gowin Tools directory to PATH
-ENV PATH="/home/mohammad/src/sipeed-primer_20k/IDE/bin:${PATH}"
+ENV PATH="/IDE/bin:${PATH}"
 
 # Set PATH for RISC-V GCC
 ENV PATH="/usr/local/riscv/bin:${PATH}"
@@ -58,7 +58,8 @@ RUN gpg --export --armor 99E82A75642AC823 | apt-key add -
 RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list
 RUN apt-get update && apt-get install -y sbt
 
-# Additional configuration and commands if needed
+# Copy the IDE folder into the Docker image
+RUN mkdir /IDE
+COPY ./IDE /IDE
 
 # Define the entry point or any other custom instructions
-
