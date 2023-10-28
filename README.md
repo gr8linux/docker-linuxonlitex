@@ -31,7 +31,7 @@ This Dockerfile assumes you've put your Gowin IDE files inside the IDE folder (I
    if the build was finished without any error you shoud see your file inside the build directory 
 5. Exit the docker and run the below command to load/flash it into your board
    ```
-   openFPGALoader ./gateware/sipeed_tang_primer_20k.fs
+   openFPGALoader .sipeed_tang_primer_20k/gateware/sipeed_tang_primer_20k.fs
    ```
 You can then load it using OpenFPGALoader. OpenFPGALoader is already included in the image, and if you run in privileged mode, you can run it inside the container itself.
 
