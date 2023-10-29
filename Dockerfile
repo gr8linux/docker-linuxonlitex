@@ -99,10 +99,15 @@ WORKDIR /home/
 RUN git clone https://github.com/litex-hub/linux-on-litex-vexriscv.git
 ENV JAVA_OPTS="-Xmx4g -Xms2g -XX:MaxMetaspaceSize=512m"
 # Add the USB tools to the docker 
-RUN apt-get update && apt-get install -y usbutils
+RUN apt-get update && apt-get install -y usbutils vim
 # Fix the python link
 RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Fix the issue over video core 
+WORKDIR /root/litex/litex
+RUN git checkout cd8218779e0eb05c73785cd6b8866dc3215c1710
 # Let the /home/linux-on-litex-vexriscv be the default when login to the docker
+
 WORKDIR /home/linux-on-litex-vexriscv
 
 # Define the entry point or any other custom instructions
