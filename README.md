@@ -69,7 +69,7 @@ You might like to have the board and know how it is looklike
 
 **The board**
 
-You could buy the board directly from Amazon or Aliexpress if you like 
+You could buy the board directly from Amazon or [Aliexpress](https://s.click.aliexpress.com/e/_mrrSdFI) if you like 
 Just search Sipeed tang primer 20k
 
 ![Board Picture](https://github.com/gr8linux/docker-linuxonlitex/blob/master/doc/ScreenShot2.png)
