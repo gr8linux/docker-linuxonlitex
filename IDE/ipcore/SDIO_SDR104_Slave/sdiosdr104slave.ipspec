@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="SDIO SDR104 Slave Controller" id="sdio_sdr104_slave_controller" version= "1.2" category="Soft IP Core|Interface and Interconnect">SDIO SDR104 Slave Controller</ip>
+    <target module="SDIO_SDR104_Slave_Controller_Top">sdio_sdr104_slave_controller</target>
+    <docs>
+        <doc type="summary">/doc/sdiosdr104slave.html</doc>
+        <doc type="help">/doc/sdiosdr104slave_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW1N-4-*</device>
+        <device supported="true">GW1N-4B-*</device>
+        <device supported="true">GW1N-9-*</device>
+        <device supported="true">GW1N-9C-*</device>
+        <device supported="true">GW1NR-4-*</device>
+        <device supported="true">GW1NR-4B-*</device>
+        <device supported="true">GW1NSR-4C-*</device>
+        <device supported="true">GW1NR-9-*</device>
+        <device supported="true">GW1NR-9C-*</device>
+        <device supported="true">GW2A-*</device>
+        <device supported="true">GW2AN-*</device>
+        <device supported="true">GW1AN-9A-*</device>
+        <device supported="true">GW2AR-*</device>
+        <device supported="true">GW2ANR-*</device>
+        <device supported="true">GW1NS-4-*</device>
+        <device supported="true">GW1NS-4C-*</device>
+        <device supported="true">GW1NSR-4-*</device>
+        <device supported="true">GW1NSER-4C-*</device>
+        <device supported="true">GW1NRF-4B-*</device>
+    </devices>
+</ipcore>

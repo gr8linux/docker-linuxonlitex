@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="RoraLink 8B10B" id="roralink8b10b" version="1.1" category="Serdes|Telecommunication|Serial Interfaces">RoraLink 8B10B</ip>
+    <target module="RoraLink_8B10B_Top">roralink_8b10b</target>
+    <docs>
+        <doc type="summary">/doc/roralink_8b10b_information.html</doc>
+    </docs>
+    <devices>
+	<device supported="true">GW5AT-138-*</device>
+        <device supported="true">GW5AT-138B-*</device>
+        <device supported="true">GW5AT-75B-*</device>
+        <device supported="true">GW5AST-138B-*</device>
+        <device supported="true">GW5AST-138C-*</device>
+        <device supported="true">GW5AT-138C-*</device>
+        <device supported="true">GW5AT-75C-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+    </devices>
+</ipcore>

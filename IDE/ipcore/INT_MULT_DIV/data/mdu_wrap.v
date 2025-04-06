@@ -14,7 +14,7 @@ module `module_name(
     op0,
     op1,
     res0,
-    res1,
+    res1
 );
 `include "parameter.v"
 input clk;

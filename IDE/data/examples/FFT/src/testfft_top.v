@@ -3,7 +3,7 @@ module testfft_top (
     input clk,
     input [6:3] key,
     output [16:1] led,
-    output [55:11] out,
+    output [52:11] out,
     input  [10:3] in
 );
 
@@ -20,7 +20,7 @@ module testfft_top (
     wire pFftClk_t;
     wire probe2;
 
-    assign out[55:40] = oData[15:0];    
+    assign out[52:37] = oData[15:0];    
     assign out[26:11] = oData[31:16];   
     assign out[27]=psod;
     assign out[28]=pipd;
@@ -31,7 +31,7 @@ module testfft_top (
     assign out[33]=peoud;
     assign out[34]=pFftClk;
     assign out[35]=pFftClk;
-    assign out[37]=probe2;
+    assign out[36]=probe2;
 
 
     wire [15:0] sXnRe;

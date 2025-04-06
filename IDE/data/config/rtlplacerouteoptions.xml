@@ -21,7 +21,7 @@
         <Choice label="3.3" cmd="-vccaux 3.3"/>
     </SingleChoiceOption>
     <SingleChoiceOption id="PNR10" label="Generate Post-Place File" default="1">
-        <Description>Generate post-place file only included locations of BSRAM. Default: *.posp.</Description>
+        <Description>Generate post-place file only included locations of BSRAM and DSP. Default: *.posp.</Description>
         <Choice label="True" cmd="-posp"/>
         <Choice label="False"/>
     </SingleChoiceOption>

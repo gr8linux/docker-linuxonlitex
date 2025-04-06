@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="LPDDR Memory Interface" id="lpddr_memory_interface" version="1.1" category="Soft IP Core|Memory Control|DDRx SDRAM Memory Interface">LPDDR Memory Interface</ip>
+    <target module="LPDDR_Memory_Interface_Top">lpddr_memory_interface</target>
+    <docs>
+        <doc type="summary">/doc/lpddr.html</doc>
+        <doc type="help">/doc/lpddr_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW2A-*</device>
+        <device supported="true">GW2AR-*</device>
+    </devices>
+</ipcore>

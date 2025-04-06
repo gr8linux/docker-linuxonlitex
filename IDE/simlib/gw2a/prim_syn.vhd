@@ -1,6 +1,6 @@
 
 -- ===========Oooo==========================================Oooo========
--- =  Copyright (C) 2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+-- =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 -- =                     All rights reserved.
 -- =====================================================================
 --
@@ -3349,6 +3349,53 @@ COMPONENT PLL
         );
 end COMPONENT;
 	attribute syn_black_box of PLL : Component is true;
+
+
+--------------------------------rPLL--------------------------
+COMPONENT rPLL
+        GENERIC(
+             FCLKIN : STRING := "100.0"; --frequency of the clkin(M)
+             DEVICE : STRING := "GW2A-55"; --"GW2A-18","GW2A-55","GW2AR-18","GW2A-55C","GW2A-18C","GW2AR-18C","GW2ANR-18C","GW2AN-55C"
+             DYN_IDIV_SEL : STRING := "false"; --true:IDSEL; false:IDIV_SEL
+             IDIV_SEL : integer := 0; --Input divider IDIV, 0:1,1:2...63:64.  1~64
+             DYN_FBDIV_SEL : STRING := "false";
+             FBDIV_SEL : integer := 0; --Feedback divider FBDIV,  0:1,1:2...63:64. 1~64
+             DYN_ODIV_SEL : STRING := "false"; --true:ODSEL; false:ODIV_SEL
+             ODIV_SEL : integer := 8; --2/4/8/16/32/48/64/80/96/112/128
+             PSDA_SEL : STRING := "0000"; --
+             DYN_DA_EN : STRING := "false"; --true:PSDA or DUTYDA or FDA; false: DA_SEL
+             DUTYDA_SEL : STRING := "1000"; --
+             CLKOUT_FT_DIR : bit := '1'; -- CLKOUT fine tuning direction. '1' only
+             CLKOUTP_FT_DIR : bit := '1'; -- '1' only
+             CLKOUT_DLY_STEP : integer := 0; -- 0,1,2,4
+             CLKOUTP_DLY_STEP : integer := 0; -- 0,1,2
+
+             CLKOUTD3_SRC : STRING := "CLKOUT"; --select div3 output, CLKOUTP or CLKOUT
+             CLKFB_SEL : STRING := "internal"; --"internal", "external"
+             CLKOUT_BYPASS : STRING := "false";
+             CLKOUTP_BYPASS : STRING := "false";
+             CLKOUTD_BYPASS : STRING := "false";
+             CLKOUTD_SRC : STRING := "CLKOUT"; --select div output,  CLKOUTP or CLKOUT
+             DYN_SDIV_SEL : integer := 2 -- 2~128,only even num
+	      );
+        PORT(
+             CLKIN : IN std_logic;
+             CLKFB : IN std_logic:='0';
+             IDSEL : In std_logic_vector(5 downto 0);
+             FBDSEL : In std_logic_vector(5 downto 0);
+             ODSEL : In std_logic_vector(5 downto 0);
+             RESET : in std_logic:='0';
+             RESET_P : in std_logic:='0';
+             PSDA,FDLY : In std_logic_vector(3 downto 0);
+             DUTYDA : In std_logic_vector(3 downto 0);
+             LOCK : OUT std_logic;
+             CLKOUT : OUT std_logic;
+             CLKOUTD : out std_logic;
+             CLKOUTP : out std_logic;
+             CLKOUTD3 : out std_logic
+        );
+end COMPONENT;
+	attribute syn_black_box of rPLL : Component is true;
 
 
 --------------------------------CLKDIV--------------------------

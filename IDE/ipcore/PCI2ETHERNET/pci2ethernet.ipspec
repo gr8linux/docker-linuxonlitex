@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="PCI to Ethernet" id="pci_to_ethernet" version= "1.0" category="Soft IP Core|Interface and Interconnect">PCI to Ethernet</ip>
+    <target module="PCI_to_Ethernet_Top">pci_to_ethernet</target>
+    <docs>
+        <doc type="summary">/doc/pci2ethernet.html</doc>
+        <doc type="help">/doc/pci2ethernet_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">*</device>
+        <device supported="false">GW1N-1-*</device>
+        <device supported="false">GW1N-1S-*</device>
+        <device supported="false">GW1NR-1-*</device>
+        <device supported="false">GW1AN-1C-*</device>
+        <device supported="false">GW1NZ-1-*</device>
+        <device supported="false">GW1NZ-1C-*</device>
+        <device supported="false">GW1N-2-*</device>
+        <device supported="false">GW1N-2B-*</device>
+        <device supported="false">GW1NR-2-*</device>
+        <device supported="false">GW1NR-2B-*</device>
+        <device supported="false">GW1NS-2-*</device>
+        <device supported="false">GW1NS-2C-*</device>
+        <device supported="false">GW1NSR-2-*</device>
+        <device supported="false">GW1NSR-2C-*</device>
+        <device supported="false">GW1NSER-2C-*</device>
+        <device supported="false">GW1NZR-2-*</device>
+        <device supported="false">GW1N-1P5-*</device>
+        <device supported="false">GW1N-1P5B-*</device>
+        <device supported="false">GW1N-2C-*</device>
+        <device supported="false">GW1NR-2C-*</device>
+        <device supported="false">GW1N-1P5C-*</device>
+        <device supported="false">GW5AT-138-*</device>
+    </devices>
+</ipcore>

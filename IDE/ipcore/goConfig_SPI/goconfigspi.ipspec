@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="goConfig SPI" id="goconfig_spi" version= "1.0" category="Soft IP Core|BackGround Configuration">goConfig SPI</ip>
+    <target module="goConfig_SPI_Top">goconfig_spi</target>
+    <docs>
+        <doc type="summary">/doc/goconfig_spi_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW1N-2C-*</device>
+        <device supported="true">GW1NR-2C-*</device>
+        <device supported="true">GW1N-1P5C-*</device>
+    </devices>
+</ipcore>
+

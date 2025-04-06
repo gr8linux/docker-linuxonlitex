@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="PCI Target" id="pci_target" version= "1.1" category="Soft IP Core|Interface and Interconnect">PCI Target</ip>
+    <target module="PCI_Target_Top">pci_target</target>
+    <docs>
+        <doc type="summary">/doc/pci_target.html</doc>
+        <doc type="help">/doc/pci_target_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>

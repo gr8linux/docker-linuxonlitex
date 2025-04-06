@@ -44,6 +44,7 @@
         <device supported="true">GW1N-9C-*</device>
         <device supported="true">GW1NR-9C-*</device>
         <device supported="true">GW1NR-1-*</device>
+        <device supported="true">GW1AN-1C-*</device>
         <device supported="true">GW1NR-2-*</device>
         <device supported="true">GW1N-1P5-*</device>
         <device supported="true">GW1N-2B-*</device>
@@ -55,6 +56,7 @@
         <device supported="true">GW1NR-2C-*</device>
         <device supported="true">GW1N-1P5C-*</device>
         <device supported="true">GW2AN-9X-*</device>
+        <device supported="true">GW1AN-9A-*</device>
         <device supported="true">GW2AN-4X-*</device>
     </devices>
 </ipcore>

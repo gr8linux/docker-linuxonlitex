@@ -27,5 +27,6 @@
         <device supported="true">GW2ANR-*</device>
         <device supported="true">GW2AR-*</device>
         <device supported="true">GW2AN-*</device>
+        <device supported="true">GW1AN-9A-*</device>
     </devices>
 </ipcore>

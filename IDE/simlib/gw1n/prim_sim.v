@@ -1,6 +1,6 @@
 
 // ===========Oooo==========================================Oooo========
-// =  Copyright (C) 2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+// =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 // =                     All rights reserved.
 // =====================================================================
 //
@@ -13063,6 +13063,13 @@ assign IO = oreg;
 
 endmodule
 
+//2k
+module TLVDS_OEN_BK(OEN);
+input OEN;
+parameter OEN_BANK = "0"; //0,3,4,5
+
+endmodule
+
 
 // CLKDIV
 module CLKDIV(CLKOUT, CALIB, HCLKIN, RESETN); 
@@ -17264,7 +17271,7 @@ begin
     clkb_dt_delay <= (0.05 * clkb_dt_step);
 end
 
-always @(clkouta_duty or clkoutb_duty or clka_dt_dir or clkb_dt_dir or clka_dt_step or clkb_dt_step) begin
+always @(clkouta_duty or clkoutb_duty or clka_dt_dir or clkb_dt_dir or clka_dt_delay or clkb_dt_delay) begin
     if (clka_dt_dir == 1'b1) begin
         tclka_duty <= clkouta_duty + clka_dt_delay;
     end else begin
@@ -18126,5 +18133,9 @@ assign CLKOUT = (DIV_MODE == "2") ? clk_div2 : ((DIV_MODE == "8") ? clk_div8 : c
 
 endmodule
 
+//PWRGRD
+module PWRGRD(PDEN);
+input PDEN; //power down enable, active low
 
+endmodule
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="SDI Decoder" id="sdi_decoder" version= "1.0" category="Soft IP Core|Multimedia">SDI Decoder</ip>
+    <target module="SDI_Decoder_Top">sdi_decoder</target>
+    <docs>
+        <doc type="summary">/doc/sdi_decoder_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5AT-*</device>
+        <device supported="true">GW5AST-*</device>
+        <device supported="true">GW5ART-*</device>
+        <device supported="true">GW5ANT-*</device>
+        <device supported="true">GW5ANRT-*</device>
+    </devices>
+</ipcore>

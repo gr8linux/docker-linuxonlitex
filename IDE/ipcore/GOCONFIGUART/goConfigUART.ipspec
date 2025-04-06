@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="goConfig UART" id="goConfig_uart" version= "1.0" category="Soft IP Core|BackGround Configuration">goConfig UART</ip>
+    <target module="goConfig_UART_Top">goconfig_uart</target>
+    <docs>
+        <doc type="summary">/doc/goconfig_uart_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW1N-9-*</device>
+        <device supported="true">GW1N-9C-*</device>
+        <device supported="true">GW2A-18-*</device>
+        <device supported="true">GW2A-18C-*</device>
+        <device supported="true">GW5A-60B-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+    </devices>
+</ipcore>
+

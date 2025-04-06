@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="CLKDIVG" id="clock_clkdivg" version= "1.0" category="Hard Module|CLOCK">CLKDIVG</ip>
+    <target module="Gowin_CLKDIVG">gowin_clkdivg</target>
+    <docs>
+        <doc type="summary">/doc/clkdivg.html</doc>
+        <doc type="help">/doc/clkdivg_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW1N-2-LQFP100X-*</device>
+        <device supported="true">GW1N-2-LQFP144X-*</device>
+        <device supported="true">GW1N-2-MBGA132X-*</device>
+        <device supported="true">GW1N-2-MBGA132H-*</device>
+        <device supported="true">GW1N-2-LQFP100-*</device>
+        <device supported="true">GW1N-2-LQFP144-*</device>
+        <device supported="true">GW1N-2-MBGA132-*</device>
+        <device supported="true">GW1N-2-MBGA49-*</device>
+        <device supported="true">GW1N-2B-LQFP100X-*</device>
+        <device supported="true">GW1N-2B-LQFP144X-*</device>
+        <device supported="true">GW1N-2B-MBGA132X-*</device>
+        <device supported="true">GW1N-2B-MBGA132H-*</device>
+        <device supported="true">GW1N-2B-LQFP100-*</device>
+        <device supported="true">GW1N-2B-LQFP144-*</device>
+        <device supported="true">GW1N-2B-MBGA132-*</device>
+        <device supported="true">GW1N-2B-MBGA121X-*</device>
+        <device supported="true">GW1N-2B-MBGA121-*</device>
+        <device supported="true">GW1N-2B-GW138-*</device>
+	<device supported="true">GW1N-2B-WLCSP100H-*</device>
+	<device supported="true">GW1N-2B-LQFP144F-*</device>
+        <device supported="true">GW1NZ-2B-WLCSP100H-*</device>
+        <device supported="true">GW1NZ-2B-GW138-*</device>
+        <device supported="true">GW1NZ-2C-WLCSP100H-*</device>
+        <device supported="true">GW1NZ-2C-GW138-*</device>
+	<device supported="true">GW1N-2C-LQFP100X-*</device>
+	<device supported="true">GW1N-2C-LQFP144X-*</device>
+	<device supported="true">GW1N-2C-MBGA132X-*</device>
+	<device supported="true">GW1N-2C-MBGA132H-*</device>
+	<device supported="true">GW1N-2C-LQFP100-*</device>
+	<device supported="true">GW1N-2C-LQFP144-*</device>
+	<device supported="true">GW1N-2C-MBGA132-*</device>
+	<device supported="true">GW1N-2C-MBGA121X-*</device>
+	<device supported="true">GW1N-2C-MBGA121-*</device>
+	<device supported="true">GW1N-2C-MBGA49-*</device>
+	<device supported="true">GW1N-2C-GW138-*</device>
+	<device supported="true">GW1N-2C-QFN32X-*</device>
+	<device supported="true">GW1N-2C-QFN32-*</device>
+	<device supported="true">GW1N-2C-WLCSP100H-*</device>
+	<device supported="true">GW1N-2C-LQFP144F-*</device>
+        <device supported="true">GW1NR-2-MBGA49P-*</device>
+        <device supported="true">GW1NR-2-MBGA49PG-*</device>
+        <device supported="true">GW1NR-2-MBGA49G-*</device>
+        <device supported="true">GW1NR-2B-MBGA49P-*</device>
+        <device supported="true">GW1NR-2B-MBGA49PG-*</device>
+        <device supported="true">GW1NR-2B-MBGA49G-*</device>
+        <device supported="true">GW1NR-2C-MBGA49P-*</device>
+        <device supported="true">GW1NR-2C-MBGA49PG-*</device>
+        <device supported="true">GW1NR-2C-MBGA49G-*</device>
+        <device supported="true">GW1N-1P5-LQFP100X-*</device>
+        <device supported="true">GW1N-1P5-LQFP100-*</device>
+        <device supported="true">GW1N-1P5B-LQFP100X-*</device>
+        <device supported="true">GW1N-1P5B-LQFP100-*</device>
+        <device supported="true">GW1N-1P5C-LQFP100X-*</device>
+        <device supported="true">GW1N-1P5C-LQFP100-*</device>
+        <device supported="true">GW2AN-18X-UBGA484-*</device>
+        <device supported="true">GW2AN-18X-UBGA400-*</device>
+        <device supported="true">GW2AN-18X-UBGA256-*</device>
+        <device supported="true">GW2AN-18X-PBGA256-*</device>
+        <device supported="true">GW2AN-18X-UBGA332-*</device>
+        <device supported="true">GW2AN-18X-UBGA324-*</device>
+        <device supported="true">GW2AN-18X-PBGA484-*</device>
+        <device supported="true">GW2AN-18X-GW392-*</device>
+        <device supported="true">GW2AN-9X-UBGA484-*</device>
+        <device supported="true">GW2AN-9X-UBGA400-*</device>
+        <device supported="true">GW2AN-9X-UBGA256-*</device>
+        <device supported="true">GW2AN-9X-PBGA256-*</device>
+        <device supported="true">GW2AN-9X-UBGA324-*</device>
+        <device supported="true">GW2AN-9X-GW392-*</device>
+        <device supported="true">GW1AN-9A-UBGA484-*</device>
+        <device supported="true">GW1AN-9A-UBGA400-*</device>
+        <device supported="true">GW1AN-9A-UBGA256-*</device>
+        <device supported="true">GW1AN-9A-PBGA256-*</device>
+        <device supported="true">GW1AN-9A-UBGA324-*</device>
+        <device supported="true">GW1AN-9A-GW392-*</device>
+    </devices>
+</ipcore>

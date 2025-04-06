@@ -7,7 +7,7 @@
 //  \ \    /  \    / /   [File name   ] vfb_top.v
 //   \ \  / /\ \  / /    [Description ] Video frame buffer 
 //    \ \/ /  \ \/ /     [Timestamp   ] Friday October 30 14:00:30 2020
-//     \  /    \  /      [version     ] 2.0
+//     \  /    \  /      [version     ] 2.3
 //      \/      \/
 //
 // ==============0ooo===================================================0ooo===========
@@ -18,6 +18,8 @@
 // V1.0    | Caojie     | 10/30/20     | Initial version 
 // ----------------------------------------------------------------------------------
 // V2.0    | Caojie     | 06/21/23     | Support DDR3 no burst number mode 
+// ----------------------------------------------------------------------------------
+// V2.3    | Caojie     | 01/05/24     | Support SDRAM memory type 
 // ----------------------------------------------------------------------------------
 // ==============0ooo===================================================0ooo===========
 
@@ -84,7 +86,7 @@ module `module_name #
     input                       I_rd_data_valid   ,
     input  [DATA_WIDTH-1:0]     I_rd_data         ,//[DATA_WIDTH-1:0]
     input                       I_init_calib       
-`endif     
+`endif 
 `ifdef MEM_HYPERRAM
     output                      O_cmd             ,
     output                      O_cmd_en          ,
@@ -94,6 +96,18 @@ module `module_name #
     input                       I_rd_data_valid   ,
     input  [DATA_WIDTH-1:0]     I_rd_data         ,//[DATA_WIDTH-1:0]
     input                       I_init_calib       
+`endif 
+`ifdef MEM_SDRAM
+    input                       I_sdrc_busy_n     ,//cmd_ready
+    output                      O_sdrc_wr_n       ,
+    output                      O_sdrc_rd_n       ,
+    output [ADDR_WIDTH-1:0]     O_sdrc_addr       ,//[ADDR_WIDTH-1:0]
+    output [7:0]                O_sdrc_data_len   ,//
+    output [DATA_WIDTH-1:0]     O_sdrc_data       ,//[DATA_WIDTH-1:0]
+    output [DATA_WIDTH/8-1:0]   O_sdrc_dqm        ,
+    input                       I_sdrc_rd_valid   ,
+    input  [DATA_WIDTH-1:0]     I_sdrc_data_out   ,//[DATA_WIDTH-1:0]
+    input                       I_sdrc_init_done     
 `endif 
 );
 
@@ -119,13 +133,13 @@ module `module_name #
     `endif
         // video data input                       
         .I_vin0_clk           (I_vin0_clk           ),
-        .I_vin0_vs_n          (I_vin0_vs_n          ),//只接收负极性
+        .I_vin0_vs_n          (I_vin0_vs_n          ),
         .I_vin0_de            (I_vin0_de            ),
         .I_vin0_data          (I_vin0_data          ),
         .O_vin0_fifo_full     (O_vin0_fifo_full     ),
         // video data output                        
         .I_vout0_clk          (I_vout0_clk          ),
-        .I_vout0_vs_n         (I_vout0_vs_n         ),//只接收负极性
+        .I_vout0_vs_n         (I_vout0_vs_n         ),
         .I_vout0_de           (I_vout0_de           ),
         .O_vout0_den          (O_vout0_den          ),
         .O_vout0_data         (O_vout0_data         ),
@@ -236,7 +250,53 @@ module `module_name #
         .I_rd_data          (I_rd_data        ),//[DATA_WIDTH-1:0]
         .I_init_calib       (I_init_calib     )
     ); 
-`endif 
+`endif
+
+`ifdef MEM_SDRAM
+    `getname(vfb_sdram_wrapper,`module_name) # 
+    (
+        .IMAGE_SIZE         (IMAGE_SIZE         ),  //frame base address
+        .BURST_WRITE_LENGTH (BURST_WRITE_LENGTH ),  
+        .BURST_READ_LENGTH  (BURST_READ_LENGTH  ),   
+        .DATA_WIDTH         (DATA_WIDTH         ),    
+        .ADDR_WIDTH         (ADDR_WIDTH         ),  
+        .WR_VIDEO_WIDTH     (WR_VIDEO_WIDTH     ),
+        .RD_VIDEO_WIDTH     (RD_VIDEO_WIDTH     )
+    )
+    vfb_sdram_wrapper_inst
+    ( 
+        .I_rst_n            (I_rst_n          ),//rst_n            ),
+        .I_dma_clk          (I_dma_clk        ),   //sram_clk         ),
+    `ifdef USE_THREE_FRAME_BUFFER 
+        .I_wr_halt          (I_wr_halt        ), //1:halt,  0:no halt
+        .I_rd_halt          (I_rd_halt        ), //1:halt,  0:no halt
+    `endif
+        // video data input           
+        .I_vin0_clk         (I_vin0_clk        ),
+        .I_vin0_vs_n        (I_vin0_vs_n       ),
+        .I_vin0_de          (I_vin0_de         ),
+        .I_vin0_data        (I_vin0_data       ),
+        .O_vin0_fifo_full   (O_vin0_fifo_full  ),
+        // video data output          
+        .I_vout0_clk        (I_vout0_clk       ),
+        .I_vout0_vs_n       (I_vout0_vs_n      ),
+        .I_vout0_de         (I_vout0_de        ),
+        .O_vout0_den        (O_vout0_den       ),
+        .O_vout0_data       (O_vout0_data      ),
+        .O_vout0_fifo_empty (O_vout0_fifo_empty),
+        // ddr write request
+        .I_sdrc_busy_n      (I_sdrc_busy_n     ),
+        .O_sdrc_wr_n        (O_sdrc_wr_n       ),
+        .O_sdrc_rd_n        (O_sdrc_rd_n       ),
+        .O_sdrc_addr        (O_sdrc_addr       ),//[ADDR_WIDTH-1:0]
+        .O_sdrc_data_len    (O_sdrc_data_len   ),
+        .O_sdrc_data        (O_sdrc_data       ),//[DATA_WIDTH-1:0]
+        .O_sdrc_dqm         (O_sdrc_dqm        ),
+        .I_sdrc_rd_valid    (I_sdrc_rd_valid   ),
+        .I_sdrc_data_out    (I_sdrc_data_out   ),//[DATA_WIDTH-1:0]
+        .I_sdrc_init_done   (I_sdrc_init_done  )
+    );  
+`endif  
 
 endmodule   
   

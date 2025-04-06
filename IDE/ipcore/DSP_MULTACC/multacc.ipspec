@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="MULTACC" id="dsp_multacc" version= "1.0" category="Hard Module|DSP">MULTACC</ip>
+    <target module="Gowin_MULTACC">gowin_multacc</target>
+    <docs>
+        <doc type="summary">/doc/multacc.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5ART-15A-*</device>
+        <device supported="true">GW5AT-15B-*</device>
+        <device supported="true">GW5ART-15B-*</device>
+        <device supported="true">GW5ANT-15A-*</device>
+        <device supported="true">GW5ANRT-15A-*</device>
+        <device supported="true">GW5AT-15A-*</device>
+    </devices>
+</ipcore>

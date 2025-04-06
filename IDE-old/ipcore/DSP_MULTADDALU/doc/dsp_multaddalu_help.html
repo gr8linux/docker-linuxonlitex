@@ -1,0 +1,50 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../../../data/ipcores/mkdown.css" />
+<title>MULTADDALU</title></head>
+<body class="markdown-body">
+<h1>MULTADDALU</h1>
+<hr />
+<h2>Information</h2>
+<p><strong>Type:</strong> MULTADDALU <br />
+<strong>Vendor:</strong> GOWIN Semiconductor<br />
+<strong>Summary:</strong> Each Gowin DSP macro can implement the sum of two 18x18 multipliers. The alu two-18x18 mode can be composed of two 18x18 multipliers and one ALU. The MULTADDALU can be configured to work in the following operation modes: <br />
+1. A0*B0 + A1*B1<br />
+2. A0*B0 - A1*B1<br />
+3. A0*B0 + A1*B1 + C<br />
+4. A0*B0 + A1*B1 - C<br />
+5. A0*B0 - A1*B1 + C<br />
+6. A0*B0 - A1*B1 - C<br />
+7. Accum + A0*B0 + A1*B1<br />
+8. Accum + A0*B0 - A1*B1<br />
+9. A0*B0 + A1*B1 + CASI<br />
+10. A0*B0 - A1*B1 + CASI<br />
+<strong>Devices:</strong> GW1N-4, GW1N-4B, GW1N-4D, GW1NR-4, GW1NR-4B, GW1NR-4D, GW1NRF-4B, GW1NS-4, GW1NS-4C, GW1NSR-4, GW1NSER-4C, GW1NSR-4C, GW1N-9, GW1N-9C, GW1NR-9, GW1NR-9C, GW2A-18, GW2AR-18, GW2A-18C, GW2AR-18C, GW2ANR-18C, GW2A-55, GW2A-55C, GW2AN-55C     </p>
+<h2>Options</h2>
+<h3>MULTADDALU Mode Option</h3>
+<ul>
+<li><strong>MULTADDALU Mode</strong> - Set one of the MULTADDALU operation modes.  </li>
+</ul>
+<h3>Shift Output Options</h3>
+<ul>
+<li><strong>Enable Shift Output A</strong> - Enable or disable the shift out port A of the DSP.  </li>
+<li><strong>Enable Shift Output B</strong> - Enable or disable the shift out port B of the DSP.  </li>
+</ul>
+<h3>Data Options</h3>
+<ul>
+<li><strong>Input A0 Width</strong> - Set the size of the first item in the first multiplication.  </li>
+<li><strong>Input B0 Width</strong> - Set the size of the second item in the first multiplication.  </li>
+<li><strong>Input A1 Width</strong> - Set the size of the first item in the second multiplication.  </li>
+<li><strong>Input B1 width</strong> - Set the size of the second item in the second multiplication.  </li>
+<li><strong>Input C width</strong> - Set the size of input C.  </li>
+<li><strong>Source</strong> - Set the source of the input A0/B0/A1/B1 as Parallel or Shift.  </li>
+<li><strong>Data Type</strong> - Set the data format of the input A0/B0/A1/B1 as signed or unsigned.  </li>
+</ul>
+<h3>Register Options</h3>
+<ul>
+<li><strong>Reset Mode</strong> - Set whether the reset mode is synchronous or asynchronous.  </li>
+<li><strong>Enable … Register</strong> - Enable or disable registers. For example, if you choose Enable Input A0 Register, the input data will go through one register.  </li>
+</ul>
+</body>
+</html>

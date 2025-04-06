@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="AHB to AHB 16 Bridge" id="ahb_to_ahb_16_bridge" version= "1.1" category="Soft IP Core|Microprocessor System|Bus Interconnect">AHB to AHB 16 Bridge</ip>
+    <target module="AHB_to_AHB_16_Bridge_Top">ahb_to_ahb_16_bridge</target>
+    <docs>
+        <doc type="summary">/doc/ahb_to_ahb_16_bridge_info.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">*</device>
+    </devices>
+</ipcore>

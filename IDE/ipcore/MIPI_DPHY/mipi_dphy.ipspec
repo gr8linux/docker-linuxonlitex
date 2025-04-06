@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="MIPI_DPHY" id="mipi_dphy" version= "1.0" category="Hard Module|MIPI_DPHY">MIPI_DPHY</ip>
+    <target module="Gowin_MIPI_DPHY">gowin_mipi_dphy</target>
+    <docs>
+        <doc type="summary">/doc/mipi_dphy.html</doc>
+        <doc type="help">/doc/mipi_dphy_rx_help.html</doc>
+    </docs>
+    <devices>
+	<device supported="true">GW5A-25A-MBGA121N-*</device>
+	<device supported="true">GW5A-25A-GW251S-*</device>
+	<device supported="true">GW5A-25A-UBGA324-*</device>
+	<device supported="true">GW5A-25A-GW251C-*</device>
+        <device supported="true">GW5A-25A-PBGA256-*</device>
+        <device supported="true">GW5A-25A-PBGA196S-*</device>
+        <device supported="true">GW5AT-60ES-GW369-*</device>
+        <device supported="true">GW5AT-60ES-GW369S0-*</device>
+        <device supported="true">GW5AT-60ES-UBGA225-*</device>
+        <device supported="true">GW5AT-60B-GW369-*</device>
+        <device supported="true">GW5AT-60B-GW369S0-*</device>
+        <device supported="true">GW5AT-60B-UBGA225-*</device>
+        <device supported="true">GW5AT-60B-UBGA225H-*</device>
+        <device supported="true">GW5A-60B-GW343S0-*</device>
+        <device supported="true">GW5A-60B-GW343-*</device>
+        <device supported="true">GW5A-60B-GW343C-*</device>
+        <device supported="true">GW5AS-25A-UBGA256-*</device>
+        <device supported="true">GW5AS-25A-GW251C-*</device>
+        <device supported="true">GW5AR-25A-UBGA256P-*</device>
+        <device supported="true">GW5AR-25A-GW251S-*</device>
+        <device supported="true">GW5ART-15A-WLCSP90P-*</device>
+        <device supported="true">GW5ART-15A-GW94-*</device>
+        <device supported="true">GW5ART-15A-MBGA132P-*</device>
+        <device supported="true">GW5ANRT-15A-GW94-*</device>
+        <device supported="true">GW5ANRT-15A-MBGA132P-*</device>
+        <device supported="true">GW5ANT-15A-GW94-*</device>
+        <device supported="true">GW5ANT-15A-MBGA132-*</device>
+        <device supported="true">GW5AT-15A-GW94-*</device>
+        <device supported="true">GW5AT-15A-MBGA132-*</device>
+        <device supported="true">GW5A-25B-GW251C-*</device>
+        <device supported="true">GW5A-25B-MBGA121N-*</device>
+        <device supported="true">GW5A-25B-GW251S-*</device>
+        <device supported="true">GW5A-25B-UBGA324-*</device>
+        <device supported="true">GW5A-25B-PBGA256-*</device>
+        <device supported="true">GW5A-25B-PBGA196S-*</device>
+        <device supported="true">GW5A-25B-UBGA324F-*</device>
+        <device supported="true">GW5AS-25B-UBGA256-*</device>
+        <device supported="true">GW5AS-25B-GW251C-*</device>
+        <device supported="true">GW5AR-25B-UBGA256P-*</device>
+        <device supported="true">GW5AR-25B-GW251S-*</device>
+        <device supported="true">GW5ART-15B-WLCSP90P-*</device>
+        <device supported="true">GW5ART-15B-GW94-*</device>
+        <device supported="true">GW5ART-15B-MBGA132P-*</device>
+        <device supported="true">GW5AT-15B-GW94-*</device>
+        <device supported="true">GW5AT-15B-MBGA132-*</device>
+        <device supported="true">GW5AT-15B-CS130-*</device>
+        <device supported="true">GW5AT-15A-CS130-*</device>
+    </devices>
+</ipcore>

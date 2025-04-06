@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="USB to Multi Serial Protocol Bridge" id="usb_to_multi_serial" version= "1.0" category="Soft IP Core|Interface and Interconnect">USB to Multi Serial Protocol Bridge</ip>
+    <target module="USB_to_Multi_Serial_Top">usb_to_multi_serial</target>
+    <docs>
+        <doc type="summary">/doc/usb_to_multi_serial_protocol_bridge_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">*</device>
+    </devices>
+</ipcore>

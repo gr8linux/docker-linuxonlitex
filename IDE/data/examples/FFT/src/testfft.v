@@ -38,11 +38,11 @@ input wre;
 input [9:0] ad;
 
 wire gw_gnd;
-
+wire [15:0] dout_o;
 assign gw_gnd = 1'b0;
 
 ROM bram_rom_0 (
-    .DO(dout[15:0]),
+    .DO({dout[15:0],dout_o[15:0]}),
     .CLK(clk),
     .OCE(oce),
     .CE(ce),

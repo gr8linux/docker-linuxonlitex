@@ -52,8 +52,8 @@ wire [12 - SCALE - 1:0] x_relative, y_relative;
 
 assign x_scaled = x[11:SCALE];
 assign y_scaled = y[11:SCALE];
-assign x_relative = x_scaled - X_START;
-assign y_relative = y_scaled - Y_START;
+assign x_relative = x_scaled & X_START;
+assign y_relative = y_scaled & Y_START;
 
 // flags indicates we are in the label area
 wire in_label_x = x_scaled >= X_START && x_scaled < X_END;
@@ -80,10 +80,10 @@ begin
             x <= 12'h0;
             y <= 12'h0;
         end else if(hs && !hs_d) begin
-            y <= y + 1;
+            y <= y + 1'b1;
             x <= 12'h0;
         end else if(de) begin
-            x <= x + 1;
+            x <= x + 1'b1;
             //if(in_label_x) 
             //    pxl <= pxl + 1;
         end

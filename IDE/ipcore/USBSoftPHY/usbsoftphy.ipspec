@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="USB 1.1 SoftPHY" id="usb_11_softphy" version= "1.2" category="Soft IP Core|Interface and Interconnect">USB 1.1 SoftPHY</ip>
+    <target module="USB_SoftPHY_Top">usb_softphy</target>
+    <docs>
+        <doc type="summary">/doc/usb_softphy.html</doc>
+        <doc type="help">/doc/usb_softphy_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>

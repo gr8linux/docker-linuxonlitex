@@ -1,0 +1,120 @@
+[
+ {
+  "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+  "InstLine" : 11,
+  "InstName" : "mjb_npu",
+  "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+  "ModuleLine" : 11,
+  "ModuleName" : "mjb_npu",
+  "SubInsts" : [
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 206,
+    "InstName" : "u_downscaler",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2npu/downscaler.v",
+    "ModuleLine" : 1,
+    "ModuleName" : "downscaler"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 235,
+    "InstName" : "u_NPU_Top",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/npu/npu.v",
+    "ModuleLine" : 2,
+    "ModuleName" : "NPU_Top"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 390,
+    "InstName" : "u_DVI_out",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2dvi/DVI_out.v",
+    "ModuleLine" : 1,
+    "ModuleName" : "DVI_out"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 154,
+    "InstName" : "u_Gowin_rPLL",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/gowin_rpll/gowin_rpll.v",
+    "ModuleLine" : 2,
+    "ModuleName" : "Gowin_rPLL"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 176,
+    "InstName" : "u_Gowin_EMPU_M1_Top",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/gowin_empu_m1/gowin_empu_m1.v",
+    "ModuleLine" : 20598,
+    "ModuleName" : "Gowin_EMPU_M1_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/gowin_empu_m1/gowin_empu_m1.v",
+      "InstLine" : 21459,
+      "InstName" : "M1_inst",
+      "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/gowin_empu_m1/gowin_empu_m1.v",
+      "ModuleLine" : 3,
+      "ModuleName" : "CortexM1IntegrationWrapper"
+     },
+     {
+      "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/gowin_empu_m1/gowin_empu_m1.v",
+      "InstLine" : 21543,
+      "InstName" : "u_GowinCM1AhbExtWrapper",
+      "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/gowin_empu_m1/gowin_empu_m1.v",
+      "ModuleLine" : 14279,
+      "ModuleName" : "GowinCM1AhbExtWrapper"
+     }
+    ]
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 220,
+    "InstName" : "u_tflite_img_buf",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2npu/tflite_img_buf/tflite_img_buf.v",
+    "ModuleLine" : 2,
+    "ModuleName" : "tflite_img_buf"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 275,
+    "InstName" : "u_GW_PLL_27",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2dvi/gw_rpll_27/gw_rpll_27.v",
+    "ModuleLine" : 2,
+    "ModuleName" : "GW_rPLL_27"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 309,
+    "InstName" : "u_frame_buffer",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2dvi/frame_buffer/frame_buffer.v",
+    "ModuleLine" : 2,
+    "ModuleName" : "frame_buffer"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 329,
+    "InstName" : "u_colorbar_generator",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2dvi/colorbar_generator.v",
+    "ModuleLine" : 11,
+    "ModuleName" : "colorbar_generator"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/mjb_npu.v",
+    "InstLine" : 358,
+    "InstName" : "u_text_overlay",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2dvi/text_overlay.v",
+    "ModuleLine" : 11,
+    "ModuleName" : "text_overlay",
+    "SubInsts" : [
+     {
+      "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2dvi/text_overlay.v",
+      "InstLine" : 99,
+      "InstName" : "u_label_placer",
+      "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/mjb_npu/src/camera2dvi/label_placer.v",
+      "ModuleLine" : 11,
+      "ModuleName" : "label_placer"
+     }
+    ]
+   }
+  ]
+ }
+]

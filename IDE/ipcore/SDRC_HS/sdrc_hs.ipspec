@@ -13,11 +13,19 @@
         <device supported="false">GW1N-1P5-*</device>
         <device supported="false">GW1N-1P5B-*</device>
         <device supported="false">GW1NR-1-*</device>
+        <device supported="false">GW1AN-1C-*</device>
         <device supported="false">GW1NZ-1-*</device>
         <device supported="false">GW1NZ-1C-*</device>
         <device supported="false">GW5AT-138-*</device>
         <device supported="false">GW5AT-138B-*</device>
+        <device supported="false">GW5AT-75B-*</device>
         <device supported="false">GW5AST-138B-*</device>
+        <device supported="false">GW5A-138C-*</device>
+        <device supported="false">GW5AS-138C-*</device>
+        <device supported="false">GW5AST-138C-*</device>
+        <device supported="false">GW5AT-138C-*</device>
+        <device supported="false">GW5AT-75C-*</device>
         <device supported="false">GW5A-138B-*</device>
+        <device supported="false">GW5AS-138B-*</device>
     </devices>
 </ipcore>

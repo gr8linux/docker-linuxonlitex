@@ -12,7 +12,7 @@ always @(posedge clk) begin
         cnt_r <= INIT-1;
     end
     else begin
-        cnt_r <= cnt_r-1;
+        cnt_r <= cnt_r-1'b1;
     end
 end
 assign over = isOver;

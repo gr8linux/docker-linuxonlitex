@@ -1,0 +1,110 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../../../data/ipcores/mkdown.css" />
+<title>PLLO</title></head>
+<body class="markdown-body">
+<h1>PLLO</h1>
+<hr />
+<h2>Information</h2>
+<p><strong>Type:</strong> PLLO<br />
+<strong>Vendor:</strong> GOWIN Semiconductor<br />
+<strong>Summary:</strong> Gowin FPGA provides a Phase Locked Loop (PLLO), which is used to generate multiple clocks with defined phase and frequency relationships to a given input clock.<br />
+<strong>Devices:</strong> GW1N-2, GW1NR-2, GW2AN-18X, GW1N-1P5  </p>
+<h2>Options</h2>
+<h3>General</h3>
+<ul>
+<li><strong>General Mode</strong> - In this mode, entering input clock frequency and expected frequencies, software will automatically calculate divide factors.  </li>
+<li><strong>Advanced Mode</strong> - This mode is for advanced users. Allows you to enter input clock frequency and divide factors to achieve expected output frequency.  </li>
+</ul>
+<h3>Optional Port</h3>
+<ul>
+<li><strong>PLL Phase And Duty Cycle Adjustment</strong> - Allows you to select Static Mode or Dynamic Mode.  </li>
+<li><strong>Clock Enable Ports</strong> - Selecting this option will generate one or more clock enable ports (enclka, enclkb, enclkc, enclkd) in the generated module.  </li>
+</ul>
+<h3>PLL Reset</h3>
+<ul>
+<li><strong>PLL Reset</strong> - Provides a reset port to reset the PLL.  </li>
+<li><strong>PLL Power Down</strong> - Provides a reset_p port to power down the PLL.  </li>
+<li><strong>CLKIN Divider Reset</strong> - PLL Reset, includes resetting the CLKIN-divider. When this option is selected, an input port reset_i is generated.  </li>
+<li><strong>CLKOUTB/CLKOUTC/CLKOUTD Divider Reset</strong> - Select it if CLKOUTB or CLKOUTC or CLKOUTD divider reset is required as an input port. When CLKOUTB or CLKOUTC or CLKOUTD is enabled and this option is selected, an input port reset_s is generated.  </li>
+</ul>
+<h3>CLKIN</h3>
+<ul>
+<li>CLKIN is the input reference clock for the PLL.  </li>
+<li><strong>Clock Frequency</strong> - Specify its frequency in MHz.  </li>
+<li><strong>Divide Factor</strong> - If in Advanced mode, also choose a divide factor which is from Dynamic or Static mode to achieve the expected output frequency. Static mode means select a static value from the drop-down list as divide factor, while Dynamic mode means that choose the value of port idsel as dynamic divide factor.   </li>
+<li><strong>VCO Frequency</strong> - Clicking the “Calculate” button displays the VCO frequency.  </li>
+</ul>
+<h3>CLKFB</h3>
+<ul>
+<li><strong>Source</strong> -Specify the source of feedback.  </li>
+<li><strong>Divide Factor</strong> - In Advanced mode, the divide factor in the feedback path can be selected from port fbdsel or from the drop-down list. In General mode, the divide factor is shown when the “Calculate” button is clicked.   </li>
+</ul>
+<h3>ICP and LPF</h3>
+<ul>
+<li><strong>ICPSEL</strong> - Charge pump current. Allows you to select Static or Dynamic.  </li>
+<li><strong>LPFRES</strong> - Resistance value of low pass filter. Allows you to select Static or Dynamic.  </li>
+</ul>
+<h3>LOCK</h3>
+<ul>
+<li><strong>Enable LOCK</strong> - Selecting this option will produce the lock port in the generated module.  </li>
+</ul>
+<h3>CLKOUTA</h3>
+<ul>
+<li><strong>Bypass</strong> - The bypass option means fclkouta = fclkin, it connects the output to the input, bypassing the PLL circuit. If select Enable CLKOUTA Divider, fclkouta = fclkin/divider. Bypassing CLKOUTA disables the CLKOUTA expected frequency and tolerance fields.  </li>
+<li><strong>Enable CLKOUTA Divider</strong> - You can select enable or disable CLKOUTA Divider.  </li>
+<li><strong>VCO Divide Factor</strong> - In General mode, VCO Divide Factors cannot be selected. Clicking the “Calculate” button displays the actual values. In Advanced mode, Dynamic or Static mode can be selected. When the Dynamic mode is selected, the user needs to set an initial value.  </li>
+<li>The following options are not available when CLKOUTA is in Bypass mode.  </li>
+<li><strong>Expected Frequency</strong> - In General mode, set the output clock frequency.  </li>
+<li><strong>Tolerance</strong> - Set a tolerance for the clkouta frequency, as a percentage of requested frequency. Since the divide factors can only take a certain set of values, not all frequencies can be generated. The tolerance value is used to guide the tool to select a suitable divide factor.  </li>
+<li><strong>Actual Frequency</strong> - Clicking the “Calculate” button displays the actual frequency that the PLL can produce.  </li>
+<li><strong>Duty Trim</strong> - Allows you to fine-tune the duty cycle of CLKOUTA.  </li>
+</ul>
+<h3>CLKOUTB</h3>
+<ul>
+<li><strong>Enable CLKOUTB</strong> - Selecting this option will produce the clkoutb port in the generated module.  </li>
+<li><strong>Bypass</strong> - If CLKOUTA bypasses, CLKOUTB defaults to bypass. This option will connect the output to the input, bypassing the PLL circuit. If select Enable CLKOUTB Divider, fclkoutb = fclkin/divider. Bypassing clkoutb disables its expected frequency, tolerance, phase and duty adjust fields.  </li>
+<li><strong>Enable CLKOUTB Divider</strong> - You can select enable or disable CLKOUTB Divider.  </li>
+<li><strong>VCO Divide Factor</strong> - In General mode, VCO Divide Factors cannot be selected. Clicking the “Calculate” button displays the actual values. In Advanced mode, Dynamic or Static mode can be selected. When the Dynamic mode is selected, the user needs to set an initial value.  </li>
+<li>The following options are not available when CLKOUTB is in Bypass mode.  </li>
+<li><strong>Expected Frequency</strong> - In General mode, set the output clock frequency.  </li>
+<li><strong>Tolerance</strong> - Set a tolerance for the clkoutb frequency, as a percentage of requested frequency. Since the divide factors can only take a certain set of values, not all frequencies can be generated. The tolerance value is used to guide the tool to select a suitable divide factor.  </li>
+<li><strong>Actual Frequency</strong> - Clicking the “Calculate” button displays the actual frequency that the PLL can produce.  </li>
+<li><strong>Duty Trim</strong> - Allows you to fine-tune the duty cycle of CLKOUTB.  </li>
+<li><strong>Phase (degree)</strong> - You can select Dynamic or Static mode. The static phase value (0~315) is the phase of the rising edge of CLKOUTB.  </li>
+<li><strong>Duty Cycle</strong> - You can select Dynamic or Static mode. The phase value (0~315) in Dynamic mode is the phase of the falling edge of CLKOUTB.  </li>
+</ul>
+<h3>CLKOUTC</h3>
+<ul>
+<li><strong>Enable CLKOUTC</strong> - Selecting this option will produce the clkoutc port in the generated module.  </li>
+<li><strong>Bypass</strong> - If CLKOUTA bypasses, CLKOUTC defaults to bypass. This option will connect the output to the input, bypassing the PLL circuit. If select Enable CLKOUTC Divider, fclkoutc = fclkin/divider. Bypassing clkoutc disables its expected frequency, tolerance, phase and duty adjust fields.  </li>
+<li><strong>Enable CLKOUTC Divider</strong> - You can select enable or disable CLKOUTC Divider.  </li>
+<li><strong>VCO Divide Factor</strong> - In General mode, VCO Divide Factors cannot be selected. Clicking the “Calculate” button displays the actual values. In Advanced mode, Dynamic or Static mode can be selected. When the Dynamic mode is selected, the user needs to set an initial value.  </li>
+<li>The following options are not available when CLKOUTC is in Bypass mode.  </li>
+<li><strong>Expected Frequency</strong> - In General mode, set the output clock frequency.  </li>
+<li><strong>Tolerance</strong> -Set a tolerance for the clkoutc frequency, as a percentage of requested frequency. Since the divide factors can only take a certain set of values, not all frequencies can be generated. The tolerance value is used to guide the tool to select a suitable divide factor.  </li>
+<li><strong>Actual Frequency</strong> - Clicking the “Calculate” button displays the actual frequency that the PLL can produce.  </li>
+<li><strong>Phase (degree)</strong> - You can select Dynamic or Static mode. The static phase value (0~315) is the phase of the rising edge of CLKOUTC.  </li>
+<li><strong>Duty Cycle</strong> - You can select Dynamic or Static mode. The phase value (0~315) in Dynamic mode is the phase of the falling edge of CLKOUTC.  </li>
+</ul>
+<h3>CLKOUTD</h3>
+<ul>
+<li><strong>Enable CLKOUTD</strong> - Selecting this option will produce the clkoutd port in the generated module.  </li>
+<li><strong>Bypass</strong> - If CLKOUTA bypasses, CLKOUTD defaults to bypass. This option will connect the output to the input, bypassing the PLL circuit. If select Enable CLKOUTD Divider, fclkoutd = fclkin/divider. Bypassing clkoutd disables its expected frequency, tolerance, phase and duty adjust fields.  </li>
+<li><strong>Enable CLKOUTD Divider</strong> - You can select enable or disable CLKOUTD Divider.  </li>
+<li><strong>VCO Divide Factor</strong> - In General mode, VCO Divide Factors cannot be selected. Clicking the “Calculate” button displays the actual values. In Advanced mode, Dynamic or Static mode can be selected. When the Dynamic mode is selected, the user needs to set an initial value.  </li>
+<li>The following options are not available when CLKOUTD is in Bypass mode.   </li>
+<li><strong>Expected Frequency</strong> - In General mode, set the output clock frequency.  </li>
+<li><strong>Tolerance</strong> - Set a tolerance for the clkoutd frequency, as a percentage of requested frequency. Since the divide factors can only take a certain set of values, not all frequencies can be generated. The tolerance value is used to guide the tool to select a suitable divide factor.  </li>
+<li><strong>Actual Frequency</strong> - Clicking the “Calculate” button displays the actual frequency that the PLL can produce.  </li>
+<li><strong>Phase (degree)</strong> - You can select Dynamic or Static mode. The static phase value (0~315) is the phase of the rising edge of CLKOUTD.  </li>
+<li><strong>Duty Cycle</strong> - You can select Dynamic or Static mode. The phase value (0~315) in Dynamic mode is the phase of the falling edge of CLKOUTD.  </li>
+</ul>
+<h3>Calculate</h3>
+<ul>
+<li>General Mode: The tool calculates Divide Factor settings based on input/output frequency.  </li>
+<li>Advanced Mode: The tool calculates output frequencies based on divide factors.  </li>
+</ul>
+</body>
+</html>

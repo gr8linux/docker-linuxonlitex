@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="SDRAM Controller(With embedded SDRAM)" id="sdrc_emb" version= "1.3" category="Soft IP Core|Memory Control|SDR SDRAM Memory Interface">SDRAM Controller(With embedded SDRAM)</ip>
+    <target module="SDRAM_controller_top_SIP">SDRAM_controller_top_SIP</target>
+    <docs>
+        <doc type="summary">/doc/sdrc_embedded.html</doc>
+        <doc type="help">/doc/sdrc_embedded_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW1NR-4-QFN88-*</device>
+        <device supported="true">GW1NR-4B-QFN88-*</device>
+        <device supported="true">GW1NR-4D-QFN88-*</device>
+        <device supported="true">GW1NR-9-QFN88-*</device>
+        <device supported="true">GW1NR-9C-QFN88-*</device>
+        <device supported="true">GW2AR-18-QFN88-*</device>
+        <device supported="true">GW2AR-18C-QFN88-*</device>
+        <device supported="true">GW2AR-18-LQFP144-*</device>
+        <device supported="true">GW2AR-18C-LQFP144-*</device>
+        <device supported="true">GW2AR-18-eLQFP144-*</device>
+        <device supported="true">GW2AR-18C-eLQFP144-*</device>
+        <device supported="true">GW2AR-18C-PBGA256S-*</device>
+        <device supported="true">GW2ANR-18C-QFN88-*</device>
+    </devices>
+</ipcore>

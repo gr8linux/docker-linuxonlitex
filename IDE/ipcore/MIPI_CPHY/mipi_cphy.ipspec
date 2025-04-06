@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="MIPI_CPHY" id="mipi_cphy" version= "1.0" category="Hard Module|MIPI_CPHY">MIPI_CPHY</ip>
+    <target module="Gowin_MIPI_CPHY">gowin_mipi_cphy</target>
+    <docs>
+        <doc type="summary">/doc/mipi_cphy.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5ART-15A-WLCSP90PF-*</device>
+        <device supported="true">GW5ART-15A-GW94-*</device>
+        <device supported="true">GW5ART-15A-MBGA132P-*</device>
+        <device supported="true">GW5AT-60ES-GW369-*</device>
+        <device supported="true">GW5AT-60ES-GW369S0-*</device>
+        <device supported="true">GW5AT-60ES-UBGA225-*</device>
+        <device supported="true">GW5AT-15A-GW94-*</device>
+        <device supported="true">GW5AT-15A-MBGA132-*</device>
+        <device supported="true">GW5ANT-15A-MBGA132-*</device>
+        <device supported="true">GW5ANT-15A-GW94-*</device>
+        <device supported="true">GW5ANRT-15A-MBGA132P-*</device>
+        <device supported="true">GW5ANRT-15A-GW94-*</device>
+        <device supported="true">GW5AT-60B-GW369-*</device>
+        <device supported="true">GW5AT-60B-UBGA225-*</device>
+        <device supported="true">GW5AT-60B-GW369S0-*</device>
+        <device supported="true">GW5AT-60B-UBGA225H-*</device>
+        <device supported="true">GW5A-60B-GW343S0-*</device>
+        <device supported="true">GW5A-60B-GW343-*</device>
+        <device supported="true">GW5A-60B-GW343C-*</device>
+        <device supported="true">GW5ART-15B-WLCSP90PF-*</device>
+        <device supported="true">GW5ART-15B-GW94-*</device>
+        <device supported="true">GW5ART-15B-MBGA132P-*</device>
+        <device supported="true">GW5AT-15B-GW94-*</device>
+        <device supported="true">GW5AT-15B-MBGA132-*</device>
+        <device supported="true">GW5AT-15B-CS130-*</device>
+        <device supported="true">GW5AT-15A-CS130-*</device>
+    </devices>
+</ipcore>

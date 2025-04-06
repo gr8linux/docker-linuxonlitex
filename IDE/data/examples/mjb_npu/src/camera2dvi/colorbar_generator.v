@@ -41,9 +41,9 @@ module colorbar_generator (
 			q_line_count	<=	0;
 		end
 		else begin
-			q_pixel_count	<=	(q_pixel_count<p_htotal-1)											? q_pixel_count+1	: 0;
-			q_line_count	<=	(q_pixel_count==p_htotal-1)	&&	(q_line_count < p_vtotal		)	? q_line_count+1	:
-								(q_pixel_count==p_htotal-1)	&&	(q_line_count == p_vtotal		)	? 0					: q_line_count;
+			q_pixel_count	<=	(q_pixel_count<p_htotal-1'b1)											? q_pixel_count+1'b1	: 1'b0;
+			q_line_count	<=	(q_pixel_count==p_htotal-1'b1)	&&	(q_line_count < p_vtotal		)	? q_line_count+1'b1	:
+								(q_pixel_count==p_htotal-1'b1)	&&	(q_line_count == p_vtotal		)	? 1'b0					: q_line_count;
 		end
 	
 	always@(posedge clk or negedge reset_n) 

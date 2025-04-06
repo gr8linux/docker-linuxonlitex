@@ -1,0 +1,21 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW1N-4D" pn="GW1N-UV4PG256C6/I5">gw1n4d-049</Device>
+    <FileList>
+        <File path="src/TOP.v" type="file.verilog" enable="1"/>
+        <File path="src/VGA_640x480.v" type="file.verilog" enable="1"/>
+        <File path="src/clk_01ms.v" type="file.verilog" enable="1"/>
+        <File path="src/clk_100ms.v" type="file.verilog" enable="1"/>
+        <File path="src/clk_10ms.v" type="file.verilog" enable="1"/>
+        <File path="src/clk_1ms.v" type="file.verilog" enable="1"/>
+        <File path="src/clk_5ms.v" type="file.verilog" enable="1"/>
+        <File path="src/demon1.v" type="file.verilog" enable="1"/>
+        <File path="src/draw_demon1.v" type="file.verilog" enable="1"/>
+        <File path="src/game.cst" type="file.cst" enable="1"/>
+        <File path="src/game.sdc" type="file.sdc" enable="1"/>
+        <File path="src/game.gao" type="file.gao" enable="1"/>
+    </FileList>
+</Project>

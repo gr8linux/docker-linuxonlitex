@@ -10,13 +10,13 @@
         <Choice label="True" cmd="-oc"/>
         <Choice label="False"/>
     </SingleChoiceOption>-->
-<!--    <SingleChoiceOption id="PNR09" label="Generate IBIS File" default="1">
+    <SingleChoiceOption id="PNR09" label="Generate IBIS File" default="1">
         <Description>Generate input/output buffer information specification file. Default: *.ibs.</Description>
         <Choice label="True" cmd="-ibs"/>
         <Choice label="False"/>
-    </SingleChoiceOption>-->
+    </SingleChoiceOption>
     <SingleChoiceOption id="PNR10" label="Generate Post-Place File" default="1">
-        <Description>Generate post-place file only included locations of BSRAM. Default: *.posp.</Description>
+        <Description>Generate post-place file only included locations of BSRAM and DSP. Default: *.posp.</Description>
         <Choice label="True" cmd="-posp"/>
         <Choice label="False"/>
     </SingleChoiceOption>
@@ -127,4 +127,9 @@
         <Choice label="0"/>
         <Choice label="1"/>
     </SingleChoiceOption> -->
+    <SingleChoiceOption id="PNR30" label="Convert SDP32/36 to SDP16/18" default="0">
+        <Description></Description>
+        <Choice label="True" cmd="-convert_sdp32_36_to_sdp16_18"/>
+        <Choice label="False"/>
+    </SingleChoiceOption>
 </OptionDef>

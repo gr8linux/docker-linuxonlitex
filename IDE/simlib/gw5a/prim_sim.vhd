@@ -1,6 +1,6 @@
 
 -- ===========Oooo==========================================Oooo========
--- =  Copyright (C) 2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+-- =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 -- =                     All rights reserved.
 -- =====================================================================
 --
@@ -2184,47 +2184,379 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity MIPI_OBUF_A is
     PORT (
-         O : OUT std_logic;
-         OB : OUT std_logic;
-         I : IN std_logic;
-         IB : IN std_logic;
-         IL : IN std_logic;
-         MODESEL : IN std_logic
+        O : OUT std_logic;
+        OB : OUT std_logic;
+        I : IN std_logic;
+        IB : IN std_logic;
+        IL : IN std_logic;
+        IO,IOB : INOUT std_logic;
+        OEN, OENB : IN std_logic;
+        MODESEL : IN std_logic
     );
 end MIPI_OBUF_A;
 
 architecture Behavioral of MIPI_OBUF_A is
-    SIGNAL O_HS,O_LP : std_logic;
-    SIGNAL OB_HS,OB_LP : std_logic;
-begin    
+    
+begin
 
-    process(I,IL,IB,MODESEL)
+    process(I, IL, IB, OEN, OENB, MODESEL)
     begin
         if((MODESEL = '0') or (MODESEL = 'L')) then
-            O_HS <= 'Z';
-            OB_HS <= 'Z';
-            O_LP <= TO_X01(IL);
-            OB_LP <= TO_X01(IB);
+	        if ((OEN = '1') or (OEN = 'H')) then
+	            IO <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO <= TO_X01(IL);
+	        else
+	            IO <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB <= TO_X01(IB);
+	        else
+	            IOB <= 'X';
+	        end if;
         elsif((MODESEL = '1') or (MODESEL = 'H')) then
-            O_LP <= 'Z';
-            OB_LP <= 'Z';
-            O_HS <= TO_X01(I);
-            OB_HS <= not TO_X01(I);
+            if ((OEN = '1') or (OEN = 'H')) then
+	            IO <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO <= TO_X01(I);
+	        else
+	            IO <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB <= not TO_X01(I);
+	        else
+	            IOB <= 'X';
+	        end if;
         end if;
     end process;
 
-    process(O_HS,O_LP,OB_HS,OB_LP,MODESEL)
+    process(IO,IOB,MODESEL)
     begin
         if((MODESEL = '0') or (MODESEL = 'L')) then
-            O <= O_LP;
-            OB <= OB_LP;
+            O <= TO_X01(IO);
+            OB <= TO_X01(IOB);
         elsif((MODESEL = '1') or (MODESEL = 'H')) then
-            O <= O_HS;
-            OB <= OB_HS;
+            O <= 'Z';
+            OB <= 'Z';
         end if;
     end process;
 
 end Behavioral;
+
+
+------------------------MIPI_CPHY_IBUF------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity MIPI_CPHY_IBUF is
+    PORT (
+         OH0, OL0, OB0, OH1, OL1, OB1, OH2, OL2, OB2 : OUT std_logic;
+         IO0, IOB0, IO1, IOB1, IO2, IOB2 : INOUT std_logic;
+         I0, IB0, I1, IB1, I2, IB2 : IN std_logic;
+         OEN, OENB, HSEN : IN std_logic
+    );
+end MIPI_CPHY_IBUF;
+
+architecture Behavioral of MIPI_CPHY_IBUF is    
+
+begin
+    ----LP mode
+    --IO0
+    OL0 <= TO_X01(IO0);
+    OB0 <= TO_X01(IOB0);
+
+    process(IO0, I0, OEN)
+    begin
+	    if ((OEN = '1') or (OEN = 'H')) then
+	        IO0 <= 'Z';
+	    elsif ((OEN = '0') or (OEN = 'L')) then
+	        IO0 <= TO_X01(I0);
+	    else
+	        IO0 <= 'X';
+	    end if;		
+    end process;
+
+    process(IOB0, IB0, OENB)
+    begin      
+	    if ((OENB = '1') or (OENB = 'H')) then
+	        IOB0 <= 'Z';
+	    elsif ((OENB = '0') or (OENB = 'L')) then
+	        IOB0 <= TO_X01(IB0);
+	    else
+	        IOB0 <= 'X';
+	    end if;
+    end process;
+
+    --IO1
+    OL1 <= TO_X01(IO1);
+    OB1 <= TO_X01(IOB1);
+
+    process(IO1, I1, OEN)
+    begin
+	    if ((OEN = '1') or (OEN = 'H')) then
+	        IO1 <= 'Z';
+	    elsif ((OEN = '0') or (OEN = 'L')) then
+	        IO1 <= TO_X01(I1);
+	    else
+	        IO1 <= 'X';
+	    end if;		
+    end process;
+
+    process(IOB1, IB1, OENB)
+    begin      
+	    if ((OENB = '1') or (OENB = 'H')) then
+	        IOB1 <= 'Z';
+	    elsif ((OENB = '0') or (OENB = 'L')) then
+	        IOB1 <= TO_X01(IB1);
+	    else
+	        IOB1 <= 'X';
+	    end if;
+    end process;
+
+    --IO2
+    OL2 <= TO_X01(IO2);
+    OB2 <= TO_X01(IOB2);
+
+    process(IO2, I2, OEN)
+    begin
+	    if ((OEN = '1') or (OEN = 'H')) then
+	        IO2 <= 'Z';
+	    elsif ((OEN = '0') or (OEN = 'L')) then
+	        IO2 <= TO_X01(I2);
+	    else
+	        IO2 <= 'X';
+	    end if;		
+    end process;
+
+    process(IOB2, IB2, OENB)
+    begin      
+	    if ((OENB = '1') or (OENB = 'H')) then
+	        IOB2 <= 'Z';
+	    elsif ((OENB = '0') or (OENB = 'L')) then
+	        IOB2 <= TO_X01(IB2);
+	    else
+	        IOB2 <= 'X';
+	    end if;
+    end process;
+
+    ----HS mode  
+    --IO0 
+    process (IO0, IOB0, HSEN)
+    begin
+        if(HSEN = '1') then
+            if((IO0 = '1') and (IOB0 = '0')) then
+                OH0 <= TO_X01(IO0);
+            elsif((IO0 = '0') and (IOB0 = '1')) then
+                OH0 <= TO_X01(IO0);
+            elsif((IO0 = 'X') or (IOB0 = 'X')) then
+                OH0 <= 'X';
+            end if;
+        end if;
+    end process;
+
+    --IO1
+    process (IO1, IOB1, HSEN)
+    begin
+        if(HSEN = '1') then
+            if((IO1 = '1') and (IOB1 = '0')) then
+                OH1 <= TO_X01(IO1);
+            elsif((IO1 = '0') and (IOB1 = '1')) then
+                OH1 <= TO_X01(IO1);
+            elsif((IO1 = 'X') or (IOB1 = 'X')) then
+                OH1 <= 'X';
+            end if;
+        end if;
+    end process;
+
+    --IO2
+    process (IO2, IOB2, HSEN)
+    begin
+        if(HSEN = '1') then
+            if((IO2 = '1') and (IOB2 = '0')) then
+                OH2 <= TO_X01(IO2);
+            elsif((IO2 = '0') and (IOB2 = '1')) then
+                OH2 <= TO_X01(IO2);
+            elsif((IO2 = 'X') or (IOB2 = 'X')) then
+                OH2 <= 'X';
+            end if;
+        end if;
+    end process;
+
+end Behavioral;
+
+------------------------MIPI_CPHY_OBUF---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity MIPI_CPHY_OBUF is
+    PORT (
+        O0, OB0, O1, OB1, O2, OB2 : OUT std_logic;
+        I0, IB0, IL0, I1, IB1, IL1, I2, IB2, IL2 : IN std_logic;
+        IO0, IOB0, IO1, IOB1, IO2, IOB2 : INOUT std_logic;
+        OEN, OENB, MODESEL, VCOME : IN std_logic
+    );
+end MIPI_CPHY_OBUF;
+
+architecture Behavioral of MIPI_CPHY_OBUF is
+    
+begin
+
+    --IO0
+    process(I0, IL0, IB0, OEN, OENB, MODESEL)
+    begin
+        if((MODESEL = '0') or (MODESEL = 'L')) then
+	        if ((OEN = '1') or (OEN = 'H')) then
+	            IO0 <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO0 <= TO_X01(IL0);
+	        else
+	            IO0 <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB0 <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB0 <= TO_X01(IB0);
+	        else
+	            IOB0 <= 'X';
+	        end if;
+        elsif((MODESEL = '1') or (MODESEL = 'H')) then
+            if ((OEN = '1') or (OEN = 'H')) then
+	            IO0 <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO0 <= TO_X01(I0);
+	        else
+	            IO0 <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB0 <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB0 <= not TO_X01(I0);
+	        else
+	            IOB0 <= 'X';
+	        end if;
+        end if;
+    end process;
+
+    process(IO0,IOB0,MODESEL)
+    begin
+        if((MODESEL = '0') or (MODESEL = 'L')) then
+            O0 <= TO_X01(IO0);
+            OB0 <= TO_X01(IOB0);
+        elsif((MODESEL = '1') or (MODESEL = 'H')) then
+            O0 <= 'Z';
+            OB0 <= 'Z';
+        end if;
+    end process;
+
+    --IO1
+    process(I1, IL1, IB1, OEN, OENB, MODESEL)
+    begin
+        if((MODESEL = '0') or (MODESEL = 'L')) then
+	        if ((OEN = '1') or (OEN = 'H')) then
+	            IO1 <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO1 <= TO_X01(IL1);
+	        else
+	            IO1 <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB1 <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB1 <= TO_X01(IB1);
+	        else
+	            IOB1 <= 'X';
+	        end if;
+        elsif((MODESEL = '1') or (MODESEL = 'H')) then
+            if ((OEN = '1') or (OEN = 'H')) then
+	            IO1 <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO1 <= TO_X01(I1);
+	        else
+	            IO1 <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB1 <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB1 <= not TO_X01(I1);
+	        else
+	            IOB1 <= 'X';
+	        end if;
+        end if;
+    end process;
+
+    process(IO1,IOB1,MODESEL)
+    begin
+        if((MODESEL = '0') or (MODESEL = 'L')) then
+            O1 <= TO_X01(IO1);
+            OB1 <= TO_X01(IOB1);
+        elsif((MODESEL = '1') or (MODESEL = 'H')) then
+            O1 <= 'Z';
+            OB1 <= 'Z';
+        end if;
+    end process;
+
+    --IO2
+    process(I2, IL2, IB2, OEN, OENB, MODESEL)
+    begin
+        if((MODESEL = '0') or (MODESEL = 'L')) then
+	        if ((OEN = '1') or (OEN = 'H')) then
+	            IO2 <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO2 <= TO_X01(IL2);
+	        else
+	            IO2 <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB2 <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB2 <= TO_X01(IB2);
+	        else
+	            IOB2 <= 'X';
+	        end if;
+        elsif((MODESEL = '1') or (MODESEL = 'H')) then
+            if ((OEN = '1') or (OEN = 'H')) then
+	            IO2 <= 'Z';
+	        elsif ((OEN = '0') or (OEN = 'L')) then
+	            IO2 <= TO_X01(I2);
+	        else
+	            IO2 <= 'X';
+	        end if;
+
+            if ((OENB = '1') or (OENB = 'H')) then
+	            IOB2 <= 'Z';
+	        elsif ((OENB = '0') or (OENB = 'L')) then
+	            IOB2 <= not TO_X01(I2);
+	        else
+	            IOB2 <= 'X';
+	        end if;
+        end if;
+    end process;
+
+    process(IO2,IOB2,MODESEL)
+    begin
+        if((MODESEL = '0') or (MODESEL = 'L')) then
+            O2 <= TO_X01(IO2);
+            OB2 <= TO_X01(IOB2);
+        elsif((MODESEL = '1') or (MODESEL = 'H')) then
+            O2 <= 'Z';
+            OB2 <= 'Z';
+        end if;
+    end process;
+
+
+end Behavioral;
+
 
 ----------------------------I3C_IOBUF--------------------------------
 library IEEE;
@@ -2256,56 +2588,6 @@ begin
     end process;
 
 end Behavioral;
-
-----------------------IBUF_R-------------------------------------
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
-entity IBUF_R is
-    PORT (
-    	O : OUT std_logic;
-    	I : IN std_logic;
-        RTEN : IN std_logic
-        
-    );
-end IBUF_R;
-
-architecture Behavioral of IBUF_R is
-begin
-    O <= TO_X01(I);
-end Behavioral;
-
-
-----------------------------IOBUF_R--------------------------------
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
-entity IOBUF_R is
-    PORT (
-    	O  : OUT   std_logic;
-    	IO : INOUT std_logic;
-     	I  : IN    std_logic;
-        RTEN  : IN    std_logic;
-	    OEN : IN    std_logic
-    );
-end IOBUF_R;
-
-architecture  Behavioral of IOBUF_R is
-begin
-    process(IO, I, OEN)
-    begin
-    	O <= TO_X01(IO);
-	    if ((OEN = '1') or (OEN = 'H')) then
-	        IO <= 'Z';
-	    elsif ((OEN = '0') or (OEN = 'L')) then
-	        IO <= TO_X01(I);
-	    else
-	        IO <= 'X';
-	    end if;		
-    end process;
-
-end Behavioral;
-
 
 -----------------ELVDS_IOBUF_R---------------------------------
 library IEEE;
@@ -2442,7 +2724,7 @@ architecture Behavioral of SP is
 	signal pl_reg,pl_reg_async,pl_reg_sync : std_logic_vector(31 downto 0):=conv_std_logic_vector(0,32);
 	signal ram_MEM : std_logic_vector(16383 downto 0) :=TO_StdLogicVector(INIT_RAM_3F & INIT_RAM_3E & INIT_RAM_3D & INIT_RAM_3C &INIT_RAM_3B & INIT_RAM_3A & INIT_RAM_39 & INIT_RAM_38 &INIT_RAM_37 & INIT_RAM_36 & INIT_RAM_35 & INIT_RAM_34 &INIT_RAM_33 & INIT_RAM_32 & INIT_RAM_31 & INIT_RAM_30 &INIT_RAM_2F & INIT_RAM_2E & INIT_RAM_2D & INIT_RAM_2C &INIT_RAM_2B & INIT_RAM_2A & INIT_RAM_29 & INIT_RAM_28 &INIT_RAM_27 & INIT_RAM_26 & INIT_RAM_25 & INIT_RAM_24 &INIT_RAM_23 & INIT_RAM_22 & INIT_RAM_21 & INIT_RAM_20 &INIT_RAM_1F & INIT_RAM_1E & INIT_RAM_1D & INIT_RAM_1C &INIT_RAM_1B & INIT_RAM_1A & INIT_RAM_19 & INIT_RAM_18 &INIT_RAM_17 & INIT_RAM_16 & INIT_RAM_15 & INIT_RAM_14 &INIT_RAM_13 & INIT_RAM_12 & INIT_RAM_11 & INIT_RAM_10 &INIT_RAM_0F & INIT_RAM_0E & INIT_RAM_0D & INIT_RAM_0C & INIT_RAM_0B & INIT_RAM_0A & INIT_RAM_09 & INIT_RAM_08 &INIT_RAM_07 & INIT_RAM_06 & INIT_RAM_05 & INIT_RAM_04 &INIT_RAM_03 & INIT_RAM_02 & INIT_RAM_01 & INIT_RAM_00);
 	signal data_width_t: integer := BIT_WIDTH;
-	signal addr_width : integer;
+	signal addr_width : integer := 0;
 	signal mc : std_logic := '0';
 	signal pce : std_logic;
 	signal bs_en : std_logic;
@@ -3769,7 +4051,7 @@ begin
 	DOB <= bpb_reg when (READ_MODE1 = '0') else plb_reg;
 	
 	pcea <= CEA and bs_ena and grstn;
-	pceb <= CEB and bs_enb;
+	pceb <= CEB and bs_enb and grstn;
 	process(BLKSELA, BLKSELB)
 	begin
 		if(BLKSELA = TO_STDLOGICVECTOR(BLK_SEL_0)) then
@@ -4234,7 +4516,7 @@ begin
 	DOB <= bpb_reg when (READ_MODE1 = '0') else plb_reg;
 	
 	pcea <= CEA and bs_ena and grstn;
-	pceb <= CEB and bs_enb;
+	pceb <= CEB and bs_enb and grstn;
 	process(BLKSELA, BLKSELB)
 	begin
 		if(BLKSELA = TO_STDLOGICVECTOR(BLK_SEL_0)) then
@@ -4950,8 +5232,8 @@ entity SDP36KE is
 	    READ_MODE : bit := '0'; -- 0: bypass mode; 1: pipeline mode
 	    BLK_SEL_A : bit_vector := "000";
 	    BLK_SEL_B : bit_vector := "000";
-        ECC_WRITE_EN : string := "FALSE"; --"FALSE":disable ECC WRITE mode; "TRUE":enable ECC WRITE mode
-        ECC_READ_EN : string := "FALSE"; --"FALSE":disable ECC READ mode; "TRUE":enable ECC READ mode
+        ECC_WRITE_EN : string := "TRUE"; --"FALSE":disable ECC WRITE mode; "TRUE":enable ECC WRITE mode
+        ECC_READ_EN : string := "TRUE"; --"FALSE":disable ECC READ mode; "TRUE":enable ECC READ mode
         RESET_MODE : string := "SYNC"; --SYNC, ASYNC
         INIT_FILE : string := "NONE";
 	    INIT_RAM_00 : bit_vector := X"0000000000000000000000000000000000000000000000000000000000000000";
@@ -5878,6 +6160,48 @@ begin
 
 end Behavioral;
 
+
+-------------------SDP136K-------------------------------
+library IEEE; 
+use IEEE.std_logic_1164.all; 
+use IEEE.std_logic_unsigned.all; 
+
+entity SDP136K is
+    port (
+        DI : in STD_LOGIC_VECTOR(67 downto 0);
+        ADA, ADB : in STD_LOGIC_VECTOR(10 downto 0);
+        CLKA, WE, CLKB, RE: in STD_LOGIC; 
+        DO : out STD_LOGIC_VECTOR(67 downto 0)); 
+end SDP136K; 
+
+architecture Behavioral of SDP136K is 
+    type mem_type is array (2047 downto 0) of 
+    STD_LOGIC_VECTOR (67 downto 0); 
+    signal mem : mem_type;
+    signal data_out : STD_LOGIC_VECTOR(67 downto 0); 
+
+begin
+    process (CLKA)
+    begin
+        if (rising_edge(CLKA)) then 
+            if (WE = '1')then
+                mem(conv_integer(ADA)) <= DI;
+            end if;
+        end if;
+    end process; 
+
+    process(CLKB) 
+    begin
+        if (rising_edge(CLKB)) then
+            if (RE = '1')then
+                data_out <= mem(conv_integer(ADB));
+            end if;
+        end if;
+    end process;
+    
+    DO <= data_out;
+
+end Behavioral; 
 
 ---------------------
 --/*DSP models*/
@@ -7943,7 +8267,7 @@ architecture Behavioral of MULTALU27X18 is
             ind_12_ext(11) <= ind(10);
         end process;
 
-        process(ina_ext, ind_ext, ina_12_ext, ind_12_ext, ina)
+        process(ina_ext, ind_ext, ina_12_ext, ind_12_ext, ina, psel_0, paddsub_0)
         begin
             if(MULT12X12_EN = "FALSE") then
                 if(psel_0 = '1') then
@@ -8529,7 +8853,7 @@ architecture Behavioral of MULTALU27X18 is
         end process;
 
 
-        process(a_in, inb)
+        process(a_in, a_12_in, inb)
         begin
             if(MULT12X12_EN = "FALSE") then
                 a0(26 downto 0) <= a_in;
@@ -8537,8 +8861,8 @@ architecture Behavioral of MULTALU27X18 is
                 b0(17 downto 0) <= inb;
                 b0(44 downto 18) <= (others => inb(17));
             else
-                a0(11 downto 0) <= a_in(11 downto 0);
-                a0(44 downto 12) <= (others => a_in(11));
+                a0(11 downto 0) <= a_12_in(11 downto 0);
+                a0(44 downto 12) <= (others => a_12_in(11));
                 b0(11 downto 0) <= inb(11 downto 0);
                 b0(44 downto 12) <= (others => inb(11));
             end if;
@@ -9646,6 +9970,204 @@ architecture Behavioral of MULT27X36 is
 end Behavioral;
 
 
+-----------------MULTACC---------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity MULTACC is
+	generic(
+		COFFIN_WIDTH : integer := 4; -- 4/6 bit
+		DATAIN_WIDTH : integer := 8; -- 8/10 bit
+        IREG : bit := '0'; -- 0: bypass mode;   1: registered mode
+        OREG : bit := '0'; -- 0: bypass mode;   1: registered mode
+        PREG : bit := '0'; -- 0: bypass mode;   1: registered mode
+        ACC_EN : string := "FALSE"; -- FALSE: CASI/0;  TRUE: enable ACC, DOUT
+
+        CASI_EN : string := "FALSE"; -- FALSE: 0; TRUE: enable CASI. ACC_EN&CASI_EN,mutually exclusive, cannot both be true. Priority is ACC_EN>CASI_EN
+        CASO_EN : string := "FALSE" -- FALSE: 0; TRUE: enable CASO.
+	);
+    
+	port (
+		COFFIN0, COFFIN1, COFFIN2 : in std_logic_vector(5 downto 0);
+		DATAIN0, DATAIN1, DATAIN2 : in std_logic_vector(9 downto 0);
+		CLK, CE, RSTN : in std_logic;
+		CASI : in std_logic_vector(23 downto 0);
+		DATAO, CASO : out std_logic_vector(23 downto 0)
+	);
+end MULTACC;
+
+architecture Behavioral of MULTACC is
+    signal coffin0_sig,coffin1_sig,coffin2_sig : std_logic_vector(5 downto 0);
+    signal datain0_sig,datain1_sig,datain2_sig : std_logic_vector(9 downto 0);
+    signal coffin0_reg,coffin1_reg,coffin2_reg,ina0,ina1,ina2 : std_logic_vector(5 downto 0);
+    signal datain0_reg,datain1_reg,datain2_reg,inb0,inb1,inb2 : std_logic_vector(9 downto 0);
+    signal mult_out0,mult_out1,mult_out2 : std_logic_vector(15 downto 0);
+    signal d_casi,fb_acc,m_out0,m_out1,m_out2 : std_logic_vector(23 downto 0);
+    signal out0_reg,out1_reg,out2_reg,out0,out1,out2 : std_logic_vector(15 downto 0);
+    signal alu_out, dout_reg,d_out : std_logic_vector(23 downto 0);
+
+    begin
+
+        process(COFFIN0, COFFIN1,COFFIN2,DATAIN0,DATAIN1,DATAIN2)
+        begin
+            if(COFFIN_WIDTH = 4) then
+                coffin0_sig(3 downto 0) <= COFFIN0(3 downto 0);
+                coffin0_sig(5 downto 4) <= (others => '0');
+                coffin1_sig(3 downto 0) <= COFFIN1(3 downto 0);
+                coffin1_sig(5 downto 4) <= (others => '0');
+                coffin2_sig(3 downto 0) <= COFFIN2(3 downto 0);
+                coffin2_sig(5 downto 4) <= (others => '0');
+            else 
+                coffin0_sig <= COFFIN0;
+                coffin1_sig <= COFFIN1;
+                coffin2_sig <= COFFIN2;
+            end if;
+
+            if(DATAIN_WIDTH = 8) then
+                datain0_sig(7 downto 0) <= DATAIN0(7 downto 0);
+                datain0_sig(9 downto 8) <= (others => '0');
+                datain1_sig(7 downto 0) <= DATAIN1(7 downto 0);
+                datain1_sig(9 downto 8) <= (others => '0');
+                datain2_sig(7 downto 0) <= DATAIN2(7 downto 0);
+                datain2_sig(9 downto 8) <= (others => '0');
+            else 
+                datain0_sig <= DATAIN0;
+                datain1_sig <= DATAIN1;
+                datain2_sig <= DATAIN2;
+            end if;
+
+        end process;
+
+        -- in reg
+        process(CLK, RSTN)
+        begin
+            if (RSTN = '0') then
+				coffin0_reg <= (others=>'0');
+				coffin1_reg <= (others=>'0');
+				coffin2_reg <= (others=>'0');
+            elsif (CLK'event and CLK = '1') then  
+                if (CE = '1') then
+                    coffin0_reg <= coffin0_sig;
+                    coffin1_reg <= coffin1_sig;
+                    coffin2_reg <= coffin2_sig;
+                end if;
+            end if;
+        end process;
+
+        process(CLK, RSTN)
+        begin
+            if (RSTN = '0') then
+				datain0_reg <= (others=>'0');
+				datain1_reg <= (others=>'0');
+				datain2_reg <= (others=>'0');
+            elsif (CLK'event and CLK = '1') then  
+                if (CE = '1') then
+                    datain0_reg <= datain0_sig;
+                    datain1_reg <= datain1_sig;
+                    datain2_reg <= datain2_sig;
+                end if;
+            end if;
+        end process;
+  
+        process(coffin0_reg, coffin1_reg, coffin2_reg, datain0_reg, datain1_reg, datain2_reg, coffin0_sig, coffin1_sig, coffin2_sig, datain0_sig, datain1_sig, datain2_sig)
+        begin
+            if (IREG = '1') then
+                ina0 <= coffin0_reg;
+                ina1 <= coffin1_reg;
+                ina2 <= coffin2_reg;
+                inb0 <= datain0_reg;
+                inb1 <= datain1_reg;
+                inb2 <= datain2_reg;
+            else
+                ina0 <= coffin0_sig;
+                ina1 <= coffin1_sig;
+                ina2 <= coffin2_sig;
+                inb0 <= datain0_sig;
+                inb1 <= datain1_sig;
+                inb2 <= datain2_sig;
+            end if;
+        end process;
+
+        mult_out0 <= ina0 * inb0;
+        mult_out1 <= ina1 * inb1;
+        mult_out2 <= ina2 * inb2;
+
+        --pipeline reg
+        process(CLK, RSTN)
+        begin
+            if (RSTN = '0') then
+				out0_reg <= (others=>'0');
+				out1_reg <= (others=>'0');
+				out2_reg <= (others=>'0');
+            elsif (CLK'event and CLK = '1') then
+                if (CE = '1') then
+                    out0_reg <= mult_out0;
+                    out1_reg <= mult_out1;
+                    out2_reg <= mult_out2;
+                end if;
+            end if;
+        end process;
+
+        process(mult_out0, out0_reg)
+        begin
+            if (PREG = '0') then
+                out0 <= mult_out0;
+                out1 <= mult_out1;
+                out2 <= mult_out2;
+            else
+                out0 <= out0_reg;
+                out1 <= out1_reg;
+                out2 <= out2_reg;
+            end if;
+        end process;
+
+        d_casi <= CASI when (CASI_EN = "TRUE") else (others=>'0');
+        fb_acc <= dout_reg when (ACC_EN = "TRUE") else d_casi;
+        
+        process(out0, out1)
+        begin
+            m_out0(15 downto 0) <= out0;
+            m_out0(23 downto 16) <= (others=>'0');
+            m_out1(15 downto 0) <= out1;
+            m_out1(23 downto 16) <= (others=>'0');
+            m_out2(15 downto 0) <= out2;
+            m_out2(23 downto 16) <= (others=>'0');
+        end process;
+
+        process(d_casi, fb_acc, m_out0, m_out1, m_out2)
+        begin
+            alu_out <= m_out0 + m_out1 + m_out2 + fb_acc;
+        end process;
+
+        -- output reg
+        process(CLK, RSTN)
+        begin
+            if (RSTN = '0') then
+				dout_reg <= (others=>'0');
+            elsif (CLK'event and CLK = '1') then  
+                if (CE = '1') then
+                    dout_reg <= alu_out;
+                end if;
+            end if;
+        end process;
+
+        process(alu_out, dout_reg)
+        begin
+            if (OREG = '0') then
+                d_out <= alu_out;
+            else
+                d_out <= dout_reg;
+            end if;
+        end process;
+
+        DATAO <= d_out(23 downto 0);
+        CASO <= d_out(23 downto 0) when(CASO_EN = "TRUE") else (others=>'0');
+
+end Behavioral;
+
+
 ---------------------
 --/*Hardcore models*/
 ---------------------
@@ -10421,7 +10943,8 @@ begin
 
 end Behavioral;
 
-----------------------------IVIDEO------------------------------------
+
+--------------------------IVIDEO----------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
@@ -10429,12 +10952,12 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.glb.GSRO;
 
 entity IVIDEO is
-    PORT (
-		D : IN std_logic;
-		RESET : IN std_logic;
+	PORT(
+	    D : IN std_logic;
 		CALIB : IN std_logic;
-		FCLK : IN std_logic;
 		PCLK : IN std_logic;
+		FCLK : IN std_logic;
+		RESET : IN std_logic;
 		Q0 : OUT std_logic;
 		Q1 : OUT std_logic;
 		Q2 : OUT std_logic;
@@ -10446,15 +10969,16 @@ entity IVIDEO is
 end IVIDEO;
 
 ARCHITECTURE Behavioral of IVIDEO is
-	SIGNAL d0_reg,d1_reg,d0_ireg,d0_ireg0,d1_ireg,d1_ireg1 : std_logic;
-	SIGNAL reset_delay : std_logic;
-	SIGNAL D_data,data,Q_reg : std_logic_vector(6 downto 0) := "0000000";
-	SIGNAL calib_data : std_logic_vector(2 downto 0) := "000";
-	SIGNAL data_en,data_en0,data_en1,dcnt_en,dsel_en,data_sel : std_logic := '0';
-	SIGNAL d0_reg0,d0_reg1,d0_reg2,d1_reg0,d1_reg1,d1_reg2,d1_reg3 : std_logic := '0';
-	SIGNAL calib_rising_p: std_logic;
 	SIGNAL grstn: std_logic;
 	SIGNAL lrstn: std_logic;
+	SIGNAL reset_delay: std_logic;
+	SIGNAL cnt_rst: std_logic;
+	SIGNAL calib_rising_p:std_logic;
+	SIGNAL data_sel,d_up,data_en,data_en0,data_en1,data_en0_data,data_en1_data,dcnt_en,dsel_en: std_logic;
+	SIGNAL d0_ireg,d0_ireg0,d1_ireg,d1_ireg1: std_logic;
+	SIGNAL d0_reg,d0_reg0,d0_reg1,d0_reg2,d1_reg,d1_reg0,d1_reg1,d1_reg2,d1_reg3: std_logic;
+	SIGNAL D_data,data,Q_data:std_logic_vector(6 downto 0);
+	SIGNAL calib_data: std_logic_vector(2 downto 0);
 
 begin
 	grstn <= GSRO;
@@ -10462,43 +10986,31 @@ begin
 
 	process(FCLK,grstn,lrstn)
 	begin
-		if(grstn='0') then
+		if(grstn = '0')then
 			d0_ireg <= '0';
-			d0_ireg0 <= d0_ireg;
-        	d0_reg <= d0_ireg0;
-		elsif(lrstn='0') then
+		elsif(lrstn = '0')then
 			d0_ireg <= '0';
-			d0_ireg0 <= d0_ireg;
-        	d0_reg <= d0_ireg0;
 		elsif(falling_edge(FCLK))then
 			d0_ireg <= D;
-			d0_ireg0 <= d0_ireg;
-        	d0_reg <= d0_ireg0;
 		end if;
 	end process;
 
 	process(FCLK,grstn,lrstn)
 	begin
-		if (grstn='0') then
+		if(grstn = '0')then
 			d1_ireg <= '0';
-			d1_ireg1 <= d1_ireg;
-        	d1_reg <= d1_ireg1;
-		elsif (lrstn='0') then
+		elsif(lrstn ='0')then
 			d1_ireg <= '0';
-			d1_ireg1 <= d1_ireg;
-        	d1_reg <= d1_ireg1;
 		elsif(rising_edge(FCLK))then
 			d1_ireg <= D;
-			d1_ireg1 <= d1_ireg;
-        	d1_reg <= d1_ireg1;
 		end if;
 	end process;
 
 	process(FCLK,grstn,lrstn)
 	begin
-		if (grstn='0') then
+		if(grstn = '0')then
 			reset_delay <= '0';
-		elsif (lrstn='0') then
+		elsif(lrstn ='0')then
 			reset_delay <= '0';
 		elsif(rising_edge(FCLK))then
 			reset_delay <= '1';
@@ -10507,109 +11019,136 @@ begin
 
 	process(FCLK,reset_delay)
 	begin
-		if (reset_delay = '0') then
+		if(reset_delay = '0')then
 			calib_data <= "000";
-		elsif(rising_edge(FCLK)) then
+		elsif(rising_edge(FCLK))then
 			calib_data <= calib_data(1 downto 0)&CALIB;
 		end if;
 	end process;
-	
-	calib_rising_p <=  not(calib_data(1) and (not calib_data(2)));
-    dcnt_en <= calib_rising_p;
-	dsel_en <= not(not(data_sel and data_en1 and (not data_en0) and calib_rising_p)) and (not(data_en0 and data_en1 and (not data_sel)));
 
-	
-	process(FCLK, reset_delay) 
-    begin
-		if (reset_delay = '0') then
-            data_en1 <= '0';
-            data_en0 <= '0';
-            data_en  <= '0';
-            data_sel <= '0';
-		elsif(rising_edge(FCLK)) then
-            data_en <= not(not(data_en0 and (not data_en1) and (not data_sel)) and (not((not data_en0) and (not data_en1) and data_sel)));
-            if (dsel_en = '1') then
-                data_sel <= not data_sel;
-            else
+	calib_rising_p <= not(calib_data(1) and (not calib_data(2)));
+	dcnt_en <= calib_rising_p;
+	dsel_en <= not(not(data_sel and (data_en1  and (not data_en0)) and calib_rising_p) and (not((data_en0 and data_en1) and (not data_sel))));
+	cnt_rst <= (not data_en0) and data_en1 and data_sel;
+	data_en0_data <= not(data_en0 or cnt_rst);
+	data_en1_data <= not((not(data_en0 XOR data_en1)) or cnt_rst);
+
+	process(FCLK,reset_delay)
+	begin
+		if(reset_delay = '0')then
+			data_en1 <= '0';
+			data_en0 <= '0';
+		else			
+			if(rising_edge(FCLK))then
+				if(dcnt_en = '1')then
+					data_en0 <= data_en0_data;
+					data_en1 <= data_en1_data;
+				else
+					data_en0 <= data_en0;
+					data_en1 <= data_en1;
+				end if;
+			end if;
+		end if;
+	end process;
+
+	data_en <= not(not((data_en0 and (not data_en1)) and (not data_sel)) and (not(((not data_en0) and (not data_en1)) and data_sel)));
+
+	process(FCLK,reset_delay)
+	begin
+		if(reset_delay = '0')then
+			d_up <= '0';
+		elsif(rising_edge(FCLK))then
+			if(data_en = '1')then
+				d_up <= '1';
+			else 
+                d_up <= '0';
+			end if;
+		end if;
+	end process;
+
+	process(FCLK,reset_delay)
+	begin
+		if(reset_delay = '0')then
+			data_sel <= '0';
+		elsif(rising_edge(FCLK))then
+			if(dsel_en = '1')then
+				data_sel <= not data_sel;
+			else 
                 data_sel <= data_sel;
-            end if;
-        
-            if (dcnt_en = '1') then
-                data_en0 <= not data_en0;
-            else
-                data_en0 <= data_en0;
-            end if;
-                                                                                   
-            if (dcnt_en = '1') then
-                data_en1 <= data_en0 xor data_en1;
-            else
-                data_en1 <= data_en1;
-            end if;   
-        end if;          
-    end process;
+			end if;
+		end if;
+	end process;
 
-    process(FCLK, grstn, lrstn) 
-    begin
-		if (grstn='0') then
-            d0_reg0 <= '0';
-            d0_reg1 <= '0';
-            d0_reg2 <= '0';
-            d1_reg0 <= '0';
-            d1_reg1 <= '0';
-            d1_reg2 <= '0';
-            d1_reg3 <= '0';
-		elsif (lrstn='0') then
-            d0_reg0 <= '0';
-            d0_reg1 <= '0';
-            d0_reg2 <= '0';
-            d1_reg0 <= '0';
-            d1_reg1 <= '0';
-            d1_reg2 <= '0';
-            d1_reg3 <= '0';
-		elsif(rising_edge(FCLK)) then
-            d0_ireg0 <= d0_ireg;
-		    d0_reg <= d0_ireg0;
-            d0_reg0 <= d0_reg;
-            d0_reg1 <= d0_reg0;
-            d0_reg2 <= d0_reg1;
-		    d1_ireg1 <= d1_ireg;
-		    d1_reg <= d1_ireg1;
-            d1_reg0 <= d1_reg;
-            d1_reg1 <= d1_reg0;
-            d1_reg2 <= d1_reg1;
-            d1_reg3 <= d1_reg2;
-        end if;
-    end process;
-
-    process(data_sel, d0_reg, d0_reg0, d0_reg1, d0_reg2, d1_reg0, d1_reg1, d1_reg2, d1_reg3) 
-    begin
-        if(data_sel = '1') then
-            D_data(6) <= d0_reg;
-            D_data(5) <= d1_reg0;
-            D_data(4) <= d0_reg0;
-            D_data(3) <= d1_reg1;
-            D_data(2) <= d0_reg1;
-            D_data(1) <= d1_reg2;
-            D_data(0) <= d0_reg2;
-        else
-            D_data(6) <= d1_reg0;
-            D_data(5) <= d0_reg0;
-            D_data(4) <= d1_reg1;
-            D_data(3) <= d0_reg1;
-            D_data(2) <= d1_reg2;
-            D_data(1) <= d0_reg2;
-            D_data(0) <= d1_reg3;
-        end if;
-    end process;
-	
 	process(FCLK,grstn,lrstn)
 	begin
-		if (grstn='0') then
+		if(grstn ='0')then
+			d0_ireg0 <= '0';
+			d0_reg   <= '0';
+			d0_reg0  <= '0';
+			d0_reg1  <= '0';
+		 	d0_reg2  <= '0';
+			d1_ireg1 <= '0';
+			d1_reg   <= '0';
+			d1_reg0  <= '0';
+		 	d1_reg1  <= '0';
+		 	d1_reg2  <= '0';
+			d1_reg3  <= '0';
+		elsif(lrstn ='0')then
+			d0_ireg0 <= '0';
+			d0_reg   <= '0';
+			d0_reg0  <= '0';
+			d0_reg1  <= '0';
+		 	d0_reg2  <= '0';
+			d1_ireg1 <= '0';
+			d1_reg   <= '0';
+			d1_reg0  <= '0';
+		 	d1_reg1  <= '0';
+		 	d1_reg2  <= '0';
+			d1_reg3  <= '0';
+		elsif(rising_edge(FCLK))then
+			d0_ireg0 <= d0_ireg;
+			d0_reg <= d0_ireg0;
+			d0_reg0 <= d0_reg;
+			d0_reg1 <= d0_reg0;
+			d0_reg2 <= d0_reg1;
+			d1_ireg1 <= d1_ireg;
+			d1_reg <= d1_ireg1;
+			d1_reg0 <= d1_reg;
+			d1_reg1 <= d1_reg0;
+			d1_reg2 <= d1_reg1;
+			d1_reg3 <= d1_reg2;
+		end if;
+	end process;
+
+	process(data_sel, d0_reg, d0_reg0, d0_reg1, d0_reg2, d1_reg0, d1_reg1, d1_reg2, d1_reg3)
+	begin
+		if(data_sel = '1') then
+			D_data(6) <= d0_reg;
+			D_data(5) <= d1_reg;
+			D_data(4) <= d0_reg0;
+			D_data(3) <= d1_reg0;
+			D_data(2) <= d0_reg1;
+			D_data(1) <= d1_reg1;
+			D_data(0) <= d0_reg2;
+		else
+		  	D_data(6) <= d1_reg;
+			D_data(5) <= d0_reg0;
+			D_data(4) <= d1_reg0;
+			D_data(3) <= d0_reg1;
+			D_data(2) <= d1_reg1;
+			D_data(1) <= d0_reg2;
+			D_data(0) <= d1_reg2;
+		end if;
+	end process;
+
+	process(FCLK,grstn,lrstn)
+	begin
+		if(grstn = '0')then
 			data <= "0000000";
-		elsif (lrstn='0') then
+		elsif(lrstn = '0')then
 			data <= "0000000";
 		elsif(rising_edge(FCLK))then
-			if(data_en = '1') then
+			if(d_up = '1')then
 				data <= D_data;
 			end if;
 		end if;
@@ -10617,17 +11156,16 @@ begin
 
 	process(PCLK,grstn,lrstn)
 	begin
-		if (grstn='0') then
-			Q_reg <= "0000000";
-		elsif (lrstn='0') then
-			Q_reg <= "0000000";
+		if(grstn = '0')then
+			Q_data <= "0000000";
+		elsif(lrstn = '0')then
+			Q_data <= "0000000";
 		elsif(rising_edge(PCLK))then
-			Q_reg <= data;
+			Q_data <= data;
 		end if;
 	end process;
 
-	(Q6,Q5,Q4,Q3,Q2,Q1,Q0) <= Q_reg;
-	
+	(Q6,Q5,Q4,Q3,Q2,Q1,Q0) <= Q_data;
 end Behavioral;
 
 
@@ -13283,6 +13821,160 @@ begin
 
 end Behavioral;
 
+--------------------OSER14-----------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use work.glb.GSRO;
+
+entity OSER14 is
+	PORT (
+		D0 : in std_logic;
+		D1 : in std_logic;
+		D2 : in std_logic;
+		D3 : in std_logic;
+		D4 : in std_logic;
+		D5 : in std_logic;
+		D6 : in std_logic;
+		D7 : in std_logic;
+		D8 : in std_logic;
+		D9 : in std_logic;
+        D10 : in std_logic;
+		D11 : in std_logic;
+		D12 : in std_logic;
+		D13 : in std_logic;
+		PCLK : in std_logic;
+		RESET : in std_logic;
+		FCLK : in std_logic;
+		Q : OUT std_logic
+	);
+end OSER14;
+
+architecture Behavioral of OSER14 is
+	SIGNAL d_reg0,d_reg1,d_reg2 : std_logic_vector(13 downto 0);
+    SIGNAL rstn_dsel,d_up0,d_up1 : std_logic;
+    SIGNAL dcnt0,dcnt1,dcnt2 : std_logic := '0';
+    SIGNAL cnt_rst,d_en : std_logic;
+	SIGNAL d_reg_p,d_reg_n : std_logic;
+	SIGNAL grstn: std_logic;
+	SIGNAL lrstn: std_logic;
+begin
+	grstn <= GSRO;
+	lrstn <= (not RESET);	 
+	
+    process(FCLK, grstn, lrstn)
+	begin
+		if(grstn='0') then
+			rstn_dsel <= '0';
+		elsif(lrstn='0') then
+			rstn_dsel <= '0';
+		elsif(FCLK 'event and FCLK = '1') then
+			rstn_dsel <= '1';
+		end if;
+	end process;
+
+    cnt_rst <= ((not dcnt0) and dcnt1) and dcnt2;
+
+    process(FCLK, rstn_dsel)
+	begin
+		if(rstn_dsel='0') then
+			dcnt0 <= '0';
+			dcnt1 <= '0';
+			dcnt2 <= '0';
+		elsif(FCLK 'event and FCLK = '1') then
+			dcnt0 <= not (dcnt0 or cnt_rst);
+            dcnt1 <= (dcnt1 xor dcnt0) and (not cnt_rst);
+            dcnt2 <= ((dcnt0 and dcnt1) xor dcnt2) and (not cnt_rst);
+		end if;
+	end process;
+
+    d_en <= ((not dcnt2) and dcnt1) and dcnt0;
+
+    process(FCLK, rstn_dsel)
+	begin
+		if(rstn_dsel='0') then
+			d_up0 <= '0';
+			d_up1 <= '0';
+		elsif(FCLK 'event and FCLK = '1') then
+            if(d_en = '1') then
+                d_up0 <= '1';
+                d_up1 <= '1';
+            else
+                d_up0 <= '0';
+                d_up1 <= '0';
+            end if;
+		end if;
+	end process;
+
+	process(PCLK, grstn, lrstn)
+	begin
+		if(grstn = '0') then
+			d_reg0 <= (others => '0');
+		elsif(lrstn='0') then
+			d_reg0 <= (others => '0');
+		elsif(PCLK 'event and PCLK = '1') then
+			d_reg0 <= (D13,D12,D11,D10,D9,D8,D7,D6,D5,D4,D3,D2,D1,D0);
+		end if;
+	end process;
+
+	process(FCLK, grstn, lrstn)
+	begin
+		if(grstn='0') then
+			d_reg1 <= (others => '0');
+		elsif(lrstn='0') then
+			d_reg1 <= (others => '0');
+		elsif(FCLK 'event and FCLK = '1') then
+			if(d_up0 = '1') then
+				d_reg1 <= d_reg0;
+            else 
+                d_reg1 <= d_reg1;
+			end if;
+		end if;
+	end process;
+
+	process(FCLK, grstn, lrstn)
+	begin
+		if(grstn='0') then
+			d_reg2 <= (others => '0');
+		elsif(lrstn='0') then
+			d_reg2 <= (others => '0');
+		elsif(FCLK 'event and FCLK = '1') then
+			if(d_up1 = '1') then
+				d_reg2 <= d_reg1;
+			else
+				d_reg2 <= "00"&d_reg2(13 downto 2);
+			end if;
+		end if;
+	end process;
+
+	process(FCLK, grstn, lrstn)
+	begin
+		if(grstn='0') then
+			d_reg_p <= '0';
+		elsif(lrstn='0') then
+			d_reg_p <= '0';
+		elsif(FCLK 'event and FCLK = '1') then
+			d_reg_p <= d_reg2(1);
+		end if;
+	end process;
+
+	process(FCLK, grstn, lrstn)
+	begin
+		if(grstn='0') then
+			d_reg_n <= '0';
+		elsif(lrstn='0') then
+			d_reg_n <= '0';	
+		elsif(FCLK 'event and FCLK = '1') then
+			d_reg_n <= d_reg2(0);
+	    end if;
+	end process;
+	
+	Q <= d_reg_n when FCLK = '1' else d_reg_p;
+
+end Behavioral;
+
+
 --------------------OSER16-----------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -13445,19 +14137,23 @@ use work.glb.GSRO;
 
 entity OSIDES32 is
     generic(
-            C_STATIC_DLY : integer := 0;   -- 0~255
-            DYN_DLY_EN : string := "FALSE";
-            ADAPT_EN : string := "FALSE"
+            C_STATIC_DLY_0 : integer := 0;   -- 0~255
+            DYN_DLY_EN_0 : string := "FALSE";
+            ADAPT_EN_0 : string := "FALSE";
+            C_STATIC_DLY_1 : integer := 0;   -- 0~255
+            DYN_DLY_EN_1 : string := "FALSE";
+            ADAPT_EN_1 : string := "FALSE"
+
         );
 	port(
 		PCLK,FCLKP,FCLKN,FCLKQP,FCLKQN : in std_logic;
 		D : in std_logic;
         RESET : in std_logic;
-        SDTAP : in std_logic;
-        VALUE : in std_logic;
-        DLYSTEP : in std_logic_vector(7 downto 0);
+        SDTAP0,SDTAP1 : in std_logic;
+        VALUE0,VALUE1 : in std_logic;
+        DLYSTEP0,DLYSTEP1 : in std_logic_vector(7 downto 0);
 		Q : out std_logic_vector(31 downto 0);
-		DF : out std_logic
+		DF0,DF1 : out std_logic
 	 );
 end OSIDES32;
 
@@ -13474,7 +14170,6 @@ end OSIDES32;
 
     signal D_data,Q_data : std_logic_vector(31 downto 0);
 	signal grstn : std_logic;
-    signal DF0 : std_logic;
 
     component IODELAY
         generic (
@@ -13494,35 +14189,35 @@ end OSIDES32;
 
 begin
     grstn <= GSRO;
+    
     dly_0:IODELAY
     generic map (
-                    C_STATIC_DLY=>0,
-                    DYN_DLY_EN=>"FALSE",
-                    ADAPT_EN=>"FALSE"
-
+                    C_STATIC_DLY=>C_STATIC_DLY_0,
+                    DYN_DLY_EN=>DYN_DLY_EN_0,
+                    ADAPT_EN=>ADAPT_EN_0
                 )
     port map (
                  DO=>D_a,
                  DF=>DF0,
                  DI=>D,
-                 DLYSTEP=>"00000000",
-                 SDTAP=>'0',
-                 VALUE=>'0'
+                 DLYSTEP=>DLYSTEP0,
+                 SDTAP=>SDTAP0,
+                 VALUE=>VALUE0
              );
 
     dly_1:IODELAY
     generic map (
-                    C_STATIC_DLY=>C_STATIC_DLY,
-                    DYN_DLY_EN=>DYN_DLY_EN,
-                    ADAPT_EN=>ADAPT_EN
+                    C_STATIC_DLY=>C_STATIC_DLY_1,
+                    DYN_DLY_EN=>DYN_DLY_EN_1,
+                    ADAPT_EN=>ADAPT_EN_1
                 )
     port map (
                  DO=>D_b,
-                 DF=>DF,
+                 DF=>DF1,
                  DI=>D,
-                 DLYSTEP=>DLYSTEP,
-                 SDTAP=>SDTAP,
-                 VALUE=>VALUE
+                 DLYSTEP=>DLYSTEP1,
+                 SDTAP=>SDTAP1,
+                 VALUE=>VALUE1
              );
 
 
@@ -13846,6 +14541,146 @@ begin
 
 end Behavioral;
 
+--------------------OSIDES64-----------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+use work.glb.GSRO;
+
+entity OSIDES64 is
+    generic(
+        C_STATIC_DLY_0 : integer := 0;   -- 0~255
+        DYN_DLY_EN_0 : string := "FALSE";
+        ADAPT_EN_0 : string := "FALSE";
+        C_STATIC_DLY_1 : integer := 0;   -- 0~255
+        DYN_DLY_EN_1 : string := "FALSE";
+        ADAPT_EN_1 : string := "FALSE";
+        C_STATIC_DLY_2 : integer := 0;   -- 0~255
+        DYN_DLY_EN_2 : string := "FALSE";
+        ADAPT_EN_2 : string := "FALSE";
+        C_STATIC_DLY_3 : integer := 0;   -- 0~255
+        DYN_DLY_EN_3 : string := "FALSE";
+        ADAPT_EN_3 : string := "FALSE"
+
+        );
+	port(
+		PCLK,FCLKP,FCLKN,FCLKQP,FCLKQN : in std_logic;
+		D : in std_logic;
+        RESET : in std_logic;
+        SDTAP0, SDTAP1, SDTAP2, SDTAP3 : in std_logic;
+        VALUE0, VALUE1, VALUE2, VALUE3 : in std_logic;
+        DLYSTEP0, DLYSTEP1, DLYSTEP2, DLYSTEP3 : in std_logic_vector(7 downto 0);
+		Q : out std_logic_vector(63 downto 0);
+		DF0, DF1, DF2, DF3 : out std_logic
+	 );
+end OSIDES64;
+
+ architecture Behavioral of OSIDES64 is
+    signal parallel_data_0,parallel_data_1 : std_logic_vector(31 downto 0);
+	signal grstn : std_logic;
+
+    component OSIDES32
+        generic (
+            C_STATIC_DLY_0:integer:=0;
+            DYN_DLY_EN_0 : string := "FALSE";
+            ADAPT_EN_0 : string := "FALSE";
+            C_STATIC_DLY_1:integer:=0;
+            DYN_DLY_EN_1 : string := "FALSE";
+            ADAPT_EN_1 : string := "FALSE"
+        );
+        port(
+		    PCLK,FCLKP,FCLKN,FCLKQP,FCLKQN : in std_logic;
+		    D : in std_logic;
+            RESET : in std_logic;
+            SDTAP0,SDTAP1 : in std_logic;
+            VALUE0,VALUE1 : in std_logic;
+            DLYSTEP0,DLYSTEP1 : in std_logic_vector(7 downto 0);
+		    Q : out std_logic_vector(31 downto 0);
+		    DF0,DF1 : out std_logic
+        );
+    end component;
+
+begin
+    grstn <= GSRO;
+    
+    osides32_0:OSIDES32
+    generic map (
+                    C_STATIC_DLY_0=>C_STATIC_DLY_0,
+                    DYN_DLY_EN_0=>DYN_DLY_EN_0,
+                    ADAPT_EN_0=>ADAPT_EN_0,
+                    C_STATIC_DLY_1=>C_STATIC_DLY_1,
+                    DYN_DLY_EN_1=>DYN_DLY_EN_1,
+                    ADAPT_EN_1=>ADAPT_EN_1
+                 )
+    port map (
+                 Q=>parallel_data_0,
+                 D=>D,
+                 DF0=>DF0,
+                 DF1=>DF1,
+                 PCLK=>PCLK,
+                 FCLKP=>FCLKP,
+                 FCLKN=>FCLKN,
+                 FCLKQP=>FCLKQP,
+                 FCLKQN=>FCLKQN,
+                 RESET=>RESET,
+                 DLYSTEP0=>DLYSTEP0,
+                 SDTAP0=>SDTAP0,
+                 VALUE0=>VALUE0,
+                 DLYSTEP1=>DLYSTEP1,
+                 SDTAP1=>SDTAP1,
+                 VALUE1=>VALUE1
+              );
+
+    osides32_1:OSIDES32
+    generic map (
+                    C_STATIC_DLY_0=>C_STATIC_DLY_2,
+                    DYN_DLY_EN_0=>DYN_DLY_EN_2,
+                    ADAPT_EN_0=>ADAPT_EN_2,
+                    C_STATIC_DLY_1=>C_STATIC_DLY_3,
+                    DYN_DLY_EN_1=>DYN_DLY_EN_3,
+                    ADAPT_EN_1=>ADAPT_EN_3
+                 )
+    port map (
+                 Q=>parallel_data_1,
+                 D=>D,
+                 DF0=>DF2,
+                 DF1=>DF3,
+                 PCLK=>PCLK,
+                 FCLKP=>FCLKP,
+                 FCLKN=>FCLKN,
+                 FCLKQP=>FCLKQP,
+                 FCLKQN=>FCLKQN,
+                 RESET=>RESET,
+                 DLYSTEP0=>DLYSTEP2,
+                 SDTAP0=>SDTAP2,
+                 VALUE0=>VALUE2,
+                 DLYSTEP1=>DLYSTEP3,
+                 SDTAP1=>SDTAP3,
+                 VALUE1=>VALUE3
+              );
+  
+Q <= (
+	parallel_data_0(31)	&parallel_data_0(30)&parallel_data_1(31)&parallel_data_1(30)&
+	parallel_data_0(29)	&parallel_data_0(28)&parallel_data_1(29)&parallel_data_1(28)&
+	parallel_data_0(27)	&parallel_data_0(26)&parallel_data_1(27)&parallel_data_1(26)&
+	parallel_data_0(25)	&parallel_data_0(24)&parallel_data_1(25)&parallel_data_1(24)&
+	parallel_data_0(23)	&parallel_data_0(22)&parallel_data_1(23)&parallel_data_1(22)&
+	parallel_data_0(21)	&parallel_data_0(20)&parallel_data_1(21)&parallel_data_1(20)&
+	parallel_data_0(19)	&parallel_data_0(18)&parallel_data_1(19)&parallel_data_1(18)&
+	parallel_data_0(17)	&parallel_data_0(16)&parallel_data_1(17)&parallel_data_1(16)&
+	parallel_data_0(15)	&parallel_data_0(14)&parallel_data_1(15)&parallel_data_1(14)&
+	parallel_data_0(13)	&parallel_data_0(12)&parallel_data_1(13)&parallel_data_1(12)&
+	parallel_data_0(11)	&parallel_data_0(10)&parallel_data_1(11)&parallel_data_1(10)&
+	parallel_data_0(9)	&parallel_data_0(8)	&parallel_data_1(9)	&parallel_data_1(8)	&
+	parallel_data_0(7)	&parallel_data_0(6)	&parallel_data_1(7)	&parallel_data_1(6)	&
+	parallel_data_0(5)	&parallel_data_0(4)	&parallel_data_1(5)	&parallel_data_1(4)	&
+	parallel_data_0(3)	&parallel_data_0(2)	&parallel_data_1(3)	&parallel_data_1(2)	&
+	parallel_data_0(1)	&parallel_data_0(0)	&parallel_data_1(1)	&parallel_data_1(0)	);
+
+
+end Behavioral;
+
 
 --------------------IODELAY-----------------------------------
 library IEEE;
@@ -13951,16 +14786,16 @@ begin
     process(SDTAP,VALUE,cnt_step,DLYSTEP,cnt_value_start)
     begin
         if(SDTAP = '0')then
-            delay_data_adapt <= conv_std_logic_vector(C_STATIC_DLY,8);
+            delay_data_adapt <= DLYSTEP;
         else
             if(cnt_value_start = '1')then
-                if(C_STATIC_DLY < DLYSTEP)then
+                if(delay_data_adapt < DLYSTEP)then
                     if(delay_data_adapt /= DLYSTEP)then
                         if(cnt_step = 7)then
                             delay_data_adapt <= delay_data_adapt + 1;
                         end if;
                     end if;
-                elsif(C_STATIC_DLY > DLYSTEP)then
+                elsif(delay_data_adapt > DLYSTEP)then
                     if(delay_data_adapt /= DLYSTEP)then
                         if(cnt_step = 7)then
                             delay_data_adapt <= delay_data_adapt - 1;
@@ -14033,6 +14868,80 @@ BEGIN
     END PROCESS;
 
     OSCOUT <= oscr when (OSCEN = '1') else '1';
+
+END BHV;
+
+---------------------OSCB------------------------
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+
+ENTITY OSCB IS
+GENERIC (
+    FREQ_MODE : string := "25"; --"25":25M; "210":210M
+    FREQ_DIV : integer := 10;  --3, 2~126(only even num)
+    DYN_TRIM_EN : string := "FALSE" --"FALSE","TRUE"
+);
+PORT (
+    OSCEN : in STD_LOGIC;
+    OSCOUT: OUT STD_LOGIC;
+    OSCREF: OUT STD_LOGIC;
+    FMODE : in STD_LOGIC;
+    RTRIM : in  std_logic_vector(7 downto 0);
+    RTCTRIM : in  std_logic_vector(5 downto 0)
+
+);
+END OSCB;
+
+ARCHITECTURE BHV OF OSCB IS
+SIGNAL oscr : STD_LOGIC := '0';
+SIGNAL osc_ref,osc_210,oscr_210 : STD_LOGIC := '0';
+
+BEGIN
+    
+    PROCESS
+    BEGIN
+        wait for ((20 ns) * FREQ_DIV);
+	    oscr <= not oscr;
+    END PROCESS;
+
+    PROCESS
+    BEGIN
+        wait for (20 ns);
+	    osc_ref <= not osc_ref;
+    END PROCESS;
+        
+    PROCESS
+    BEGIN
+        wait for ((2.381 ns) * FREQ_DIV);
+	    oscr_210 <= not oscr_210;
+    END PROCESS;
+
+    PROCESS
+    BEGIN
+        wait for (2.381 ns);
+	    osc_210 <= not osc_210;
+    END PROCESS;
+
+    process(OSCEN,FMODE,oscr,oscr_210)
+    begin
+        if (OSCEN = '1') then
+            if(FREQ_MODE = "25") then
+                OSCOUT <= oscr;
+                OSCOUT <= osc_ref;
+            else 
+                if(FMODE = '0') then
+                    OSCOUT <= oscr;
+                    OSCOUT <= osc_ref;
+                else 
+                    OSCOUT <= oscr_210;
+                    OSCOUT <= osc_210;
+                end if;
+            end if;
+        else 
+            OSCOUT <= '1';
+            OSCREF <= '1';
+        end if;
+    end process;
 
 END BHV;
 
@@ -14151,7 +15060,7 @@ begin
 
 end process;
 
-LOCK <= '1' when (DLL_FORCE = "TURE") else lock_reg;
+LOCK <= '1' when (DLL_FORCE = "TRUE") else lock_reg;
 
 --determine delay code
 process(CLKIN,reset_sig,clk_effect,UPDNCNTL)
@@ -14555,39 +15464,42 @@ end process;
 
 process(CLKIN)
 begin
-    if(cnt_start = '1')then
-        if(cnt_value = 22)then
-            cnt_value <= 0;
-            cnt_value_start <= '1';
-        elsif(cnt_value = 15)then
-            cnt_step_start <= '1';
-            cnt_value <= cnt_value + 1;
+    if(CLKIN'event and CLKIN = '0')then
+        if(cnt_start = '1')then
+            if(cnt_value = 22)then
+                cnt_value <= 0;
+                cnt_value_start <= '1';
+            elsif(cnt_value = 15)then
+                cnt_step_start <= '1';
+                cnt_value <= cnt_value + 1;
+            else
+                cnt_value <= cnt_value + 1;
+            end if;
+
+            if(cnt_value_start = '1')then
+                cnt_value <= 0;
+            end if;
         else
-            cnt_value <= cnt_value + 1;
-        end if;
-
-        if(cnt_value_start = '1')then
             cnt_value <= 0;
+            cnt_value_start <= '0';
+            cnt_step_start <= '0';
         end if;
-
-    elsif(CLKIN'event and CLKIN = '0')then
-        cnt_value <= 0;
-        cnt_value_start <= '0';
-        cnt_step_start <= '0';
     end if;
 end process;
 
 
 process(CLKIN)
 begin
-    if(cnt_step_start = '1')then
-        if(cnt_step = 7)then
-            cnt_step <= 0;
+    if(CLKIN'event and CLKIN = '0')then
+        if(cnt_step_start = '1')then
+            if(cnt_step = 7)then
+                cnt_step <= 0;
+            else
+                cnt_step <= cnt_step + 1;
+            end if;
         else
-            cnt_step <= cnt_step + 1;
+            cnt_step <= 0;
         end if;
-    elsif(CLKIN'event and CLKIN = '0')then
-        cnt_step <= 0;
     end if;
 end process;
 
@@ -15133,7 +16045,7 @@ signal fine_dyn_0,fine_dyn_1,fine_dyn_2,fine_dyn_3,fine_dyn_4,fine_dyn_5,fine_dy
 signal coarse_dyn_0,coarse_dyn_1,coarse_dyn_2,coarse_dyn_3,coarse_dyn_4,coarse_dyn_5,coarse_dyn_6 : integer := 0;
 signal ps_pulse_pre : std_logic;
 signal clk0_dt_dir,clk1_dt_dir,clk2_dt_dir,clk3_dt_dir : std_logic;
-signal clk0_dt_step,clk1_dt_step,clk2_dt_step,clk3_dt_step : integer;
+signal clk0_dt_step,clk1_dt_step,clk2_dt_step,clk3_dt_step : integer := 0;
 signal fine_0,fine_1,fine_2,fine_3,fine_4,fine_5,fine_6 : integer;
 signal coarse_0,coarse_1,coarse_2,coarse_3,coarse_4,coarse_5,coarse_6 : integer;
 signal unit_duty,unit_phase,unit_div,real_fbdiv : real := 1.0;
@@ -15759,7 +16671,7 @@ begin
                     else
                         if(fine_dyn_1 = "000") then
                             coarse_dyn_1 <= coarse_dyn_1 - 1;
-                            if (coarse_dyn_1 = 1) then
+                            if (coarse_dyn_1 = 0) then
                                 coarse_dyn_1 <= (ODIV1_SEL_reg-1);
                             end if;
                         end if;
@@ -15793,7 +16705,7 @@ begin
                     else
                         if(fine_dyn_2 = "000") then
                             coarse_dyn_2 <= coarse_dyn_2 - 1;
-                            if (coarse_dyn_2 = 1) then
+                            if (coarse_dyn_2 = 0) then
                                 coarse_dyn_2 <= (ODIV2_SEL_reg-1);
                             end if;
                         end if;
@@ -15827,7 +16739,7 @@ begin
                     else
                         if(fine_dyn_3 = "000") then
                             coarse_dyn_3 <= coarse_dyn_3 - 1;
-                            if (coarse_dyn_3 = 1) then
+                            if (coarse_dyn_3 = 0) then
                                 coarse_dyn_3 <= (ODIV3_SEL_reg-1);
                             end if;
                         end if;
@@ -15861,7 +16773,7 @@ begin
                     else
                         if(fine_dyn_4 = "000") then
                             coarse_dyn_4 <= coarse_dyn_4 - 1;
-                            if (coarse_dyn_4 = 1) then
+                            if (coarse_dyn_4 = 0) then
                                 coarse_dyn_4 <= (ODIV4_SEL_reg-1);
                             end if;
                         end if;
@@ -15895,7 +16807,7 @@ begin
                     else
                         if(fine_dyn_5 = "000") then
                             coarse_dyn_5 <= coarse_dyn_5 - 1;
-                            if (coarse_dyn_5 = 1) then
+                            if (coarse_dyn_5 = 0) then
                                 coarse_dyn_5 <= (ODIV5_SEL_reg-1);
                             end if;
                         end if;
@@ -15929,7 +16841,7 @@ begin
                     else
                         if(fine_dyn_6 = "000") then
                             coarse_dyn_6 <= coarse_dyn_6 - 1;
-                            if (coarse_dyn_6 = 1) then
+                            if (coarse_dyn_6 = 0) then
                                 coarse_dyn_6 <= (ODIV6_SEL_reg-1);
                             end if;
                         end if;
@@ -16030,7 +16942,7 @@ begin
     clk2_dt_delay <= (0.05 ns * clk2_dt_step);
     clk3_dt_delay <= (0.05 ns * clk3_dt_step);
 
-    process(clkout0_duty, clkout1_duty, clkout2_duty, clkout3_duty, clk0_dt_dir, clk1_dt_dir, clk2_dt_dir, clk3_dt_dir, clk0_dt_step, clk1_dt_step, clk2_dt_step, clk3_dt_step)
+    process(clkout0_duty, clkout1_duty, clkout2_duty, clkout3_duty, clk0_dt_dir, clk1_dt_dir, clk2_dt_dir, clk3_dt_dir, clk0_dt_delay, clk1_dt_delay, clk2_dt_delay, clk3_dt_delay)
     begin
         if (clk0_dt_dir = '1') then
             tclk0_duty <= clkout0_duty + clk0_dt_delay;
@@ -16926,7 +17838,7 @@ signal fine_dyn_0,fine_dyn_1,fine_dyn_2,fine_dyn_3,fine_dyn_4,fine_dyn_5,fine_dy
 signal coarse_dyn_0,coarse_dyn_1,coarse_dyn_2,coarse_dyn_3,coarse_dyn_4,coarse_dyn_5,coarse_dyn_6 : integer := 0;
 signal ps_pulse_pre : std_logic;
 signal clk0_dt_dir,clk1_dt_dir,clk2_dt_dir,clk3_dt_dir : std_logic;
-signal clk0_dt_step,clk1_dt_step,clk2_dt_step,clk3_dt_step : integer;
+signal clk0_dt_step,clk1_dt_step,clk2_dt_step,clk3_dt_step : integer := 0;
 signal fine_0,fine_1,fine_2,fine_3,fine_4,fine_5,fine_6 : integer;
 signal coarse_0,coarse_1,coarse_2,coarse_3,coarse_4,coarse_5,coarse_6 : integer;
 signal unit_duty,unit_phase,unit_div,real_fbdiv : real := 1.0;
@@ -17512,7 +18424,7 @@ begin
                     else
                         if(fine_dyn_1 = "000") then
                             coarse_dyn_1 <= coarse_dyn_1 - 1;
-                            if (coarse_dyn_1 = 1) then
+                            if (coarse_dyn_1 = 0) then
                                 coarse_dyn_1 <= (ODIV1_SEL_reg-1);
                             end if;
                         end if;
@@ -17546,7 +18458,7 @@ begin
                     else
                         if(fine_dyn_2 = "000") then
                             coarse_dyn_2 <= coarse_dyn_2 - 1;
-                            if (coarse_dyn_2 = 1) then
+                            if (coarse_dyn_2 = 0) then
                                 coarse_dyn_2 <= (ODIV2_SEL_reg-1);
                             end if;
                         end if;
@@ -17580,7 +18492,7 @@ begin
                     else
                         if(fine_dyn_3 = "000") then
                             coarse_dyn_3 <= coarse_dyn_3 - 1;
-                            if (coarse_dyn_3 = 1) then
+                            if (coarse_dyn_3 = 0) then
                                 coarse_dyn_3 <= (ODIV3_SEL_reg-1);
                             end if;
                         end if;
@@ -17614,7 +18526,7 @@ begin
                     else
                         if(fine_dyn_4 = "000") then
                             coarse_dyn_4 <= coarse_dyn_4 - 1;
-                            if (coarse_dyn_4 = 1) then
+                            if (coarse_dyn_4 = 0) then
                                 coarse_dyn_4 <= (ODIV4_SEL_reg-1);
                             end if;
                         end if;
@@ -17648,7 +18560,7 @@ begin
                     else
                         if(fine_dyn_5 = "000") then
                             coarse_dyn_5 <= coarse_dyn_5 - 1;
-                            if (coarse_dyn_5 = 1) then
+                            if (coarse_dyn_5 = 0) then
                                 coarse_dyn_5 <= (ODIV5_SEL_reg-1);
                             end if;
                         end if;
@@ -17682,7 +18594,7 @@ begin
                     else
                         if(fine_dyn_6 = "000") then
                             coarse_dyn_6 <= coarse_dyn_6 - 1;
-                            if (coarse_dyn_6 = 1) then
+                            if (coarse_dyn_6 = 0) then
                                 coarse_dyn_6 <= (ODIV6_SEL_reg-1);
                             end if;
                         end if;
@@ -17783,7 +18695,7 @@ begin
     clk2_dt_delay <= (0.05 ns * clk2_dt_step);
     clk3_dt_delay <= (0.05 ns * clk3_dt_step);
 
-    process(clkout0_duty, clkout1_duty, clkout2_duty, clkout3_duty, clk0_dt_dir, clk1_dt_dir, clk2_dt_dir, clk3_dt_dir, clk0_dt_step, clk1_dt_step, clk2_dt_step, clk3_dt_step)
+    process(clkout0_duty, clkout1_duty, clkout2_duty, clkout3_duty, clk0_dt_dir, clk1_dt_dir, clk2_dt_dir, clk3_dt_dir, clk0_dt_delay, clk1_dt_delay, clk2_dt_delay, clk3_dt_delay)
     begin
         if (clk0_dt_dir = '1') then
             tclk0_duty <= clkout0_duty + clk0_dt_delay;
@@ -18535,6 +19447,7 @@ begin
 end Behavioral;
 
 
+
 -----------------SAMB---------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -18562,12 +19475,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity OTP is
     generic(
-		MODE : bit := '0'
+		MODE : bit_vector := "01"
     );
     PORT (
-    	 DOUT : OUT std_logic;
-    	 READ : IN std_logic;
-    	 SHIFT : IN std_logic
+    	DOUT : OUT std_logic;
+        CLK : IN std_logic;
+    	READ : IN std_logic;
+    	SHIFT : IN std_logic
     );
 end OTP;
 
@@ -18616,6 +19530,48 @@ entity CMSERA is
 end CMSERA;
 
 architecture Behavioral of CMSERA is
+begin
+
+end Behavioral;
+
+-----------------CMSERB---------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity CMSERB is    
+    PORT (
+    	 RUNNING,CRCERR,CRCDONE : OUT std_logic;
+    	 ECCCORR,ECCUNCORR : OUT std_logic;
+    	 ERRLOC : OUT std_logic_vector(12 downto 0);
+    	 ECCDEC,DSRRD,DSRWR : OUT std_logic;
+    	 ASRRESET,ASRINC,REFCLK : OUT std_logic;
+    	 CLK,ERR0INJECT,ERR1INJECT : IN std_logic;
+    	 SEREN : IN std_logic_vector(2 downto 0);
+    	 ERRINJ0LOC,ERRINJ1LOC : IN std_logic_vector(6 downto 0)
+    );
+end CMSERB;
+
+architecture Behavioral of CMSERB is
+begin
+
+end Behavioral;
+
+
+-----------------SAMBA---------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity SAMBA is
+    generic(
+		MODE : bit_vector := "00"
+    );
+    PORT (
+    	 SPIAD : IN std_logic;
+         LOAD : IN std_logic
+    );
+end SAMBA;
+
+architecture Behavioral of SAMBA is
 begin
 
 end Behavioral;
@@ -18767,7 +19723,7 @@ entity ADC is
             DRSTN : in std_logic;              --Digital part reset signal, active low
             ADCREQI : in std_logic;            --Measurement request signal, valid rising edge, asynchronous signal
             ADCRDY : out std_logic;           --The measurement completion signal, active high
-            ADCVALUE : in std_logic_vector(13 downto 0);  --The measurement result output, signed number. In voltage mode,/2048 is the actual measured value; In temperature mode,/4 is the actual measured value
+            ADCVALUE : out std_logic_vector(13 downto 0);  --The measurement result output, signed number. In voltage mode,/2048 is the actual measured value; In temperature mode,/4 is the actual measured value
              --mdrp
             MDRP_CLK : in std_logic;               --mdrp clock
             MDRP_WDATA : in std_logic_vector(7 downto 0);       --mdrp write data
@@ -18781,6 +19737,127 @@ architecture Behavioral of ADC is
 begin
 
 end Behavioral;
+
+------------------------------ADC_SAR---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity ADC_SAR is
+        generic(
+             BUF_EN          	  : bit_vector := "00000000000000000000000000000";
+             ----ADC
+             --Analog terminal option
+             CLK_SEL         	  : bit := '0';       --clk source select
+             DIV_CTL         	  : integer := 2;     --clock division，0:/1，1:/2，2:/4，3:/8，Clock after frequency division, 500kHz~8MHz
+             ADC_EN_SEL        	  : bit := '0';       --adc_en source select
+             PHASE_SEL        	  : bit := '0';       --adc internal data phase select 
+              --Digital terminal options
+             CSR_ADC_MODE      	  : bit := '1';       -- Mode selection
+             CSR_VSEN_CTRL        : integer := 0;     -- signal source:vccx/vccio_*/vcc_reg -> 7, signal source:vcc_ext -> 4, others -> 0
+             CSR_SAMPLE_CNT_SEL   : integer := 4;     -- total samples configuration, 0~4:64, 128, 256, 512, 1024 sampling points, and the other values are 2048 sampling points.The total number of samples shall be greater than 7 * sampling period, i.e.  SAMPLR_CNT_SEL >= RATE_CHANGE_CTRL-1
+             CSR_RATE_CHANGE_CTRL : integer := 4;     -- Sampling period configuration, 0~4:4、8、16、32、64，other values are 128
+             CSR_FSCAL            : integer := 730;   -- Parameter 1: temperature mode 510~948, typical value 730; Voltage mode 452~840, typical value 653
+             CSR_OFFSET           : integer := -1180; -- Parameter 2, signed number, temperature mode - 1560~- 760, typical value - 1180; Voltage mode - 410~410, typical value 0
+
+             ----SARADC----
+             ADC_CLK_DIV          : bit_vector := "00"; --clock division.00:/1,01:/2,10:/4,11:/8
+             ADC_CLKDIV_EN     	  : bit := '0';       --clock division enable
+             CLK_SRC_SEL      	  : bit := '1';       --source clock sel
+             VREF_BUF_EN       	  : bit := '1';       --BGR vref buffer enable
+             COUNT_LEN            : bit_vector := "10100"; --ADC counter length
+             DAC_SAMPLE_END       : bit_vector := "10010"; --DAC sample end point
+             DAC_SAMPLE_START     : bit_vector := "01101"; --DAC sample start point
+             SH_SAMPLE_END        : bit_vector := "01011"; --SH sample start point
+             SH_SAMPLE_START      : bit_vector := "00001"; --SH sample end point
+             AUTO_CHOP_EN      	  : bit := '0';            --auto chop
+             CHOP_CLK_DIV         : bit_vector := "0000"   --chop clock divider       
+
+        );
+        port(
+            ----ADC----
+            --control signal
+            ADCMODE : in std_logic;            --Mode selection,0:temperature mode，1:voltage mode
+            VSENCTL : in std_logic_vector(2 downto 0);      --Input source selection (ciu)
+            CLK : in std_logic;                --clk input
+            --Digital
+            ADCENO : out std_logic;            --Enable signal, active high
+            DRSTN : in std_logic;              --Digital part reset signal, active low
+            ADCREQI : in std_logic;            --Measurement request signal, valid rising edge, asynchronous signal
+            ADCRDY : out std_logic;           --The measurement completion signal, active high
+            ADCVALUE : out std_logic_vector(13 downto 0);  --The measurement result output, signed number. In voltage mode,/2048 is the actual measured value; In temperature mode,/4 is the actual measured value
+             --mdrp
+            MDRP_CLK : in std_logic;               --mdrp clock
+            MDRP_WDATA : in std_logic_vector(7 downto 0);       --mdrp write data
+            MDRP_A_INC : in std_logic;             --mdrp self-increased address
+            MDRP_OPCODE : in std_logic_vector(1 downto 0);      --mdrp opcode
+            MDRP_RDATA : out std_logic_vector(7 downto 0);        --mdrp read data
+            --Analog
+            ADC1BIT : out std_logic;           --Analog data output
+            ADCCLKO : out std_logic;           --Analog clock output
+            ADCENI : in std_logic;             --Enable signal, active high
+
+            ----SARADC----
+            ADCBIT : out std_logic_vector(12 downto 0);  --Measurement result output
+            CLKO : out std_logic;          --output clk
+            EOC : out std_logic;           --The measurement completion signal
+            CLKI : in std_logic;           --fabric input clk
+            CHEN : in std_logic_vector(6 downto 0);  --channel select
+            RSTN : in std_logic;           --resetn,active low
+            SOC : in std_logic             --Measurement request signal
+
+    );
+end ADC_SAR;
+architecture Behavioral of ADC_SAR is
+begin
+
+end Behavioral;
+
+
+------------------------------LICD---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity LICD is
+        generic(
+             STAGE_NUM            : bit_vector := "00";
+             ENCDEC_NUM           : bit_vector := "00";
+             CODE_WIDTH           : bit_vector := "00";
+             INTERLEAVE_EN        : bit_vector := "000";
+             INTERLEAVE_MODE      : bit_vector := "000"
+        );
+        port(
+            ENC_CLK : in std_logic;                
+            ENC_CE  : in std_logic;                
+            ENC_RST : in std_logic;                
+            ENC_VIDDE : in std_logic;                
+            ENC_VIDSAMP2 : in std_logic_vector(23 downto 0);      
+            ENC_VIDSAMP1 : in std_logic_vector(23 downto 0);      
+            ENC_VIDSAMP0 : in std_logic_vector(23 downto 0);      
+            ENC_CODE : out std_logic_vector(95 downto 0);      
+            ENC_CODEVLD : out std_logic;   
+            ENC_VIDDEO : out std_logic;   
+            DEC_CLK : in std_logic;   
+            DEC_CE : in std_logic;   
+            DEC_RST : in std_logic;   
+            DEC_VIDDE : in std_logic;   
+            DEC_DATAI : in std_logic_vector(95 downto 0);      
+            DEC_DFETCH : out std_logic;   
+            DEC_VIDSAMP2 : out std_logic_vector(23 downto 0);      
+            DEC_VIDSAMP1 : out std_logic_vector(23 downto 0);      
+            DEC_VIDSAMP0 : out std_logic_vector(23 downto 0);      
+            DEC_VIDDEO : out std_logic 
+
+    );
+end LICD;
+architecture Behavioral of LICD is
+begin
+
+end Behavioral;
+
 
 
 ------------------------------MIPI_DPHY_RX---------------------------------------
@@ -19022,7 +20099,7 @@ entity MIPI_DPHY is
         TX_BYPASS_MODE : bit := '0';
         TX_BYTECLK_SYNC_MODE : bit := '0';
         TX_OCLK_USE_CIBCLK : bit := '0';
-        TX_RD_START_DEPTH : bit_vector := "00000";
+        TX_RD_START_DEPTH : bit_vector := "00001";
         TX_SYNC_MODE : bit := '0';
         TX_WORD_LITTLE_ENDIAN : bit := '1';
         EQ_CS_LANE0 : bit_vector := "100";
@@ -19262,6 +20339,481 @@ architecture Behavioral of MIPI_DPHY is
 begin
 
 end Behavioral;
+
+
+------------------------------MIPI_DPHYA---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all;
+
+entity MIPI_DPHYA is
+    GENERIC(
+        TX_PLLCLK : string := "NONE";
+        RX_ALIGN_BYTE : bit_vector := "10111000";
+        RX_HS_8BIT_MODE : bit := '0';
+        RX_LANE_ALIGN_EN : bit := '0';
+        TX_HS_8BIT_MODE : bit := '0';
+        HSREG_EN_LN0 : bit := '0';
+        HSREG_EN_LN1 : bit := '0';
+        HSREG_EN_LN2 : bit := '0';
+        HSREG_EN_LN3 : bit := '0';
+        HSREG_EN_LNCK : bit := '0';
+        LANE_DIV_SEL : bit_vector := "00";
+        HSRX_EN : bit := '1';
+        HSRX_LANESEL : bit_vector := "1111";
+        HSRX_LANESEL_CK : bit := '1';
+        HSTX_EN_LN0 : bit := '0';
+        HSTX_EN_LN1 : bit := '0';
+        HSTX_EN_LN2 : bit := '0';
+        HSTX_EN_LN3 : bit := '0';
+        HSTX_EN_LNCK : bit := '0';
+        LPTX_EN_LN0 : bit := '1';
+        LPTX_EN_LN1 : bit := '1';
+        LPTX_EN_LN2 : bit := '1';
+        LPTX_EN_LN3 : bit := '1';
+        LPTX_EN_LNCK : bit := '1';
+        TXDP_EN_LN0 : bit := '0';
+        TXDP_EN_LN1 : bit := '0';
+        TXDP_EN_LN2 : bit := '0';
+        TXDP_EN_LN3 : bit := '0';
+        TXDP_EN_LNCK : bit := '0';
+
+        SPLL_DIV_SEL : bit_vector := "00"; --00:2; 01:4; 10:8; 11:16
+        DPHY_CK_SEL  : bit_vector := "01"; --00/10:0; 01:gpll; 11: spll
+
+        CKLN_DELAY_EN : bit := '0';
+        CKLN_DELAY_OVR_VAL : bit_vector := "0000000";
+        D0LN_DELAY_EN : bit := '0';
+        D0LN_DELAY_OVR_VAL : bit_vector := "0000000";
+        D0LN_DESKEW_BYPASS : bit := '0';
+        D1LN_DELAY_EN : bit := '0';
+        D1LN_DELAY_OVR_VAL : bit_vector := "0000000";
+        D1LN_DESKEW_BYPASS : bit := '0';
+        D2LN_DELAY_EN : bit := '0';
+        D2LN_DELAY_OVR_VAL : bit_vector := "0000000";
+        D2LN_DESKEW_BYPASS : bit := '0';
+        D3LN_DELAY_EN : bit := '0';
+        D3LN_DELAY_OVR_VAL : bit_vector := "0000000";
+        D3LN_DESKEW_BYPASS : bit := '0';
+        DESKEW_EN_LOW_DELAY : bit := '0';
+        DESKEW_EN_ONE_EDGE : bit := '0';
+        DESKEW_FAST_LOOP_TIME : bit_vector := "0000";
+        DESKEW_FAST_MODE : bit := '0';
+        DESKEW_HALF_OPENING : bit_vector := "010110";
+        DESKEW_LSB_MODE : bit_vector := "00";
+        DESKEW_M : bit_vector := "011";
+        DESKEW_M_TH : bit_vector := "0000110100110";
+        DESKEW_MAX_SETTING : bit_vector := "0100001";
+        DESKEW_ONE_CLK_EDGE_EN : bit := '0';
+        DESKEW_RST_BYPASS : bit := '0';
+        RX_BYTE_LITTLE_ENDIAN : bit := '1';
+        RX_CLK_1X_SYNC_SEL : bit := '0';
+        RX_INVERT : bit := '0';
+        RX_ONE_BYTE0_MATCH : bit := '0';
+        RX_RD_START_DEPTH : bit_vector := "00001";
+        RX_SYNC_MODE : bit := '0';
+        RX_WORD_ALIGN_BYPASS : bit := '0';
+        RX_WORD_ALIGN_DATA_VLD_SRC_SEL : bit := '0';
+        RX_WORD_LITTLE_ENDIAN : bit := '1';
+        TX_BYPASS_MODE : bit := '0';
+        TX_BYTECLK_SYNC_MODE : bit := '0';
+        TX_OCLK_USE_CIBCLK : bit := '0';
+        TX_RD_START_DEPTH : bit_vector := "00001";
+        TX_SYNC_MODE : bit := '0';
+        TX_WORD_LITTLE_ENDIAN : bit := '1';
+        EQ_CS_LANE0 : bit_vector := "100";
+        EQ_CS_LANE1 : bit_vector := "100";
+        EQ_CS_LANE2 : bit_vector := "100";
+        EQ_CS_LANE3 : bit_vector := "100";
+        EQ_CS_LANECK : bit_vector := "100";
+        EQ_RS_LANE0 : bit_vector := "100";
+        EQ_RS_LANE1 : bit_vector := "100";
+        EQ_RS_LANE2 : bit_vector := "100";
+        EQ_RS_LANE3 : bit_vector := "100";
+        EQ_RS_LANECK : bit_vector := "100";
+        HSCLK_LANE_LN0 : bit := '0';
+        HSCLK_LANE_LN1 : bit := '0';
+        HSCLK_LANE_LN2 : bit := '0';
+        HSCLK_LANE_LN3 : bit := '0';
+        HSCLK_LANE_LNCK : bit := '1';
+        ALP_ED_EN_LANE0 : bit := '1';
+        ALP_ED_EN_LANE1 : bit := '1';
+        ALP_ED_EN_LANE2 : bit := '1';
+        ALP_ED_EN_LANE3 : bit := '1';
+        ALP_ED_EN_LANECK : bit := '1';
+        ALP_ED_TST_LANE0 : bit := '0';
+        ALP_ED_TST_LANE1 : bit := '0';
+        ALP_ED_TST_LANE2 : bit := '0';
+        ALP_ED_TST_LANE3 : bit := '0';
+        ALP_ED_TST_LANECK : bit := '0';
+        ALP_EN_LN0 : bit := '0';
+        ALP_EN_LN1 : bit := '0';
+        ALP_EN_LN2 : bit := '0';
+        ALP_EN_LN3 : bit := '0';
+        ALP_EN_LNCK : bit := '0';
+        ALP_HYS_EN_LANE0 : bit := '1';
+        ALP_HYS_EN_LANE1 : bit := '1';
+        ALP_HYS_EN_LANE2 : bit := '1';
+        ALP_HYS_EN_LANE3 : bit := '1';
+        ALP_HYS_EN_LANECK : bit := '1';
+        ALP_TH_LANE0 : bit_vector := "1000";
+        ALP_TH_LANE1 : bit_vector := "1000";
+        ALP_TH_LANE2 : bit_vector := "1000";
+        ALP_TH_LANE3 : bit_vector := "1000";
+        ALP_TH_LANECK : bit_vector := "1000";
+        ANA_BYTECLK_PH : bit_vector := "00";
+        BIT_REVERSE_LN0 : bit := '0';
+        BIT_REVERSE_LN1 : bit := '0';
+        BIT_REVERSE_LN2 : bit := '0';
+        BIT_REVERSE_LN3 : bit := '0';
+        BIT_REVERSE_LNCK : bit := '0';
+        BYPASS_TXHCLKEN : bit := '1';
+        BYPASS_TXHCLKEN_SYNC : bit := '0';
+        BYTE_CLK_POLAR : bit := '0';
+        BYTE_REVERSE_LN0 : bit := '0';
+        BYTE_REVERSE_LN1 : bit := '0';
+        BYTE_REVERSE_LN2 : bit := '0';
+        BYTE_REVERSE_LN3 : bit := '0';
+        BYTE_REVERSE_LNCK : bit := '0';
+        EN_CLKB1X : bit := '1';
+        EQ_PBIAS_LANE0 : bit_vector := "1000";
+        EQ_PBIAS_LANE1 : bit_vector := "1000";
+        EQ_PBIAS_LANE2 : bit_vector := "1000";
+        EQ_PBIAS_LANE3 : bit_vector := "1000";
+        EQ_PBIAS_LANECK : bit_vector := "1000";
+        EQ_ZLD_LANE0 : bit_vector := "1000";
+        EQ_ZLD_LANE1 : bit_vector := "1000";
+        EQ_ZLD_LANE2 : bit_vector := "1000";
+        EQ_ZLD_LANE3 : bit_vector := "1000";
+        EQ_ZLD_LANECK : bit_vector := "1000";
+        HIGH_BW_LANE0 : bit := '1';
+        HIGH_BW_LANE1 : bit := '1';
+        HIGH_BW_LANE2 : bit := '1';
+        HIGH_BW_LANE3 : bit := '1';
+        HIGH_BW_LANECK : bit := '1';
+        HSREG_VREF_CTL : bit_vector := "100";
+        HSREG_VREF_EN : bit := '1';
+        HSRX_DLY_CTL_CK : bit_vector := "0000000";
+        HSRX_DLY_CTL_LANE0 : bit_vector := "0000000";
+        HSRX_DLY_CTL_LANE1 : bit_vector := "0000000";
+        HSRX_DLY_CTL_LANE2 : bit_vector := "0000000";
+        HSRX_DLY_CTL_LANE3 : bit_vector := "0000000";
+        HSRX_DLY_SEL_LANE0 : bit := '0';
+        HSRX_DLY_SEL_LANE1 : bit := '0';
+        HSRX_DLY_SEL_LANE2 : bit := '0';
+        HSRX_DLY_SEL_LANE3 : bit := '0';
+        HSRX_DLY_SEL_LANECK : bit := '0';
+        HSRX_DUTY_LANE0 : bit_vector := "1000";
+        HSRX_DUTY_LANE1 : bit_vector := "1000";
+        HSRX_DUTY_LANE2 : bit_vector := "1000";
+        HSRX_DUTY_LANE3 : bit_vector := "1000";
+        HSRX_DUTY_LANECK : bit_vector := "1000";
+        HSRX_EQ_EN_LANE0 : bit := '1';
+        HSRX_EQ_EN_LANE1 : bit := '1';
+        HSRX_EQ_EN_LANE2 : bit := '1';
+        HSRX_EQ_EN_LANE3 : bit := '1';
+        HSRX_EQ_EN_LANECK : bit := '1';
+        HSRX_IBIAS : bit_vector := "0011";
+        HSRX_IBIAS_TEST_EN : bit := '0';
+        HSRX_IMARG_EN : bit := '0';
+        HSRX_ODT_EN : bit := '1';
+        HSRX_ODT_TST : bit_vector := "0000";
+        HSRX_ODT_TST_CK : bit := '0';
+        HSRX_SEL : bit_vector := "0000";
+        HSRX_STOP_EN : bit := '0';
+        HSRX_TST : bit_vector := "0000";
+        HSRX_TST_CK : bit := '0';
+        HSRX_WAIT4EDGE : bit := '1';
+        HYST_NCTL : bit_vector := "01";
+        HYST_PCTL : bit_vector := "01";
+        IBIAS_TEST_EN : bit := '0';
+        LB_CH_SEL : bit := '0';
+        LB_EN_LN0 : bit := '0';
+        LB_EN_LN1 : bit := '0';
+        LB_EN_LN2 : bit := '0';
+        LB_EN_LN3 : bit := '0';
+        LB_EN_LNCK : bit := '0';
+        LB_POLAR_LN0 : bit := '0';
+        LB_POLAR_LN1 : bit := '0';
+        LB_POLAR_LN2 : bit := '0';
+        LB_POLAR_LN3 : bit := '0';
+        LB_POLAR_LNCK : bit := '0';
+        LOW_LPRX_VTH : bit := '0';
+        LPBK_DATA2TO1 : bit_vector := "0000";
+        LPBK_DATA2TO1_CK : bit := '0';
+        LPBK_EN : bit := '0';
+        LPBK_SEL : bit_vector := "0000";
+        LPBKTST_EN : bit_vector := "0000";
+        LPBKTST_EN_CK : bit := '0';
+        LPRX_EN : bit := '1';
+        LPRX_TST : bit_vector := "0000";
+        LPRX_TST_CK : bit := '0';
+        LPTX_DAT_POLAR_LN0 : bit := '0';
+        LPTX_DAT_POLAR_LN1 : bit := '0';
+        LPTX_DAT_POLAR_LN2 : bit := '0';
+        LPTX_DAT_POLAR_LN3 : bit := '0';
+        LPTX_DAT_POLAR_LNCK : bit := '0';
+        LPTX_NIMP_LN0 : bit_vector := "100";
+        LPTX_NIMP_LN1 : bit_vector := "100";
+        LPTX_NIMP_LN2 : bit_vector := "100";
+        LPTX_NIMP_LN3 : bit_vector := "100";
+        LPTX_NIMP_LNCK : bit_vector := "100";
+        LPTX_PIMP_LN0 : bit_vector := "100";
+        LPTX_PIMP_LN1 : bit_vector := "100";
+        LPTX_PIMP_LN2 : bit_vector := "100";
+        LPTX_PIMP_LN3 : bit_vector := "100";
+        LPTX_PIMP_LNCK : bit_vector := "100";
+        MIPI_PMA_DIS_N : bit := '1';
+        PGA_BIAS_LANE0 : bit_vector := "1000";
+        PGA_BIAS_LANE1 : bit_vector := "1000";
+        PGA_BIAS_LANE2 : bit_vector := "1000";
+        PGA_BIAS_LANE3 : bit_vector := "1000";
+        PGA_BIAS_LANECK : bit_vector := "1000";
+        PGA_GAIN_LANE0 : bit_vector := "1000";
+        PGA_GAIN_LANE1 : bit_vector := "1000";
+        PGA_GAIN_LANE2 : bit_vector := "1000";
+        PGA_GAIN_LANE3 : bit_vector := "1000";
+        PGA_GAIN_LANECK : bit_vector := "1000";
+        RX_ODT_TRIM_LANE0 : bit_vector := "1000";
+        RX_ODT_TRIM_LANE1 : bit_vector := "1000";
+        RX_ODT_TRIM_LANE2 : bit_vector := "1000";
+        RX_ODT_TRIM_LANE3 : bit_vector := "1000";
+        RX_ODT_TRIM_LANECK : bit_vector := "1000";
+        SLEWN_CTL_LN0 : bit_vector := "1111";
+        SLEWN_CTL_LN1 : bit_vector := "1111";
+        SLEWN_CTL_LN2 : bit_vector := "1111";
+        SLEWN_CTL_LN3 : bit_vector := "1111";
+        SLEWN_CTL_LNCK : bit_vector := "1111";
+        SLEWP_CTL_LN0 : bit_vector := "1111";
+        SLEWP_CTL_LN1 : bit_vector := "1111";
+        SLEWP_CTL_LN2 : bit_vector := "1111";
+        SLEWP_CTL_LN3 : bit_vector := "1111";
+        SLEWP_CTL_LNCK : bit_vector := "1111";
+        STP_UNIT : bit_vector := "01";
+        TERMN_CTL_LN0 : bit_vector := "1000";
+        TERMN_CTL_LN1 : bit_vector := "1000";
+        TERMN_CTL_LN2 : bit_vector := "1000";
+        TERMN_CTL_LN3 : bit_vector := "1000";
+        TERMN_CTL_LNCK : bit_vector := "1000";
+        TERMP_CTL_LN0 : bit_vector := "1000";
+        TERMP_CTL_LN1 : bit_vector := "1000";
+        TERMP_CTL_LN2 : bit_vector := "1000";
+        TERMP_CTL_LN3 : bit_vector := "1000";
+        TERMP_CTL_LNCK : bit_vector := "1000";
+        TEST_EN_LN0  : bit := '0';
+        TEST_EN_LN1  : bit := '0';
+        TEST_EN_LN2  : bit := '0';
+        TEST_EN_LN3  : bit := '0';
+        TEST_EN_LNCK  : bit := '0';
+        TEST_N_IMP_LN0  : bit := '0';
+        TEST_N_IMP_LN1  : bit := '0';
+        TEST_N_IMP_LN2  : bit := '0';
+        TEST_N_IMP_LN3  : bit := '0';
+        TEST_N_IMP_LNCK  : bit := '0';
+        TEST_P_IMP_LN0  : bit := '0';
+        TEST_P_IMP_LN1  : bit := '0';
+        TEST_P_IMP_LN2  : bit := '0';
+        TEST_P_IMP_LN3  : bit := '0';
+        TEST_P_IMP_LNCK  : bit := '0'
+    );
+    PORT(
+        D0LN_HSRXD, D1LN_HSRXD, D2LN_HSRXD, D3LN_HSRXD : OUT std_logic_vector(15 downto 0);
+        D0LN_HSRXD_VLD,D1LN_HSRXD_VLD,D2LN_HSRXD_VLD,D3LN_HSRXD_VLD : OUT std_logic;
+        D0LN_HSRX_DREN,  D1LN_HSRX_DREN, D2LN_HSRX_DREN, D3LN_HSRX_DREN : IN std_logic;
+        DI_LPRX0_N, DI_LPRX0_P, DI_LPRX1_N, DI_LPRX1_P, DI_LPRX2_N, DI_LPRX2_P, DI_LPRX3_N, DI_LPRX3_P : OUT std_logic;
+        DI_LPRXCK_N, DI_LPRXCK_P : OUT std_logic;
+        CK_N, CK_P, D0_N, D0_P, D1_N, D1_P, D2_N, D2_P, D3_N, D3_P : INOUT std_logic;
+        HSRX_STOP, HSTXEN_LN0, HSTXEN_LN1, HSTXEN_LN2, HSTXEN_LN3, HSTXEN_LNCK, LPTXEN_LN0, LPTXEN_LN1, LPTXEN_LN2, LPTXEN_LN3, LPTXEN_LNCK : IN std_logic;
+
+        RX_CLK_O,TX_CLK_O : OUT std_logic;
+        PWRON_RX, PWRON_TX, RESET, RX_CLK_1X, TX_CLK_1X : IN std_logic;
+        TXDPEN_LN0, TXDPEN_LN1, TXDPEN_LN2, TXDPEN_LN3, TXDPEN_LNCK, TXHCLK_EN : IN std_logic;
+        CKLN_HSTXD,D0LN_HSTXD,D1LN_HSTXD,D2LN_HSTXD,D3LN_HSTXD : IN std_logic_vector(15 downto 0);
+        HSTXD_VLD : IN std_logic;
+        CK0, CK90, CK180, CK270 : IN std_logic;
+        DO_LPTX0_N, DO_LPTX1_N, DO_LPTX2_N, DO_LPTX3_N, DO_LPTXCK_N, DO_LPTX0_P, DO_LPTX1_P, DO_LPTX2_P, DO_LPTX3_P, DO_LPTXCK_P : IN std_logic;
+        HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK, HSRX_ODTEN_D0, HSRX_ODTEN_D1, HSRX_ODTEN_D2, HSRX_ODTEN_D3, LPRX_EN_CK, LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2, LPRX_EN_D3 : IN std_logic;
+        RX_DRST_N, TX_DRST_N, WALIGN_DVLD : IN std_logic;
+                
+        MRDATA : OUT std_logic_vector(7 downto 0);
+        MA_INC, MCLK : IN std_logic;
+        MOPCODE : IN std_logic_vector(1 downto 0);
+        MWDATA : IN std_logic_vector(7 downto 0);
+
+        SPLL_CKN, SPLL_CKP : IN std_logic;
+         
+        ALPEDO_LANE0, ALPEDO_LANE1, ALPEDO_LANE2, ALPEDO_LANE3, ALPEDO_LANECK : OUT std_logic;
+        D1LN_DESKEW_DONE,D2LN_DESKEW_DONE,D3LN_DESKEW_DONE,D0LN_DESKEW_DONE : OUT std_logic;
+        D1LN_DESKEW_ERROR, D2LN_DESKEW_ERROR, D3LN_DESKEW_ERROR, D0LN_DESKEW_ERROR : OUT std_logic;
+        D0LN_DESKEW_REQ, D1LN_DESKEW_REQ, D2LN_DESKEW_REQ, D3LN_DESKEW_REQ  : IN std_logic;
+        HSRX_DLYDIR_LANE0, HSRX_DLYDIR_LANE1, HSRX_DLYDIR_LANE2, HSRX_DLYDIR_LANE3, HSRX_DLYDIR_LANECK : IN std_logic;
+        HSRX_DLYLDN_LANE0, HSRX_DLYLDN_LANE1, HSRX_DLYLDN_LANE2, HSRX_DLYLDN_LANE3, HSRX_DLYLDN_LANECK : IN std_logic;
+        HSRX_DLYMV_LANE0, HSRX_DLYMV_LANE1,  HSRX_DLYMV_LANE2, HSRX_DLYMV_LANE3, HSRX_DLYMV_LANECK : IN std_logic;
+        ALP_EDEN_LANE0, ALP_EDEN_LANE1, ALP_EDEN_LANE2, ALP_EDEN_LANE3, ALP_EDEN_LANECK, ALPEN_LN0, ALPEN_LN1, ALPEN_LN2, ALPEN_LN3, ALPEN_LNCK : IN std_logic
+
+    );
+    
+end MIPI_DPHYA;
+
+architecture Behavioral of MIPI_DPHYA is
+begin
+
+end Behavioral;
+
+------------------------------MIPI_CPHY---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all;
+
+entity MIPI_CPHY is
+    GENERIC(
+        TX_PLLCLK : string := "NONE";
+        D0LN_HS_TX_EN : bit := '1';
+        D1LN_HS_TX_EN : bit := '1';
+        D2LN_HS_TX_EN : bit := '1';
+        D0LN_HS_RX_EN : bit := '1';
+        D1LN_HS_RX_EN : bit := '1';
+        D2LN_HS_RX_EN : bit := '1';
+        TX_HS_21BIT_MODE : bit := '0';
+        RX_OUTCLK_SEL : bit_vector := "00";
+        TX_W_LENDIAN : bit := '1';
+
+        CLK_SEL : bit_vector := "00";
+        LNDIV_RATIO : bit_vector := "0000";
+        LNDIV_EN : bit := '0';
+
+        D0LN_TX_REASGN_A : bit_vector := "00";
+        D0LN_TX_REASGN_B : bit_vector := "01";
+        D0LN_TX_REASGN_C : bit_vector := "10";
+        D0LN_RX_HS_21BIT_MODE : bit := '0';
+
+        D0LN_RX_WA_SYNC_PAT0_EN : bit := '1';
+        D0LN_RX_WA_SYNC_PAT0_H : bit_vector := "1001001";
+        D0LN_RX_WA_SYNC_PAT0_L : bit_vector := "00100100";
+        D0LN_RX_WA_SYNC_PAT1_EN : bit := '1';
+        D0LN_RX_WA_SYNC_PAT1_H : bit_vector := "0101001";
+        D0LN_RX_WA_SYNC_PAT1_L : bit_vector := "00100100";
+        D0LN_RX_WA_SYNC_PAT2_EN : bit := '1';
+        D0LN_RX_WA_SYNC_PAT2_H : bit_vector := "0011001";
+        D0LN_RX_WA_SYNC_PAT2_L : bit_vector := "00100100";
+        D0LN_RX_WA_SYNC_PAT3_EN : bit := '0';
+        D0LN_RX_WA_SYNC_PAT3_H : bit_vector := "0001001";
+        D0LN_RX_WA_SYNC_PAT3_L : bit_vector := "00100100";
+        D0LN_RX_W_LENDIAN : bit := '1';
+        D0LN_RX_REASGN_A : bit_vector := "00";
+        D0LN_RX_REASGN_B : bit_vector := "01";
+        D0LN_RX_REASGN_C : bit_vector := "10";
+        HSRX_LNSEL : bit_vector := "111";
+        EQ_RS_LN0 : bit_vector := "001";
+        EQ_CS_LN0 : bit_vector := "101";
+        PGA_GAIN_LN0 : bit_vector := "0110";
+        PGA_BIAS_LN0 : bit_vector := "1000";
+        EQ_PBIAS_LN0 : bit_vector := "0100";
+        EQ_ZLD_LN0 : bit_vector := "1000";
+        D1LN_TX_REASGN_A : bit_vector := "00";
+        D1LN_TX_REASGN_B : bit_vector := "01";
+        D1LN_TX_REASGN_C : bit_vector := "10";
+        D1LN_RX_HS_21BIT_MODE  : bit := '1';
+        D1LN_RX_WA_SYNC_PAT0_EN  : bit := '1';
+        D1LN_RX_WA_SYNC_PAT0_H : bit_vector := "1001001";
+        D1LN_RX_WA_SYNC_PAT0_L : bit_vector := "00100100";
+        D1LN_RX_WA_SYNC_PAT1_EN : bit := '1';
+        D1LN_RX_WA_SYNC_PAT1_H : bit_vector := "0101001";
+        D1LN_RX_WA_SYNC_PAT1_L : bit_vector := "00100100";
+        D1LN_RX_WA_SYNC_PAT2_EN : bit := '1';
+        D1LN_RX_WA_SYNC_PAT2_H : bit_vector := "0011001";
+        D1LN_RX_WA_SYNC_PAT2_L : bit_vector := "00100100";
+        D1LN_RX_WA_SYNC_PAT3_EN : bit := '0';
+        D1LN_RX_WA_SYNC_PAT3_H : bit_vector := "0001001";
+        D1LN_RX_WA_SYNC_PAT3_L : bit_vector := "00100100";
+        D1LN_RX_W_LENDIAN : bit := '1';
+        D1LN_RX_REASGN_A : bit_vector := "00";
+        D1LN_RX_REASGN_B : bit_vector := "01";
+        D1LN_RX_REASGN_C : bit_vector := "10";
+        EQ_RS_LN1 : bit_vector := "001";
+        EQ_CS_LN1 : bit_vector := "101";
+        PGA_GAIN_LN1 : bit_vector := "0110";
+        PGA_BIAS_LN1 : bit_vector := "1000";
+        EQ_PBIAS_LN1 : bit_vector := "0100";
+        EQ_ZLD_LN1 : bit_vector := "1000";
+        D2LN_TX_REASGN_A : bit_vector := "00";
+        D2LN_TX_REASGN_B : bit_vector := "01";
+        D2LN_TX_REASGN_C : bit_vector := "10";
+        D2LN_RX_HS_21BIT_MODE : bit := '0';
+        D2LN_RX_WA_SYNC_PAT0_EN : bit := '1';
+        D2LN_RX_WA_SYNC_PAT0_H : bit_vector := "1001001";
+        D2LN_RX_WA_SYNC_PAT0_L : bit_vector := "00100100";
+        D2LN_RX_WA_SYNC_PAT1_EN : bit := '1';
+        D2LN_RX_WA_SYNC_PAT1_H : bit_vector := "0101001";
+        D2LN_RX_WA_SYNC_PAT1_L : bit_vector := "00100100";
+        D2LN_RX_WA_SYNC_PAT2_EN : bit := '1';
+        D2LN_RX_WA_SYNC_PAT2_H : bit_vector := "0011001";
+        D2LN_RX_WA_SYNC_PAT2_L : bit_vector := "00100100";
+        D2LN_RX_WA_SYNC_PAT3_EN : bit := '0';
+        D2LN_RX_WA_SYNC_PAT3_H : bit_vector := "0001001";
+        D2LN_RX_WA_SYNC_PAT3_L : bit_vector := "00100100";
+        D2LN_RX_W_LENDIAN : bit := '1';
+        D2LN_RX_REASGN_A : bit_vector := "00";
+        D2LN_RX_REASGN_B : bit_vector := "01";
+        D2LN_RX_REASGN_C : bit_vector := "10";
+        EQ_RS_LN2 : bit_vector := "001";
+        EQ_CS_LN2 : bit_vector := "101";
+        PGA_GAIN_LN2 : bit_vector := "0110";
+        PGA_BIAS_LN2 : bit_vector := "1000";
+        EQ_PBIAS_LN2 : bit_vector := "0100";
+        EQ_ZLD_LN2 : bit_vector := "1000"
+
+    );
+    PORT(
+        D0LN_HSRXD, D1LN_HSRXD, D2LN_HSRXD : OUT std_logic_vector(41 downto 0);
+        D0LN_HSRXD_VLD, D1LN_HSRXD_VLD, D2LN_HSRXD_VLD : OUT std_logic;
+        D0LN_HSRX_DEMAP_INVLD, D1LN_HSRX_DEMAP_INVLD, D2LN_HSRX_DEMAP_INVLD : OUT std_logic_vector(1 downto 0);
+        D0LN_HSRX_FIFO_RDE_ERR, D0LN_HSRX_FIFO_WRF_ERR, D1LN_HSRX_FIFO_RDE_ERR, D1LN_HSRX_FIFO_WRF_ERR, D2LN_HSRX_FIFO_RDE_ERR, D2LN_HSRX_FIFO_WRF_ERR : OUT std_logic;
+        D0LN_HSRX_WA, D1LN_HSRX_WA, D2LN_HSRX_WA : OUT std_logic_vector(1 downto 0);
+        D0LN_RX_CLK_1X_O, D1LN_RX_CLK_1X_O, D2LN_RX_CLK_1X_O : OUT std_logic;
+        HSTX_FIFO_AE, HSTX_FIFO_AF : OUT std_logic;
+        HSTX_FIFO_RDE_ERR, HSTX_FIFO_WRF_ERR : OUT std_logic;
+        RX_CLK_MUXED : OUT std_logic;
+        TX_CLK_1X_O : OUT std_logic;
+        DI_LPRX0_A, DI_LPRX0_B, DI_LPRX0_C, DI_LPRX1_A, DI_LPRX1_B, DI_LPRX1_C, DI_LPRX2_A, DI_LPRX2_B, DI_LPRX2_C : OUT std_logic;
+        MDRP_RDATA : OUT std_logic_vector(7 downto 0);
+        D0A, D0B, D0C, D1A, D1B, D1C, D2A, D2B, D2C : INOUT std_logic;
+        D0LN_HSRX_EN, D0LN_HSTX_EN, D1LN_HSRX_EN, D1LN_HSTX_EN, D2LN_HSRX_EN, D2LN_HSTX_EN : IN std_logic;
+        D0LN_HSTX_DATA,D1LN_HSTX_DATA, D2LN_HSTX_DATA : IN std_logic_vector(41 downto 0);
+        D0LN_HSTX_DATA_VLD, D1LN_HSTX_DATA_VLD, D2LN_HSTX_DATA_VLD : IN std_logic;
+        D0LN_HSTX_MAP_DIS, D1LN_HSTX_MAP_DIS, D2LN_HSTX_MAP_DIS : IN std_logic_vector(1 downto 0);
+        D0LN_RX_CLK_1X_I,D1LN_RX_CLK_1X_I, D2LN_RX_CLK_1X_I : IN std_logic;
+        D0LN_RX_DRST_N, D0LN_TX_DRST_N, D1LN_RX_DRST_N, D1LN_TX_DRST_N, D2LN_RX_DRST_N, D2LN_TX_DRST_N : IN std_logic;
+        HSTX_ENLN0, HSTX_ENLN1, HSTX_ENLN2, LPTX_ENLN0, LPTX_ENLN1, LPTX_ENLN2 : IN std_logic;
+        MDRP_A_D_I : IN std_logic_vector(7 downto 0);
+        MDRP_A_INC_I,MDRP_CLK_I : IN std_logic;
+        MDRP_OPCODE_I : IN std_logic_vector(1 downto 0);
+        PWRON_RX_LN0, PWRON_RX_LN1, PWRON_RX_LN2, PWRON_TX : IN std_logic;
+        ARST_RXLN0, ARST_RXLN1, ARST_RXLN2,ARSTN_TX : IN std_logic;
+        RX_CLK_EN_LN0, RX_CLK_EN_LN1, RX_CLK_EN_LN2 : IN std_logic;
+        TX_CLK_1X_I : IN std_logic;
+        TXDP_ENLN0, TXDP_ENLN1, TXDP_ENLN2 : IN std_logic;
+        TXHCLK_EN : IN std_logic;
+        DO_LPTX_A_LN0, DO_LPTX_A_LN1, DO_LPTX_A_LN2, DO_LPTX_B_LN0, DO_LPTX_B_LN1, DO_LPTX_B_LN2, DO_LPTX_C_LN0, DO_LPTX_C_LN1, DO_LPTX_C_LN2 : IN std_logic;
+        GPLL_CK0,GPLL_CK90, GPLL_CK180, GPLL_CK270 : IN std_logic;
+        HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2 : IN std_logic;
+        HSRX_ODT_EN_D0, HSRX_ODT_EN_D1, HSRX_ODT_EN_D2 : IN std_logic;
+        LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2 : IN std_logic;
+        SPLL0_CKN, SPLL0_CKP, SPLL1_CKN, SPLL1_CKP : IN std_logic
+    );
+    
+end MIPI_CPHY;
+
+architecture Behavioral of MIPI_CPHY is
+begin
+
+end Behavioral;
+
+
 
 
 ------------------------------GTR12_PMAC---------------------------------------
@@ -19848,46 +21400,807 @@ architecture Behavioral of GTR12_UPAR is
 begin
 end Behavioral;
 
-------------------------------AE350_RAM---------------------------------------
+
+------------------------------GTR12_PMACA---------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all; 
 
-entity AE350_RAM is
-        port(
-			POR_N	: in std_logic;
-			HW_RSTN	: in std_logic;
-			CORE_CLK	: in std_logic;
-			AHB_CLK	: in std_logic;
-			APB_CLK	: in std_logic;
-			RTC_CLK	: in std_logic;
-			CORE_CE	: in std_logic;
-			AXI_CE	: in std_logic;
-			AHB_CE	: in std_logic;
-			EXTM_HADDR	: in std_logic_vector(31 downto 0);
-			EXTM_HBURST	: in std_logic_vector(2 downto 0);
-			EXTM_HPROT	: in std_logic_vector(3 downto 0);
-			EXTM_HRDATA	: out std_logic_vector(63 downto 0);
-			EXTM_HREADY	: in std_logic;
-			EXTM_HREADYOUT	: out std_logic;
-			EXTM_HRESP	: out std_logic;
-			EXTM_HSEL	: in std_logic;
-			EXTM_HSIZE	: in std_logic_vector(2 downto 0);
-			EXTM_HTRANS	: in std_logic_vector(1 downto 0);
-			EXTM_HWDATA	: in std_logic_vector(63 downto 0);
-			EXTM_HWRITE	: in std_logic;
-			EMA	: in std_logic_vector(2 downto 0);
-			EMAW	: in std_logic_vector(1 downto 0);
-			EMAS	: in std_logic;
-			RET1N	: in std_logic;
-			RET2N	: in std_logic
-            );
-end AE350_RAM;
-architecture Behavioral of AE350_RAM is
+entity GTR12_PMACA is
+        port(            
+            PL_EXIT                             : out std_logic_vector(3 downto 0);
+            TL_FLR_REQ0                         : out std_logic_vector(64 downto 0);
+            TL_FLR_ACK0                         : in std_logic_vector(64 downto 0);
+            TL_CLOCK_FREQ                       : in std_logic_vector(21 downto 0);
+            PL_WAKE_OEN                         : out std_logic;
+            PL_WAKE_IN                          : in std_logic;
+            PL_CLKREQ_OEN                       : out std_logic;
+            PL_CLKREQ_IN                        : in std_logic;
+            PL_LTSSM_ENABLE                     : in std_logic;
+            TL_RX_SOP0                          : out std_logic;
+            TL_RX_EOP0                          : out std_logic;
+            TL_RX_DATA0                         : out std_logic_vector(255 downto 0);
+            TL_RX_VALID0                        : out std_logic_vector(7 downto 0);
+            TL_RX_PROT0                         : out std_logic_vector(31 downto 0);
+            TL_RX_BARDEC0                       : out std_logic_vector(19 downto 0);
+            TL_RX_MCHIT0                        : out std_logic_vector(15 downto 0);
+            TL_RX_ERR0                          : out std_logic_vector(7 downto 0);
+            TL_RX_MASKNP0                       : in std_logic;
+            TL_RX_WAIT0                         : in std_logic;
+            TL_TX_SOP0                          : in std_logic;
+            TL_TX_EOP0                          : in std_logic;
+            TL_TX_DATA0                         : in std_logic_vector(255 downto 0);
+            TL_TX_VALID0                        : in std_logic_vector(7 downto 0);
+            TL_TX_PROT0                         : in std_logic_vector(31 downto 0);
+            TL_TX_STREAM0                       : in std_logic;
+            TL_TX_ERR0                          : in std_logic_vector(7 downto 0);
+            TL_TX_WAIT0                         : out std_logic;
+            TL_TX_CREDITS0                      : out std_logic_vector(95 downto 0);
+            TL_TX_PROTERR0                      : out std_logic_vector(31 downto 0);
+            TL_TX_PROTACK0                      : in std_logic;
+            TL_BRSW_IN                          : in std_logic_vector(7 downto 0);
+            TL_BRSW_OUT                         : out std_logic_vector(7 downto 0);
+            TL_INT_STATUS0                      : in std_logic;
+            TL_INT_REQ0                         : in std_logic;
+            TL_INT_MSINUM0                      : in std_logic_vector(4 downto 0);
+            TL_INT_VFNUM0                       : in std_logic_vector(6 downto 0);
+            TL_INT_ACK0                         : out std_logic;
+            TL_INT_STATUS1                      : in std_logic;
+            TL_INT_REQ1                         : in std_logic;
+            TL_INT_MSINUM1                      : in std_logic_vector(4 downto 0);
+            TL_INT_VFNUM1                       : in std_logic_vector(6 downto 0);
+            TL_INT_ACK1                         : out std_logic;
+            TL_INT_PINSTATE                     : out std_logic_vector(3 downto 0);
+            TL_INT_PINCONTROL                   : in std_logic_vector(3 downto 0);
+            TL_PM_EVENT0                        : in std_logic;
+            TL_PM_DATA0                         : in std_logic_vector(9 downto 0);
+            TL_PM_EVENT1                        : in std_logic;
+            TL_PM_DATA1                         : in std_logic_vector(9 downto 0);
+            TL_PM_CLKCONTROL                    : in std_logic;
+            TL_PM_CLKSTATUS                     : out std_logic_vector(3 downto 0);
+            TL_PM_BWCHANGE                      : in std_logic_vector(7 downto 0);
+            TL_PM_TOCONTROL                     : in std_logic;
+            TL_PM_TOSTATUS                      : out std_logic;
+            TL_PM_AUXPWR                        : in std_logic;
+            TL_PM_OBFFCONTROL                   : in std_logic_vector(3 downto 0);
+            TL_PM_OBFFSTATUS                    : out std_logic_vector(3 downto 0);
+            TL_REPORT_ERROR0                    : in std_logic_vector(38 downto 0);
+            TL_REPORT_STATE0                    : in std_logic_vector(7 downto 0);
+            TL_REPORT_CPLPENDING0               : in std_logic_vector(64 downto 0);
+            TL_REPORT_HEADER0                   : in std_logic_vector(255 downto 0);
+            TL_REPORT_STATE1                    : in std_logic_vector(7 downto 0);
+            TL_REPORT_EVENT                     : out std_logic_vector(7 downto 0);
+            TL_REPORT_HOTPLUG                   : in std_logic_vector(7 downto 0);
+            TL_REPORT_TIMER                     : out std_logic_vector(3 downto 0);
+            TL_REPORT_LATENCY                   : in std_logic_vector(32 downto 0);
+            FABRIC_PL_NPOR                      : in std_logic;
+            FABRIC_PL_RSTN                      : in std_logic;
+            FABRIC_PL_RSTNP                     : in std_logic;
+            FABRIC_PL_SRST                      : in std_logic;
+            FABRIC_TL_NPOR                      : in std_logic;
+            FABRIC_TL_RSTN                      : in std_logic;
+            FABRIC_TL_RSTNP                     : in std_logic;
+            FABRIC_TL_CRSTN                     : in std_logic;
+            FABRIC_TL_SRST                      : in std_logic;
+            FABRIC_TL_CRST                      : in std_logic;
+            FABRIC_PL_PCLK_STOP                 : in std_logic;
+            FABRIC_CTRL_GATE_TL_CLK             : in std_logic;
+            PCIE_HALF_CLK                       : out std_logic;
+            FABRIC_TEST_BUS_MON                 : out std_logic_vector(31 downto 0);
+            TL_CFGEXPADDR0                      : out std_logic_vector(18 downto 0);
+            TL_CFGEXPADDR1                      : out std_logic_vector(18 downto 0);
+            TL_CFGEXPRDATA0                     : in std_logic_vector(31 downto 0);
+            TL_CFGEXPRDATA1                     : in std_logic_vector(31 downto 0);
+            TL_CFGEXPREAD0                      : out std_logic;
+            TL_CFGEXPREAD1                      : out std_logic;
+            TL_CFGEXPSTRB0                      : out std_logic_vector(3 downto 0);
+            TL_CFGEXPSTRB1                      : out std_logic_vector(3 downto 0);
+            TL_CFGEXPVALID0                     : in std_logic;
+            TL_CFGEXPVALID1                     : in std_logic;
+            TL_CFGEXPWDATA0                     : out std_logic_vector(31 downto 0);
+            TL_CFGEXPWDATA1                     : out std_logic_vector(31 downto 0);
+            TL_CFGEXPWRITE0                     : out std_logic;
+            TL_CFGEXPWRITE1                     : out std_logic;
+            TLCFG_BUSDEV                        : out std_logic_vector(12 downto 0);
+
+            --new port
+            TL_EN_PF0_FLR                       : in std_logic;
+            FABRIC_PCIE_PRGM_ACTIVE             : out std_logic;
+            TL_APB_PREADY                       : out std_logic;
+            TL_APB_PRDATA                       : out std_logic_vector(31 downto 0); 
+            TL_APB_PSTRB                        : in std_logic_vector(3 downto 0); 
+            TL_APB_PWDATA                       : in std_logic_vector(31 downto 0); 
+            TL_APB_PWRITE                       : in std_logic;
+            TL_APB_PENABLE                      : in std_logic;
+            TL_APB_PADDR                        : in std_logic_vector(20 downto 0); 
+            TL_EN_PF0_REPORT_ERROR              : in std_logic;
+            TL_EN_PF0_REPORT_HEADER             : in std_logic;
+            TL_EN_PF0_REPORT_CPLPENDING         : in std_logic;
+    
+            --ports that are special
+            OSC_CLK                             : in std_logic;
+            TL_CLKP                             : in std_logic;
+            PCIE_CLK                            : out std_logic;
+            PMAC_LN_RSTN                        : out std_logic;
+            Q0_CPLL0_OK_I                       : in std_logic;
+            Q0_CPLL1_OK_I                       : in std_logic;
+            Q0_CPLL2_OK_I                       : in std_logic;
+            Q0_CPLL3_OK_I                       : in std_logic;
+            Q1_CPLL0_OK_I                       : in std_logic;
+            Q1_CPLL1_OK_I                       : in std_logic;
+            Q1_CPLL2_OK_I                       : in std_logic;
+            Q1_CPLL3_OK_I                       : in std_logic;
+            FABRIC_PCLK_I                       : in std_logic;
+            PCIE_DIV2_REG                       : out std_logic;
+            PCIE_DIV4_REG                       : out std_logic
+
+        );
+end GTR12_PMACA;
+architecture Behavioral of GTR12_PMACA is
 begin
-
 end Behavioral;
+
+------------------------------GTR12_QUADA---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all; 
+
+entity GTR12_QUADA is
+    port(
+        LN0_TXM_O                    : out std_logic;
+        LN0_TXP_O                    : out std_logic;
+        LN1_TXM_O                    : out std_logic;
+        LN1_TXP_O                    : out std_logic;
+        LN2_TXM_O                    : out std_logic;
+        LN2_TXP_O                    : out std_logic;
+        LN3_TXM_O                    : out std_logic;
+        LN3_TXP_O                    : out std_logic;
+        LN0_RXM_I                    : in std_logic;
+        LN0_RXP_I                    : in std_logic;
+        LN1_RXM_I                    : in std_logic;
+        LN1_RXP_I                    : in std_logic;
+        LN2_RXM_I                    : in std_logic;
+        LN2_RXP_I                    : in std_logic;
+        LN3_RXM_I                    : in std_logic;
+        LN3_RXP_I                    : in std_logic;
+        FABRIC_LN0_RXDET_RESULT      : out std_logic;
+        FABRIC_LN1_RXDET_RESULT      : out std_logic;
+        FABRIC_LN2_RXDET_RESULT      : out std_logic;
+        FABRIC_LN3_RXDET_RESULT      : out std_logic;
+        FABRIC_PMA_CM0_DR_REFCLK_DET_O : out std_logic;
+        FABRIC_PMA_CM1_DR_REFCLK_DET_O : out std_logic;
+        FABRIC_PMA_PD_REFHCLK_I      : in std_logic;
+        FABRIC_REFCLK1_INPUT_SEL_I   : in std_logic_vector(2 downto 0);
+        FABRIC_REFCLK_INPUT_SEL_I    : in std_logic_vector(2 downto 0);
+        REFCLKM0_I                   : in std_logic;
+        REFCLKM1_I                   : in std_logic;
+        REFCLKP0_I                   : in std_logic;
+        REFCLKP1_I                   : in std_logic;
+        REFCLKM2_I                   : in std_logic;
+        REFCLKM3_I                   : in std_logic;
+        REFCLKP2_I                   : in std_logic;
+        REFCLKP3_I                   : in std_logic;
+        FABRIC_BURN_IN_I             : in std_logic;
+        FABRIC_CK_SOC_DIV_I          : in std_logic_vector(1 downto 0);
+        FABRIC_CM1_LIFE_CLK_O        : out std_logic;
+        FABRIC_CM_LIFE_CLK_O         : out std_logic;
+        FABRIC_CMU1_CK_REF_O         : out std_logic;
+        FABRIC_CMU1_OK_O             : out std_logic;
+        FABRIC_CMU1_REFCLK_GATE_ACK_O: out std_logic;
+        FABRIC_CMU1_REFCLK_GATE_I    : in std_logic;
+        FABRIC_CMU_CK_REF_O          : out std_logic;
+        FABRIC_CMU_OK_O              : out std_logic;
+        FABRIC_CMU_REFCLK_GATE_ACK_O : out std_logic;
+        FABRIC_CMU_REFCLK_GATE_I     : in std_logic;
+        FABRIC_GLUE_MAC_INIT_INFO_I  : in std_logic;
+        FABRIC_LANE0_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LANE1_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LANE2_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LANE3_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LN0_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN0_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN0_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN0_IDDQ_I            : in std_logic;
+        FABRIC_LN0_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN0_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN0_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN0_RSTN_I            : in std_logic;
+        FABRIC_LN0_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN0_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN0_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_LN1_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN1_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN1_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN1_IDDQ_I            : in std_logic;
+        FABRIC_LN1_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN1_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN1_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN1_RSTN_I            : in std_logic;
+        FABRIC_LN1_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN1_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN1_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_LN2_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN2_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN2_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN2_IDDQ_I            : in std_logic;
+        FABRIC_LN2_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN2_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN2_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN2_RSTN_I            : in std_logic;
+        FABRIC_LN2_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN2_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN2_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_LN3_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN3_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN3_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN3_IDDQ_I            : in std_logic;
+        FABRIC_LN3_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN3_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN3_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN3_RSTN_I            : in std_logic;
+        FABRIC_LN3_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN3_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN3_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_REFCLK_GATE_ACK_O     : out std_logic;
+        FABRIC_REFCLK_GATE_I         : in std_logic;
+        LANE0_PCS_RX_RST             : in std_logic;
+        LANE1_PCS_RX_RST             : in std_logic;
+        LANE2_PCS_RX_RST             : in std_logic;
+        LANE3_PCS_RX_RST             : in std_logic;
+        LANE0_ALIGN_TRIGGER          : in std_logic;
+        LANE1_ALIGN_TRIGGER          : in std_logic;
+        LANE2_ALIGN_TRIGGER          : in std_logic;
+        LANE3_ALIGN_TRIGGER          : in std_logic;
+        LANE0_CHBOND_START           : in std_logic;
+        LANE1_CHBOND_START           : in std_logic;
+        LANE2_CHBOND_START           : in std_logic;
+        LANE3_CHBOND_START           : in std_logic;
+        LANE0_ALIGN_LINK             : out std_logic;
+        LANE0_K_LOCK                 : out std_logic;
+        LANE0_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE0_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE0_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE1_ALIGN_LINK             : out std_logic;
+        LANE1_K_LOCK                 : out std_logic;
+        LANE1_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE1_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE1_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE2_ALIGN_LINK             : out std_logic;
+        LANE2_K_LOCK                 : out std_logic;
+        LANE2_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE2_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE2_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE3_ALIGN_LINK             : out std_logic;
+        LANE3_K_LOCK                 : out std_logic;
+        LANE3_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE3_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE3_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE0_PCS_TX_RST             : in std_logic;
+        LANE1_PCS_TX_RST             : in std_logic;
+        LANE2_PCS_TX_RST             : in std_logic;
+        LANE3_PCS_TX_RST             : in std_logic;
+        LANE0_FABRIC_RX_CLK          : in std_logic;
+        LANE1_FABRIC_RX_CLK          : in std_logic;
+        LANE2_FABRIC_RX_CLK          : in std_logic;
+        LANE3_FABRIC_RX_CLK          : in std_logic;
+        LANE0_FABRIC_C2I_CLK         : in std_logic;
+        LANE1_FABRIC_C2I_CLK         : in std_logic;
+        LANE2_FABRIC_C2I_CLK         : in std_logic;
+        LANE3_FABRIC_C2I_CLK         : in std_logic;
+        LANE0_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE1_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE2_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE3_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE0_FABRIC_TX_CLK          : in std_logic;
+        LANE1_FABRIC_TX_CLK          : in std_logic;
+        LANE2_FABRIC_TX_CLK          : in std_logic;
+        LANE3_FABRIC_TX_CLK          : in std_logic;
+        LANE0_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        LANE1_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        LANE2_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        LANE3_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        FABRIC_CMU0_CLK              : out std_logic;
+        FABRIC_CMU1_CLK              : out std_logic;
+        FABRIC_QUAD_CLK_RX           : out std_logic;
+        LANE0_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE1_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE2_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE3_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE0_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE0_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE0_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE1_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE1_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE1_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE2_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE2_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE2_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE3_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE3_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE3_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE0_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE0_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE0_TX_IF_FIFO_FULL        : out std_logic;
+        LANE1_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE1_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE1_TX_IF_FIFO_FULL        : out std_logic;
+        LANE2_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE2_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE2_TX_IF_FIFO_FULL        : out std_logic;
+        LANE3_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE3_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE3_TX_IF_FIFO_FULL        : out std_logic;
+        FABRIC_CMU0_RESETN_I         : in std_logic;
+        FABRIC_CMU0_PD_I             : in std_logic;
+        FABRIC_CMU0_IDDQ_I           : in std_logic;
+        FABRIC_CMU1_RESETN_I         : in std_logic;
+        FABRIC_CMU1_PD_I             : in std_logic;
+        FABRIC_CMU1_IDDQ_I           : in std_logic;
+        FABRIC_PLL_CDN_I             : in std_logic;
+        FABRIC_LN0_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN0_CPLL_PD_I         : in std_logic;
+        FABRIC_LN0_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_LN1_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN1_CPLL_PD_I         : in std_logic;
+        FABRIC_LN1_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_LN2_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN2_CPLL_PD_I         : in std_logic;
+        FABRIC_LN2_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_LN3_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN3_CPLL_PD_I         : in std_logic;
+        FABRIC_LN3_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_CM1_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_CM0_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_CLK_MON_O             : out std_logic;
+        FABRIC_GEARFIFO_ERR_RPT      : out std_logic;
+        FABRIC_LN0_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN0_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN0_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN0_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN0_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN0_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN0_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN0_TX_VLD_IN         : in std_logic;
+        FABRIC_LN1_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN1_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN1_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN1_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN1_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN1_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN1_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN1_TX_VLD_IN         : in std_logic;
+        FABRIC_LN2_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN2_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN2_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN2_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN2_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN2_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN2_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN2_TX_VLD_IN         : in std_logic;
+        FABRIC_LN3_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN3_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN3_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN3_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN3_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN3_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN3_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN3_TX_VLD_IN         : in std_logic;
+        FABRIC_POR_N_I               : in std_logic;
+        FABRIC_QUAD_MCU_REQ_I        : in std_logic;
+
+        --new port
+        FABRIC_CLK_REF_CORE_I        : in std_logic_vector(3 downto 0);
+        FABRIC_CM3_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_CM2_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_PMA_CM3_DR_REFCLK_DET_O : out std_logic;
+        FABRIC_PMA_CM2_DR_REFCLK_DET_O : out std_logic;
+        QUAD_PCLK1                   : out std_logic;
+        QUAD_PCLK0                   : out std_logic;
+        FABRIC_LANE0_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE0_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE0_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN0_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+        FABRIC_LANE1_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE1_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE1_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN1_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+        FABRIC_LANE2_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE2_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE2_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN2_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+        FABRIC_LANE3_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE3_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE3_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN3_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+
+        --ports that are special
+        CK_AHB_I                     : in std_logic;
+        AHB_RSTN                     : in std_logic;
+        TEST_DEC_EN                  : in std_logic;
+        FABRIC_LANE0_CMU_OK_O        : out std_logic;
+        FABRIC_LANE1_CMU_OK_O        : out std_logic;
+        FABRIC_LANE2_CMU_OK_O        : out std_logic;
+        FABRIC_LANE3_CMU_OK_O        : out std_logic;
+        QUAD_PCIE_CLK                : in std_logic;
+        PCIE_DIV2_REG                : in std_logic;
+        PCIE_DIV4_REG                : in std_logic;
+        PMAC_LN_RSTN                 : in std_logic;
+
+        --new port
+        CKP_MIPI_1                   : out std_logic;
+        CKP_MIPI_0                   : out std_logic;
+        CKN_MIPI_1                   : out std_logic;
+        CKN_MIPI_0                   : out std_logic;
+        CLK_VIQ_I                    : in std_logic_vector(3 downto 0)
+
+    );
+end GTR12_QUADA;
+architecture Behavioral of GTR12_QUADA is
+begin
+end Behavioral;
+
+------------------------------GTR12_UPARA---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all; 
+
+entity GTR12_UPARA is
+        port(
+            CSR_TCK                   : in std_logic;
+            CSR_TMS                   : in std_logic;
+            CSR_TDI                   : in std_logic;
+            CSR_TDO                   : out std_logic;
+            UPAR_CLK                  : in std_logic;
+            UPAR_RST                  : in std_logic;
+            SPI_CLK                   : in std_logic;
+            UPAR_WREN_S               : in std_logic;
+            UPAR_ADDR_S               : in std_logic_vector(23 downto 0);
+            UPAR_WRDATA_S             : in std_logic_vector(31 downto 0);
+            UPAR_RDEN_S               : in std_logic;
+            UPAR_STRB_S               : in std_logic_vector(7 downto 0);
+            UPAR_BUS_WIDTH_S          : in std_logic;
+            UPAR_RDDATA_S             : out std_logic_vector(31 downto 0);
+            UPAR_RDVLD_S              : out std_logic;
+            UPAR_READY_S              : out std_logic;
+            SPI_MOSI                  : in std_logic;
+            SPI_MISO                  : out std_logic;
+            SPI_SS                    : in std_logic;
+            AHB_CLK_O                 : out std_logic;
+            CSR_MODE                  : in std_logic_vector(4 downto 0);
+            FABRIC_DFT_EDT_UPDATE     : in std_logic;
+            FABRIC_DFT_IJTAG_CE       : in std_logic;
+            FABRIC_DFT_IJTAG_RESET    : in std_logic;
+            FABRIC_DFT_IJTAG_SE       : in std_logic;
+            FABRIC_DFT_IJTAG_SEL      : in std_logic;
+            FABRIC_DFT_IJTAG_SI       : in std_logic;
+            FABRIC_DFT_IJTAG_TCK      : in std_logic;
+            FABRIC_DFT_IJTAG_UE       : in std_logic;
+            FABRIC_DFT_PLL_BYPASS_CLK : in std_logic;
+            FABRIC_DFT_PLL_BYPASS_MODE: in std_logic;
+            FABRIC_DFT_SCAN_CLK       : in std_logic;
+            FABRIC_DFT_SCAN_EN        : in std_logic;
+            FABRIC_DFT_SCAN_IN0       : in std_logic;
+            FABRIC_DFT_SCAN_IN1       : in std_logic;
+            FABRIC_DFT_SCAN_IN2       : in std_logic;
+            FABRIC_DFT_SCAN_IN3       : in std_logic;
+            FABRIC_DFT_SCAN_IN4       : in std_logic;
+            FABRIC_DFT_SCAN_IN5       : in std_logic;
+            FABRIC_DFT_SCAN_IN6       : in std_logic;
+            FABRIC_DFT_SCAN_RSTN      : in std_logic;
+            FABRIC_DFT_SHIFT_SCAN_EN  : in std_logic;
+            --ports that are special
+            QUAD_CFG_TEST_DEC_EN      : out std_logic;
+            AHB_RSTN_O                : out std_logic
+
+    );
+end GTR12_UPARA;
+architecture Behavioral of GTR12_UPARA is
+begin
+end Behavioral;
+
+------------------------------GTR12_QUADB---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all; 
+
+entity GTR12_QUADB is
+    port(
+        LN0_TXM_O                    : out std_logic;
+        LN0_TXP_O                    : out std_logic;
+        LN1_TXM_O                    : out std_logic;
+        LN1_TXP_O                    : out std_logic;
+        LN2_TXM_O                    : out std_logic;
+        LN2_TXP_O                    : out std_logic;
+        LN3_TXM_O                    : out std_logic;
+        LN3_TXP_O                    : out std_logic;
+        LN0_RXM_I                    : in std_logic;
+        LN0_RXP_I                    : in std_logic;
+        LN1_RXM_I                    : in std_logic;
+        LN1_RXP_I                    : in std_logic;
+        LN2_RXM_I                    : in std_logic;
+        LN2_RXP_I                    : in std_logic;
+        LN3_RXM_I                    : in std_logic;
+        LN3_RXP_I                    : in std_logic;
+        FABRIC_LN0_RXDET_RESULT      : out std_logic;
+        FABRIC_LN1_RXDET_RESULT      : out std_logic;
+        FABRIC_LN2_RXDET_RESULT      : out std_logic;
+        FABRIC_LN3_RXDET_RESULT      : out std_logic;
+        FABRIC_PMA_CM0_DR_REFCLK_DET_O : out std_logic;
+        FABRIC_PMA_CM1_DR_REFCLK_DET_O : out std_logic;
+        FABRIC_PMA_PD_REFHCLK_I      : in std_logic;
+        FABRIC_REFCLK1_INPUT_SEL_I   : in std_logic_vector(2 downto 0);
+        FABRIC_REFCLK_INPUT_SEL_I    : in std_logic_vector(2 downto 0);
+        REFCLKM0_I                   : in std_logic;
+        REFCLKM1_I                   : in std_logic;
+        REFCLKP0_I                   : in std_logic;
+        REFCLKP1_I                   : in std_logic;
+        FABRIC_BURN_IN_I             : in std_logic;
+        FABRIC_CK_SOC_DIV_I          : in std_logic_vector(1 downto 0);
+        FABRIC_CM1_LIFE_CLK_O        : out std_logic;
+        FABRIC_CM_LIFE_CLK_O         : out std_logic;
+        FABRIC_CMU1_CK_REF_O         : out std_logic;
+        FABRIC_CMU1_OK_O             : out std_logic;
+        FABRIC_CMU1_REFCLK_GATE_ACK_O: out std_logic;
+        FABRIC_CMU1_REFCLK_GATE_I    : in std_logic;
+        FABRIC_CMU_CK_REF_O          : out std_logic;
+        FABRIC_CMU_OK_O              : out std_logic;
+        FABRIC_CMU_REFCLK_GATE_ACK_O : out std_logic;
+        FABRIC_CMU_REFCLK_GATE_I     : in std_logic;
+        FABRIC_GLUE_MAC_INIT_INFO_I  : in std_logic;
+        FABRIC_LANE0_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LANE1_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LANE2_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LANE3_CMU_CK_REF_O    : out std_logic;
+        FABRIC_LN0_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN0_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN0_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN0_IDDQ_I            : in std_logic;
+        FABRIC_LN0_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN0_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN0_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN0_RSTN_I            : in std_logic;
+        FABRIC_LN0_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN0_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN0_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_LN1_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN1_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN1_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN1_IDDQ_I            : in std_logic;
+        FABRIC_LN1_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN1_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN1_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN1_RSTN_I            : in std_logic;
+        FABRIC_LN1_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN1_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN1_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_LN2_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN2_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN2_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN2_IDDQ_I            : in std_logic;
+        FABRIC_LN2_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN2_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN2_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN2_RSTN_I            : in std_logic;
+        FABRIC_LN2_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN2_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN2_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_LN3_ASTAT_O           : out std_logic_vector(5 downto 0);
+        FABRIC_LN3_BURN_IN_TOGGLE_O  : out std_logic;
+        FABRIC_LN3_CTRL_I            : in std_logic_vector(42 downto 0);
+        FABRIC_LN3_IDDQ_I            : in std_logic;
+        FABRIC_LN3_PD_I              : in std_logic_vector(2 downto 0);
+        FABRIC_LN3_PMA_RX_LOCK_O     : out std_logic;
+        FABRIC_LN3_RATE_I            : in std_logic_vector(1 downto 0);
+        FABRIC_LN3_RSTN_I            : in std_logic;
+        FABRIC_LN3_RXDATA_O          : out std_logic_vector(87 downto 0);
+        FABRIC_LN3_STAT_O            : out std_logic_vector(12 downto 0);
+        FABRIC_LN3_TXDATA_I          : in std_logic_vector(79 downto 0);
+        FABRIC_REFCLK_GATE_ACK_O     : out std_logic;
+        FABRIC_REFCLK_GATE_I         : in std_logic;
+        LANE0_PCS_RX_RST             : in std_logic;
+        LANE1_PCS_RX_RST             : in std_logic;
+        LANE2_PCS_RX_RST             : in std_logic;
+        LANE3_PCS_RX_RST             : in std_logic;
+        LANE0_ALIGN_TRIGGER          : in std_logic;
+        LANE1_ALIGN_TRIGGER          : in std_logic;
+        LANE2_ALIGN_TRIGGER          : in std_logic;
+        LANE3_ALIGN_TRIGGER          : in std_logic;
+        LANE0_CHBOND_START           : in std_logic;
+        LANE1_CHBOND_START           : in std_logic;
+        LANE2_CHBOND_START           : in std_logic;
+        LANE3_CHBOND_START           : in std_logic;
+        LANE0_ALIGN_LINK             : out std_logic;
+        LANE0_K_LOCK                 : out std_logic;
+        LANE0_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE0_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE0_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE1_ALIGN_LINK             : out std_logic;
+        LANE1_K_LOCK                 : out std_logic;
+        LANE1_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE1_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE1_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE2_ALIGN_LINK             : out std_logic;
+        LANE2_K_LOCK                 : out std_logic;
+        LANE2_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE2_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE2_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE3_ALIGN_LINK             : out std_logic;
+        LANE3_K_LOCK                 : out std_logic;
+        LANE3_DISP_ERR_O             : out std_logic_vector(1 downto 0);
+        LANE3_DEC_ERR_O              : out std_logic_vector(1 downto 0);
+        LANE3_CUR_DISP_O             : out std_logic_vector(1 downto 0);
+        LANE0_PCS_TX_RST             : in std_logic;
+        LANE1_PCS_TX_RST             : in std_logic;
+        LANE2_PCS_TX_RST             : in std_logic;
+        LANE3_PCS_TX_RST             : in std_logic;
+        LANE0_FABRIC_RX_CLK          : in std_logic;
+        LANE1_FABRIC_RX_CLK          : in std_logic;
+        LANE2_FABRIC_RX_CLK          : in std_logic;
+        LANE3_FABRIC_RX_CLK          : in std_logic;
+        LANE0_FABRIC_C2I_CLK         : in std_logic;
+        LANE1_FABRIC_C2I_CLK         : in std_logic;
+        LANE2_FABRIC_C2I_CLK         : in std_logic;
+        LANE3_FABRIC_C2I_CLK         : in std_logic;
+        LANE0_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE1_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE2_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE3_PCS_RX_O_FABRIC_CLK    : out std_logic;
+        LANE0_FABRIC_TX_CLK          : in std_logic;
+        LANE1_FABRIC_TX_CLK          : in std_logic;
+        LANE2_FABRIC_TX_CLK          : in std_logic;
+        LANE3_FABRIC_TX_CLK          : in std_logic;
+        LANE0_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        LANE1_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        LANE2_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        LANE3_PCS_TX_O_FABRIC_CLK    : out std_logic;
+        FABRIC_CMU0_CLK              : out std_logic;
+        FABRIC_CMU1_CLK              : out std_logic;
+        FABRIC_QUAD_CLK_RX           : out std_logic;
+        LANE0_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE1_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE2_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE3_RX_IF_FIFO_RDEN        : in std_logic;
+        LANE0_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE0_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE0_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE1_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE1_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE1_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE2_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE2_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE2_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE3_RX_IF_FIFO_RDUSEWD     : out std_logic_vector(4 downto 0);
+        LANE3_RX_IF_FIFO_AEMPTY      : out std_logic;
+        LANE3_RX_IF_FIFO_EMPTY       : out std_logic;
+        LANE0_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE0_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE0_TX_IF_FIFO_FULL        : out std_logic;
+        LANE1_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE1_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE1_TX_IF_FIFO_FULL        : out std_logic;
+        LANE2_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE2_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE2_TX_IF_FIFO_FULL        : out std_logic;
+        LANE3_TX_IF_FIFO_WRUSEWD     : out std_logic_vector(4 downto 0);
+        LANE3_TX_IF_FIFO_AFULL       : out std_logic;
+        LANE3_TX_IF_FIFO_FULL        : out std_logic;
+        FABRIC_CMU0_RESETN_I         : in std_logic;
+        FABRIC_CMU0_PD_I             : in std_logic;
+        FABRIC_CMU0_IDDQ_I           : in std_logic;
+        FABRIC_CMU1_RESETN_I         : in std_logic;
+        FABRIC_CMU1_PD_I             : in std_logic;
+        FABRIC_CMU1_IDDQ_I           : in std_logic;
+        FABRIC_PLL_CDN_I             : in std_logic;
+        FABRIC_LN0_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN0_CPLL_PD_I         : in std_logic;
+        FABRIC_LN0_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_LN1_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN1_CPLL_PD_I         : in std_logic;
+        FABRIC_LN1_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_LN2_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN2_CPLL_PD_I         : in std_logic;
+        FABRIC_LN2_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_LN3_CPLL_RESETN_I     : in std_logic;
+        FABRIC_LN3_CPLL_PD_I         : in std_logic;
+        FABRIC_LN3_CPLL_IDDQ_I       : in std_logic;
+        FABRIC_CM1_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_CM0_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_CLK_MON_O             : out std_logic;
+        FABRIC_GEARFIFO_ERR_RPT      : out std_logic;
+        FABRIC_LN0_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN0_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN0_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN0_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN0_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN0_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN0_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN0_TX_VLD_IN         : in std_logic;
+        FABRIC_LN1_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN1_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN1_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN1_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN1_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN1_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN1_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN1_TX_VLD_IN         : in std_logic;
+        FABRIC_LN2_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN2_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN2_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN2_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN2_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN2_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN2_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN2_TX_VLD_IN         : in std_logic;
+        FABRIC_LN3_CTRL_I_H          : in std_logic_vector(42 downto 0);
+        FABRIC_LN3_PD_I_H            : in std_logic_vector(2 downto 0);
+        FABRIC_LN3_RATE_I_H          : in std_logic_vector(1 downto 0);
+        FABRIC_LN3_RX_VLD_OUT        : out std_logic;
+        FABRIC_LN3_RXELECIDLE_O      : out std_logic;
+        FABRIC_LN3_RXELECIDLE_O_H    : out std_logic;
+        FABRIC_LN3_STAT_O_H          : out std_logic_vector(12 downto 0);
+        FABRIC_LN3_TX_VLD_IN         : in std_logic;
+        FABRIC_POR_N_I               : in std_logic;
+        FABRIC_QUAD_MCU_REQ_I        : in std_logic;
+
+        --new port
+        FABRIC_CLK_REF_CORE_I        : in std_logic_vector(3 downto 0);
+        FABRIC_CM3_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_CM2_PD_REFCLK_DET_I   : in std_logic;
+        FABRIC_PMA_CM3_DR_REFCLK_DET_O : out std_logic;
+        FABRIC_PMA_CM2_DR_REFCLK_DET_O : out std_logic;
+        QUAD_PCLK1                   : out std_logic;
+        QUAD_PCLK0                   : out std_logic;
+        FABRIC_LANE0_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE0_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE0_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN0_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+        FABRIC_LANE1_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE1_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE1_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN1_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+        FABRIC_LANE2_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE2_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE2_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN2_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+        FABRIC_LANE3_64B66B_TX_INVLD_BLK : out std_logic;
+        FABRIC_LANE3_64B66B_TX_FETCH : out std_logic;
+        FABRIC_LANE3_64B66B_RX_VALID : out std_logic;
+        FABRIC_LN3_TX_DISPARITY_I    : in std_logic_vector(7 downto 0);
+
+        --ports that are special
+        CK_AHB_I                     : in std_logic;
+        AHB_RSTN                     : in std_logic;
+        TEST_DEC_EN                  : in std_logic;
+        FABRIC_LANE0_CMU_OK_O        : out std_logic;
+        FABRIC_LANE1_CMU_OK_O        : out std_logic;
+        FABRIC_LANE2_CMU_OK_O        : out std_logic;
+        FABRIC_LANE3_CMU_OK_O        : out std_logic;
+        QUAD_PCIE_CLK                : in std_logic;
+        PCIE_DIV2_REG                : in std_logic;
+        PCIE_DIV4_REG                : in std_logic;
+        PMAC_LN_RSTN                 : in std_logic;
+
+        --new port
+        CKP_MIPI_1                   : out std_logic;
+        CKP_MIPI_0                   : out std_logic;
+        CKN_MIPI_1                   : out std_logic;
+        CKN_MIPI_0                   : out std_logic;
+        CLK_VIQ_I                    : in std_logic_vector(1 downto 0)
+
+    );
+end GTR12_QUADB;
+architecture Behavioral of GTR12_QUADB is
+begin
+end Behavioral;
+
 
 ------------------------------AE350_SOC---------------------------------------
 library IEEE;
@@ -20054,6 +22367,48 @@ begin
 end Behavioral;
 
 
+------------------------------AE350_RAM---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity AE350_RAM is
+        port(
+			POR_N	: in std_logic;
+			HW_RSTN	: in std_logic;
+			CORE_CLK	: in std_logic;
+			AHB_CLK	: in std_logic;
+			APB_CLK	: in std_logic;
+			RTC_CLK	: in std_logic;
+			CORE_CE	: in std_logic;
+			AXI_CE	: in std_logic;
+			AHB_CE	: in std_logic;
+			EXTM_HADDR	: in std_logic_vector(31 downto 0);
+			EXTM_HBURST	: in std_logic_vector(2 downto 0);
+			EXTM_HPROT	: in std_logic_vector(3 downto 0);
+			EXTM_HRDATA	: out std_logic_vector(63 downto 0);
+			EXTM_HREADY	: in std_logic;
+			EXTM_HREADYOUT	: out std_logic;
+			EXTM_HRESP	: out std_logic;
+			EXTM_HSEL	: in std_logic;
+			EXTM_HSIZE	: in std_logic_vector(2 downto 0);
+			EXTM_HTRANS	: in std_logic_vector(1 downto 0);
+			EXTM_HWDATA	: in std_logic_vector(63 downto 0);
+			EXTM_HWRITE	: in std_logic;
+			EMA	: in std_logic_vector(2 downto 0);
+			EMAW	: in std_logic_vector(1 downto 0);
+			EMAS	: in std_logic;
+			RET1N	: in std_logic;
+			RET2N	: in std_logic
+            );
+end AE350_RAM;
+architecture Behavioral of AE350_RAM is
+begin
+
+end Behavioral;
+
+
 -----------------DQS---------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -20085,5 +22440,7 @@ end DQS;
 architecture Behavioral of DQS is
 
 	begin
+        
 
 end Behavioral;	
+

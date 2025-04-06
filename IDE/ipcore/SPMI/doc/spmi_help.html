@@ -1,0 +1,41 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../../../data/ipcores/mkdown.css" />
+<title>SPMI</title></head>
+<body class="markdown-body">
+<h1>SPMI</h1>
+<hr />
+<h2>Information</h2>
+<p><strong>Type:</strong> SPMI<br />
+<strong>Vendor:</strong> GOWIN Semiconductor<br />
+<strong>Summary:</strong> Gowin IPCore SPMI is a two-wire serial interface that connects the integrated Power Controller (PC) of a System-on-Chip (SoC) processor system with one or more Power Management Integrated Circuits (PMIC) voltage regulation systems. SPMI enables systems to dynamically adjust the supply and substrate bias voltages of the voltage domains inside the SoC using a single SPMI bus.<br />
+<strong>Devices:</strong> GW1NZ-1, GW1NZ-1C  </p>
+<h2>Options</h2>
+<h3>Functional Configuration</h3>
+<ul>
+<li><strong>Shutdown by VCCEN</strong> - Shutdown by external pin VCCEN. If choose this option, SPMI's communication function will not be available.  </li>
+<li><strong>Master/Slave</strong> - Set SPMI to master or slave.   </li>
+</ul>
+<h3>Master Configuration</h3>
+<ul>
+<li><strong>MID</strong> - Set the identifier of the SPMI master.  </li>
+<li><strong>Respond Delay</strong> - Set the response delay time.  </li>
+<li><strong>SCLK Normal Period</strong> - Set the period of the sclk in normal mode.  </li>
+<li><strong>SCLK Low Period</strong> - Set the period of the sclk in sleep mode.  </li>
+</ul>
+<h3>Slave Configuration</h3>
+<ul>
+<li><strong>SID</strong> - Set the identifier of the SPMI slave.  </li>
+</ul>
+<h3>General configuration</h3>
+<ul>
+<li><strong>Enable State Code Register</strong> - Enable or disable registers. For example, If you choose the Enable State Code Register option, the output STATE data will go through one register.  </li>
+<li><strong>Request Pipeline Steps</strong> - Set the delay step size of the request signal sampling time.  </li>
+<li><strong>Enable Decode Command</strong> - Enable or disable decoding .If you choose Enable Decode Command, SPMI will decode the reset, sleep, shutdown, and wakeup commands.  </li>
+<li><strong>Enable Reset Command</strong> - Enable or disable the reset command.   </li>
+<li><strong>Clock From External</strong> - Enable or disable the external clock.  </li>
+<li><strong>Clock Frequency</strong> - System clock frequency.  </li>
+</ul>
+</body>
+</html>

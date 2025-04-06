@@ -1,6 +1,6 @@
 
 // ===========Oooo==========================================Oooo========
-// =  Copyright (C) 2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+// =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 // =                     All rights reserved.
 // =====================================================================
 //
@@ -980,42 +980,27 @@ end
 endmodule
 
 //OBUF for mipi output, gw5a-25
-module MIPI_OBUF_A (O, OB, I, IB, IL, MODESEL);
+module MIPI_OBUF_A (O, OB, IO, IOB, I, IB, IL, OEN, OENB, MODESEL);
 output O, OB;
 input  I, IB, IL, MODESEL;
+inout IO, IOB;
+input OEN, OENB;
 
-bufif1  (O, I, MODESEL); //HS mode
-notif1  (OB, I, MODESEL);
+//LP mode
+bufif0 IL_INST (IO, IL, (OEN || MODESEL));
+bufif0 IB_INST (IOB, IB, (OENB || MODESEL));
 
-bufif0  (O, IL, MODESEL); //LP mode
-bufif0  (OB, IB, MODESEL);
+bufif0  (O, IO, MODESEL); //LP RX 
+bufif0  (OB, IOB, MODESEL);
+
+//HS mode
+bufif1 I_HS (I_hs, I, MODESEL);
+
+bufif0  (IO, I_hs, (OEN || (!MODESEL)));
+notif0  (IOB, I_hs, (OENB || (!MODESEL)));
 
 endmodule
 
-
-//IBUF with ODT
-module IBUF_R (O, I, RTEN);
-
-input  I;
-input RTEN;
-output O;
-
-buf IB (O, I);
-        
-endmodule
-
-//IOBUF with ODT
-module IOBUF_R (O, IO, I, OEN, RTEN);
-
-input I,OEN;
-input RTEN;
-output O;
-inout IO;
-
-buf OB (O, IO);
-bufif0 IB (IO,I,OEN);
-    
-endmodule 
 
 
 //ELVDS_IOBUF with ODT
@@ -1068,6 +1053,146 @@ endmodule
 module TLVDS_IBUF_ADC(I, IB, ADCEN);
 input I, IB;
 input ADCEN;
+
+endmodule
+
+
+//MIPI_CPHY_IBUF
+//CPHY BUF for mipi input
+module MIPI_CPHY_IBUF (OH0, OL0, OB0, IO0, IOB0, I0, IB0, OH1, OL1, OB1, IO1, IOB1, I1, IB1, OH2, OL2, OB2, IO2, IOB2, I2, IB2, OEN, OENB, HSEN);
+output OH0, OL0, OB0, OH1, OL1, OB1, OH2, OL2, OB2;
+inout IO0, IOB0, IO1, IOB1, IO2, IOB2;
+input  I0, IB0, I1, IB1, I2, IB2;
+input OEN, OENB;
+input HSEN;
+reg OH0,OH1,OH2;
+
+////LP mode
+//IO0
+bufif0 IL_INST0 (IO0,I0,OEN);
+bufif0 IB_INST0 (IOB0,IB0,OENB);
+
+assign OL0 = IO0;
+assign OB0 = IOB0;
+
+//IO1
+bufif0 IL_INST1 (IO1,I1,OEN);
+bufif0 IB_INST1 (IOB1,IB1,OENB);
+
+assign OL1 = IO1;
+assign OB1 = IOB1;
+
+//IO2
+bufif0 IL_INST2 (IO2,I2,OEN);
+bufif0 IB_INST2 (IOB2,IB2,OENB);
+
+assign OL2 = IO2;
+assign OB2 = IOB2;
+
+////HS mode
+//IO0
+always @(IO0 or IOB0 or HSEN)
+begin
+    if(HSEN)
+    begin
+        if (IO0 == 1'b1 && IOB0 == 1'b0)
+        begin
+		    OH0 <= IO0;
+        end else if (IO0 == 1'b0 && IOB0 == 1'b1) 
+        begin
+		    OH0 <= IO0;
+        end else if (IO0 == 1'bx || IOB0 == 1'bx) 
+        begin
+		    OH0 <= 1'bx;
+        end
+    end
+end
+
+//IO1
+always @(IO1 or IOB1 or HSEN)
+begin
+    if(HSEN)
+    begin
+        if (IO1 == 1'b1 && IOB1 == 1'b0)
+        begin
+		    OH1 <= IO1;
+        end else if (IO1 == 1'b0 && IOB1 == 1'b1) 
+        begin
+		    OH1 <= IO1;
+        end else if (IO1 == 1'bx || IOB1 == 1'bx) 
+        begin
+		    OH1 <= 1'bx;
+        end
+    end
+end
+
+//IO2
+always @(IO2 or IOB2 or HSEN)
+begin
+    if(HSEN)
+    begin
+        if (IO2 == 1'b1 && IOB2 == 1'b0)
+        begin
+		    OH2 <= IO2;
+        end else if (IO2 == 1'b0 && IOB2 == 1'b1) 
+        begin
+		    OH2 <= IO2;
+        end else if (IO2 == 1'bx || IOB2 == 1'bx) 
+        begin
+		    OH2 <= 1'bx;
+        end
+    end
+end
+
+endmodule
+
+//CPHY OBUF for mipi output
+module MIPI_CPHY_OBUF (O0, OB0, IO0, IOB0, I0, IB0, IL0, O1, OB1, IO1, IOB1, I1, IB1, IL1, O2, OB2, IO2, IOB2, I2, IB2, IL2, OEN, OENB, VCOME, MODESEL);
+output O0, OB0, O1, OB1, O2, OB2;
+input  I0, IB0, IL0, I1, IB1, IL1, I2, IB2, IL2;
+inout IO0, IOB0, IO1, IOB1, IO2, IOB2;
+input OEN, OENB, MODESEL, VCOME;
+
+////LP mode
+//IO0
+bufif0 IL_INST0 (IO0, IL0, (OEN || MODESEL));
+bufif0 IB_INST0 (IOB0, IB0, (OENB || MODESEL));
+
+bufif0  (O0, IO0, MODESEL); //LP RX 
+bufif0  (OB0, IOB0, MODESEL);
+
+//IO1
+bufif0 IL_INST1 (IO1, IL1, (OEN || MODESEL));
+bufif0 IB_INST1 (IOB1, IB1, (OENB || MODESEL));
+
+bufif0  (O1, IO1, MODESEL); //LP RX 
+bufif0  (OB1, IOB1, MODESEL);
+
+//IO2
+bufif0 IL_INST2 (IO2, IL2, (OEN || MODESEL));
+bufif0 IB_INST2 (IOB2, IB2, (OENB || MODESEL));
+
+bufif0  (O2, IO2, MODESEL); //LP RX 
+bufif0  (OB2, IOB2, MODESEL);
+
+////HS mode
+//IO0
+bufif1 I_HS0 (I_hs0, I0, MODESEL);
+
+bufif0  (IO0, I_hs0, (OEN || (!MODESEL)));
+notif0  (IOB0, I_hs0, (OENB || (!MODESEL)));
+
+//IO1
+bufif1 I_HS1 (I_hs1, I1, MODESEL);
+
+bufif0  (IO1, I_hs1, (OEN || (!MODESEL)));
+notif0  (IOB1, I_hs1, (OENB || (!MODESEL)));
+
+//IO2
+bufif1 I_HS2 (I_hs2, I2, MODESEL);
+
+bufif0  (IO2, I_hs2, (OEN || (!MODESEL)));
+notif0  (IOB2, I_hs2, (OENB || (!MODESEL)));
 
 endmodule
 
@@ -3353,8 +3478,8 @@ endmodule //pROMX9
 //SDP36KE
 module SDP36KE (DO, DOP, DECCO, SECCO, ECCP, DI, DIP, BLKSELA, BLKSELB, ADA, ADB, DECCI, SECCI, CLKA, CLKB, CEA, CEB, OCE, RESET);
 
-parameter ECC_WRITE_EN="FALSE"; //"FALSE":disable ECC WRITE mode; "TRUE":enable ECC WRITE mode
-parameter ECC_READ_EN="FALSE"; //"FALSE":disable ECC READ mode; "TRUE":enable ECC READ mode
+parameter ECC_WRITE_EN="TRUE"; //"FALSE":disable ECC WRITE mode; "TRUE":enable ECC WRITE mode
+parameter ECC_READ_EN="TRUE"; //"FALSE":disable ECC READ mode; "TRUE":enable ECC READ mode
 parameter READ_MODE = 1'b0; // 1'b0: bypass mode; 1'b1: pipeline mode
 parameter BLK_SEL_A = 3'b000;
 parameter BLK_SEL_B = 3'b000;
@@ -3591,6 +3716,11 @@ initial begin
     pl_reg_sync = 0;
     mc = 1'b0;
     ECCP = 8'b0;
+    DECCO = 1'b0;
+    SECCO = 1'b0;
+    DO = 64'b0;
+    DOP = 8'b0;
+
 end
 
 assign pcea = CEA && bs_ena && grstn;
@@ -3832,6 +3962,35 @@ always @(posedge CLKA or negedge grstn)begin
 end  
 
 endmodule // SDP36KE: semi dual port 36k Block SRAM with ECC
+
+
+//SDP136K,serdes ram
+module SDP136K(DO, DI, ADA, ADB, CLKA, CLKB, WE, RE);
+
+input CLKA, CLKB;
+input WE, RE;
+input [10:0] ADA, ADB;
+input [67:0] DI;
+output [67:0] DO;
+
+reg [67:0] data_out;
+reg [67:0] mem [2047:0];
+
+always @(posedge CLKA)begin
+    if (WE)begin
+        mem[ADA] <= DI;
+    end
+end
+
+always@(posedge CLKB)begin
+    if(RE)begin
+       data_out <= mem[ADB];
+    end
+end
+
+assign DO = data_out;
+
+endmodule
 
 
 //////DSP models
@@ -5824,7 +5983,7 @@ always @(ina_reg_async or ina_reg_sync or inb_reg_async or inb_reg_sync or ind_r
     assign ina_12_ext = {ina[10],ina[10:0]};
     assign ind_12_ext = {ind[10],ind[10:0]};
 
-    always@(ina_ext or ind_ext or ina or psel_0 or paddsub_0)
+    always@(ina_ext or ind_ext or ina or psel_0 or paddsub_0 or ina_12_ext or ind_12_ext)
     begin
         if(MULT12X12_EN == "FALSE")
         begin
@@ -7559,6 +7718,182 @@ always @(ina_reg_async or ina_reg_sync or inb_reg_async or inb_reg_sync or ind_r
 endmodule
 
 
+//MULTACC,15k
+module MULTACC (DATAO, CASO, CE, CLK, COFFIN0, COFFIN1, COFFIN2, DATAIN0, DATAIN1, DATAIN2, RSTN, CASI);
+
+output  [23:0] DATAO, CASO;
+
+input CE, CLK;
+input [5:0] COFFIN0, COFFIN1, COFFIN2;
+input [9:0] DATAIN0, DATAIN1;
+input [9:0] DATAIN2;
+input RSTN;
+input [23:0] CASI;
+
+
+//a*b+c*d+e*f,8*4,default
+parameter COFFIN_WIDTH = 4; // 4/6 bit
+parameter DATAIN_WIDTH = 8; // 8/10 bit
+parameter IREG = 1'b0; //0: bypass mode;   1: registered mode
+parameter OREG = 1'b0; //0: bypass mode;   1: registered mode
+parameter PREG = 1'b0; //0: bypass mode;   1: registered mode
+parameter ACC_EN = "FALSE";  //FALSE: CASI/0;  TRUE: enable ACC, DOUT
+parameter CASI_EN = "FALSE"; //FALSE: 0; TRUE: enable CASI. ACC_EN&CASI_EN,mutually exclusive, cannot both be true. Priority is ACC_EN>CASI_EN
+parameter CASO_EN = "FALSE"; //FALSE: 0; TRUE: enable CASO.
+
+
+wire [5:0] coffin0_sig,coffin1_sig,coffin2_sig;
+wire [9:0] datain0_sig,datain1_sig,datain2_sig;
+reg [5:0] coffin0_reg,coffin1_reg,coffin2_reg,ina0,ina1,ina2;
+reg [9:0] datain0_reg,datain1_reg,datain2_reg,inb0,inb1,inb2;
+wire [15:0] mult_out0,mult_out1,mult_out2;
+wire [23:0] d_casi,fb_acc,m_out0,m_out1,m_out2;
+reg [15:0] out0_reg,out1_reg,out2_reg,out0,out1,out2;
+reg [23:0] alu_out, dout_reg,d_out;
+
+    assign coffin0_sig = (COFFIN_WIDTH == 4)? {{2{1'b0}},COFFIN0[3:0]} : COFFIN0;
+    assign coffin1_sig = (COFFIN_WIDTH == 4)? {{2{1'b0}},COFFIN1[3:0]} : COFFIN1;
+    assign coffin2_sig = (COFFIN_WIDTH == 4)? {{2{1'b0}},COFFIN2[3:0]} : COFFIN2;
+
+    assign datain0_sig = (DATAIN_WIDTH == 8)? {{2{1'b0}},DATAIN0[7:0]} : DATAIN0;
+    assign datain1_sig = (DATAIN_WIDTH == 8)? {{2{1'b0}},DATAIN1[7:0]} : DATAIN1;
+    assign datain2_sig = (DATAIN_WIDTH == 8)? {{2{1'b0}},DATAIN2[7:0]} : DATAIN2;
+
+    // in reg
+    always @(posedge CLK or negedge RSTN)
+    begin
+        if (RSTN == 1'b0)
+        begin
+            coffin0_reg <= 6'b0;
+            coffin1_reg <= 6'b0;
+            coffin2_reg <= 6'b0;
+        end
+        else if (CE == 1'b1)
+        begin
+            coffin0_reg <= coffin0_sig;
+            coffin1_reg <= coffin1_sig;
+            coffin2_reg <= coffin2_sig;
+        end
+    end
+
+    always @(posedge CLK or negedge RSTN)
+    begin
+        if (RSTN == 1'b0)
+        begin
+            datain0_reg <= 10'b0;
+            datain1_reg <= 10'b0;
+            datain2_reg <= 10'b0;
+        end
+        else if (CE == 1'b1)
+        begin
+            datain0_reg <= datain0_sig;
+            datain1_reg <= datain1_sig;
+            datain2_reg <= datain2_sig;
+        end
+    end
+
+
+    always @(coffin0_reg or coffin1_reg or coffin2_reg or datain0_reg or datain1_reg or datain2_reg or coffin0_sig or coffin1_sig or coffin2_sig or datain0_sig or datain1_sig or datain2_sig)
+    begin
+        if (IREG == 1'b1)
+        begin
+            ina0 = coffin0_reg;
+            ina1 = coffin1_reg;
+            ina2 = coffin2_reg;
+            inb0 = datain0_reg;
+            inb1 = datain1_reg;
+            inb2 = datain2_reg;
+        end else
+        begin
+            ina0 = coffin0_sig;
+            ina1 = coffin1_sig;
+            ina2 = coffin2_sig;
+            inb0 = datain0_sig;
+            inb1 = datain1_sig;
+            inb2 = datain2_sig;
+        end
+    end
+
+    assign mult_out0 = ina0 * inb0;
+    assign mult_out1 = ina1 * inb1;
+    assign mult_out2 = ina2 * inb2;
+
+    // pipeline reg
+    always @(posedge CLK or negedge RSTN)
+    begin
+        if (RSTN == 1'b0)
+        begin
+            out0_reg <= 16'b0;
+            out1_reg <= 16'b0;
+            out2_reg <= 16'b0;
+        end
+        else if (CE == 1'b1)
+        begin
+            out0_reg <= mult_out0;
+            out1_reg <= mult_out1;
+            out2_reg <= mult_out2;
+        end
+    end
+
+    always @(mult_out0 or out0_reg or mult_out1 or out1_reg or mult_out2 or out2_reg)
+    begin
+        if (PREG == 1'b0)
+        begin
+            out0 = mult_out0;
+            out1 = mult_out1;
+            out2 = mult_out2;
+        end else
+        begin
+            out0 = out0_reg;
+            out1 = out1_reg;
+            out2 = out2_reg;
+        end
+    end
+
+    assign d_casi = (CASI_EN == "TRUE") ? CASI : 24'b0;
+    assign fb_acc = (ACC_EN == "TRUE") ? dout_reg : d_casi;
+
+    assign m_out0 = {{8{1'b0}},out0};
+    assign m_out1 = {{8{1'b0}},out1};
+    assign m_out2 = {{8{1'b0}},out2};
+
+    always @(d_casi or fb_acc or m_out0 or m_out1 or m_out2)
+    begin
+        alu_out = m_out0 + m_out1 + m_out2 + fb_acc;
+
+    end
+
+    // output reg
+    always @(posedge CLK or negedge RSTN)
+    begin
+        if (RSTN == 1'b0)
+        begin
+            dout_reg <= 0;
+        end
+        else if (CE == 1'b1)
+        begin
+            dout_reg <= alu_out;
+        end
+    end
+
+    always @(alu_out or dout_reg)
+    begin
+        if (OREG == 1'b0)
+        begin
+            d_out = alu_out;
+        end else
+        begin
+            d_out = dout_reg;
+        end
+    end
+
+    assign DATAO = d_out[23:0];
+    assign CASO = (CASO_EN == "TRUE")? d_out[23:0] : 24'b0;
+
+endmodule
+
+
+
 //////Hardcore models
 //Iologic
 //IDDR
@@ -9116,6 +9451,7 @@ assign {Q3,Q2,Q1,Q0} = Q_data;
 
 endmodule //IDES4_MEM (4 to 1 deserializer with memory)
 
+//IVIDEO
 module IVIDEO (Q0, Q1, Q2, Q3, Q4, Q5, Q6, D, CALIB, PCLK, FCLK, RESET);
 
 input D, FCLK, PCLK, CALIB, RESET;
@@ -9137,24 +9473,21 @@ reg [2:0] calib_data;
 wire dcnt_en,dsel_en;
 reg d0_reg0,d0_reg1,d0_reg2,d1_reg0,d1_reg1,d1_reg2,d1_reg3;
 reg d0_ireg,d0_ireg0,d1_ireg,d1_ireg1;
-reg data_en,data_en0,data_en1;
-
+reg data_en0,data_en1;
+wire data_en;
+reg d_up;
+wire cnt_rst;
+wire data_en0_data,data_en1_data;
 always @(negedge FCLK or negedge grstn or negedge lrstn)
 begin
     if (!grstn)begin
 		d0_ireg <= 0;
-		d0_ireg0 <= d0_ireg;
-        d0_reg <= d0_ireg0;
     end
     else if (!lrstn)begin
         d0_ireg <= 0;
-		d0_ireg0 <= d0_ireg;
-        d0_reg <= d0_ireg0;
     end
     else begin
 		d0_ireg <= D;
-		d0_ireg0 <= d0_ireg;
-        d0_reg <= d0_ireg0;
     end
 end
 
@@ -9162,18 +9495,12 @@ always @(posedge FCLK or negedge grstn or negedge lrstn)
 begin
     if (!grstn)begin
 		d1_ireg <= 0;
-		d1_ireg1 <= d1_ireg;
-        d1_reg <= d1_ireg1;
     end
     else if (!lrstn)begin
 		d1_ireg <= 0;
-		d1_ireg1 <= d1_ireg;
-        d1_reg <= d1_ireg1;
     end
     else begin
         d1_ireg <= D;
-		d1_ireg1 <= d1_ireg;
-        d1_reg <= d1_ireg1;
     end
 end
 
@@ -9196,51 +9523,72 @@ always @(posedge FCLK or negedge reset_delay) begin
 end
 
 assign calib_rising_p =  ~(calib_data[1] && (~calib_data[2]));
-assign dcnt_en = calib_rising_p;
-assign dsel_en = ~(~(data_sel & data_en1 & (~data_en0) & calib_rising_p)) & (~(data_en0 & data_en1 & (~data_sel)));
+assign dcnt_en =  calib_rising_p;
+assign dsel_en = ~(~(data_sel & (data_en1 & (~data_en0)) & calib_rising_p) & (~((data_en0 & data_en1) & (~data_sel)))); 
+assign cnt_rst = (~data_en0) & data_en1 & data_sel;
+
+assign data_en0_data = ~(data_en0|cnt_rst);
+assign data_en1_data = ~((~(data_en0 ^ data_en1))|cnt_rst);
 
 always @(posedge FCLK or negedge reset_delay) begin
     if (!reset_delay) begin
         data_en1 <= 1'b0;
         data_en0 <= 1'b0;
-        data_en  <= 1'b0;
-        data_sel <= 1'b0;
+    end else begin
+        if(dcnt_en) begin
+            data_en0 <= data_en0_data;
+            data_en1 <= data_en1_data;
+        end else begin
+            data_en0 <= data_en0;
+            data_en1 <= data_en1;
+        end
+
     end
-    else begin
-		data_en <= ~(~(data_en0 & (~data_en1) & (~data_sel))&(~((~data_en0) & (~data_en1) & data_sel)));
-        if (dsel_en) begin
+end
+//
+assign data_en = ~(~((data_en0 & (~data_en1)) & (~data_sel))&(~(((~data_en0) & (~data_en1)) & data_sel)));
+always @(posedge FCLK or negedge reset_delay) begin
+    if(!reset_delay) begin
+        d_up <= 0;
+    end else if(data_en) begin
+        d_up <= 1;
+    end else begin
+        d_up <= 0;
+    end
+end
+
+always @(posedge FCLK or negedge reset_delay) begin
+    if(!reset_delay) begin
+	    data_sel <=0; 
+    end else begin
+        if(dsel_en) begin
             data_sel <= ~data_sel;
         end else begin
             data_sel <= data_sel;
         end
-        
-        if (dcnt_en) begin
-            data_en0 <= ~data_en0;
-        end else  begin
-            data_en0 <= data_en0;
-        end
-                                                                                   
-        if (dcnt_en) begin
-            data_en1 <= data_en0 ^ data_en1;
-        end else begin
-            data_en1 <= data_en1;
-        end
     end
 end
-
 always @(posedge FCLK or negedge grstn  or negedge lrstn) begin
     if (!grstn) begin
+        d0_ireg0 <= 1'b0;
+        d0_reg <= 1'b0;
         d0_reg0 <= 1'b0;
         d0_reg1 <= 1'b0;
         d0_reg2 <= 1'b0;
+        d1_ireg1 <= 1'b0;
+        d1_reg <= 1'b0;
         d1_reg0 <= 1'b0;
         d1_reg1 <= 1'b0;
         d1_reg2 <= 1'b0;
         d1_reg3 <= 1'b0;
     end else if(!lrstn) begin
+        d0_ireg0 <= 1'b0;
+        d0_reg <= 1'b0;
         d0_reg0 <= 1'b0;
         d0_reg1 <= 1'b0;
         d0_reg2 <= 1'b0;
+        d1_ireg1 <= 1'b0;
+        d1_reg <= 1'b0;
         d1_reg0 <= 1'b0;
         d1_reg1 <= 1'b0;
         d1_reg2 <= 1'b0;
@@ -9263,20 +9611,20 @@ end
 always @(data_sel or d0_reg or d0_reg0 or d0_reg1 or d0_reg2 or d1_reg0 or d1_reg1 or d1_reg2 or d1_reg3) begin
     if(data_sel) begin
         D_data[6] <= d0_reg;
-        D_data[5] <= d1_reg0;
+        D_data[5] <= d1_reg;
         D_data[4] <= d0_reg0;
-        D_data[3] <= d1_reg1;
+        D_data[3] <= d1_reg0;
         D_data[2] <= d0_reg1;
-        D_data[1] <= d1_reg2;
+        D_data[1] <= d1_reg1;
         D_data[0] <= d0_reg2;
     end else begin
-        D_data[6] <= d1_reg0;
+        D_data[6] <= d1_reg;
         D_data[5] <= d0_reg0;
-        D_data[4] <= d1_reg1;
+        D_data[4] <= d1_reg0;
         D_data[3] <= d0_reg1;
-        D_data[2] <= d1_reg2;
+        D_data[2] <= d1_reg1;
         D_data[1] <= d0_reg2;
-        D_data[0] <= d1_reg3;
+        D_data[0] <= d1_reg2;
     end
 end
 
@@ -9288,7 +9636,7 @@ begin
     else if (!lrstn)begin
         data <= 0;
     end
-    else if (data_en)begin
+    else if (d_up)begin
         data <= D_data;
     end
 end
@@ -9309,6 +9657,7 @@ end
 assign {Q6, Q5, Q4, Q3, Q2, Q1, Q0} = Q_data;
 
 endmodule //IVIDEO (7 to 1 deserializer)
+
 
 //IDES8_MEM
 module IDES8_MEM (Q0, Q1, Q2, Q3, Q4, Q5, Q6, Q7, D, WADDR, RADDR, CALIB, PCLK, FCLK, ICLK, RESET);
@@ -11202,6 +11551,153 @@ assign Q = FCLK ? d_reg_n : d_reg_p;
 //synthesis translate_on
 endmodule // OSER10 (10 to 1 serializer)
 
+//OSER14
+module OSER14 (Q, D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, PCLK, FCLK, RESET);
+
+input D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13;
+input PCLK, FCLK, RESET;
+output  Q;
+
+reg [13:0] d_reg0,d_reg1,d_reg2;
+reg rstn_dsel;
+reg dcnt0,dcnt1,dcnt2;
+reg d_up0,d_up1;
+reg d_reg_p,d_reg_n;
+
+wire grstn,lrstn;
+wire cnt_rst,d_en;
+
+initial begin
+    dcnt0 = 1'b0;
+    dcnt1 = 1'b0;
+    dcnt2 = 1'b0;
+end
+
+assign grstn = GSR.GSRO;
+assign lrstn = (~RESET);
+
+always @(posedge FCLK or negedge grstn or negedge lrstn) begin
+    if (!grstn) begin
+        rstn_dsel <= 0;
+    end else if(!lrstn) begin
+        rstn_dsel <= 0;
+    end else begin
+        rstn_dsel <= 1;
+    end
+end
+
+assign cnt_rst = (~dcnt0) & dcnt1 & dcnt2;
+
+always @(posedge FCLK or negedge rstn_dsel) begin
+    if(!rstn_dsel) begin
+        dcnt0 <= 0;
+        dcnt1 <= 0;
+        dcnt2 <= 0;
+    end else begin
+        dcnt0 <= ~(dcnt0 | cnt_rst);
+        dcnt1 <= (dcnt1 ^ dcnt0) &(~cnt_rst);
+        dcnt2 <= ((dcnt0 & dcnt1) ^ dcnt2) &(~cnt_rst);
+    end
+end
+
+assign d_en = ((~dcnt2) & dcnt1) & dcnt0;
+
+always @(posedge FCLK or negedge rstn_dsel) begin
+    if(!rstn_dsel) begin
+        d_up0 <= 0;
+        d_up1 <= 0;
+    end else if(d_en) begin
+        d_up0 <= 1;
+        d_up1 <= 1;
+    end else begin
+        d_up0 <= 0;
+        d_up1 <= 0;
+    end
+end
+
+always @(posedge PCLK or negedge grstn or negedge lrstn)
+begin
+    if (!grstn) begin
+        d_reg0 <= 14'b0;
+    end
+    else if (!lrstn) begin
+        d_reg0 <= 14'b0;
+    end
+    else begin
+        d_reg0 <= {D13,D12,D11,D10,D9,D8,D7,D6,D5,D4,D3,D2,D1,D0};
+    end
+end
+
+always @(posedge FCLK or negedge grstn or negedge lrstn)
+begin 
+    if (!grstn) begin
+        d_reg1 <= 14'b0;
+    end else if (!lrstn) begin
+        d_reg1 <= 14'b0;
+    end else begin
+        if(d_up0)begin
+            d_reg1 <= d_reg0;
+        end else begin
+            d_reg1 <= d_reg1;
+        end
+    end
+end
+
+always @(posedge FCLK or negedge grstn or negedge lrstn)
+begin 
+    if (!grstn) begin
+        d_reg2 <= 14'b0;
+    end else if (!lrstn) begin
+        d_reg2 <= 14'b0;
+    end else begin
+        if(d_up1)begin
+            d_reg2 <= d_reg1;
+        end else begin
+            d_reg2[0] <= d_reg2[2];
+            d_reg2[1] <= d_reg2[3];
+            d_reg2[2] <= d_reg2[4];
+            d_reg2[3] <= d_reg2[5];
+            d_reg2[4] <= d_reg2[6];
+            d_reg2[5] <= d_reg2[7];
+            d_reg2[6] <= d_reg2[8];
+            d_reg2[7] <= d_reg2[9];
+            d_reg2[8] <= d_reg2[10];
+            d_reg2[9] <= d_reg2[11];
+            d_reg2[10] <= d_reg2[12];
+            d_reg2[11] <= d_reg2[13];
+            d_reg2[12] <= 1'b0;
+            d_reg2[13] <= 1'b0;
+        end
+    end
+end
+
+always @(posedge FCLK or negedge grstn or negedge lrstn)
+begin
+    if (!grstn) begin
+        d_reg_p <= 1'b0;
+    end else if (!lrstn) begin
+        d_reg_p <= 1'b0;
+    end else begin
+        d_reg_p <= d_reg2[1];
+    end
+end
+
+always @(posedge FCLK or negedge grstn or negedge lrstn)
+begin
+    if (!grstn) begin
+        d_reg_n <= 1'b0;
+    end else if (!lrstn) begin
+        d_reg_n <= 1'b0;
+    end else begin
+        d_reg_n <= d_reg2[0];
+    end
+end
+
+assign Q = FCLK ? d_reg_n : d_reg_p;
+
+endmodule
+
+
 //OSER16
 module OSER16 (Q, D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15, PCLK, FCLK, RESET);
 
@@ -11366,7 +11862,7 @@ output DO;
 
 reg [7:0] delay_data,delay_data_adapt;
 reg pre_value;
-wire delay_out;
+reg delay_out;
 wire [7:0] delay_code;
 wire [7:0] delay_data_real;
 integer cnt_step,cnt_value;
@@ -11436,17 +11932,17 @@ end
 
 always @(SDTAP or VALUE or cnt_step or DLYSTEP or cnt_value_start) begin
     if (!SDTAP) begin
-        delay_data_adapt <= C_STATIC_DLY;
+        delay_data_adapt <= DLYSTEP;
     end else begin
         if(cnt_value_start == 1'b1) begin
-   	        if (C_STATIC_DLY < DLYSTEP)
+   	        if (delay_data_adapt < DLYSTEP)
             begin
                 if(delay_data_adapt != DLYSTEP) begin
                     if (cnt_step == 7) begin
       		            delay_data_adapt <= delay_data_adapt + 1;
                     end
                 end
-            end else if (C_STATIC_DLY > DLYSTEP) begin
+            end else if (delay_data_adapt > DLYSTEP) begin
                 if(delay_data_adapt != DLYSTEP) begin
                     if (cnt_step == 7) begin
       		            delay_data_adapt <= delay_data_adapt - 1;
@@ -11465,26 +11961,34 @@ assign DF = ((C_STATIC_DLY > DLYSTEP) && (delay_data_adapt == DLYSTEP)) || ((C_S
 
 assign delay_data_real = (ADAPT_EN == "FALSE")? delay_data : delay_data_adapt;
 
-assign #(0.0125*(delay_data_real+1)) delay_out = DI;
+//assign #(0.0125*(delay_data_real+1)) delay_out = DI;
+always @(DI)
+begin
+    delay_out <= #(0.0125*(delay_data_real+1)) DI;
+end
 
 assign DO = delay_out;
 
 endmodule // IODELAY (i/o delay in IOB)
 
 
-module OSIDES32(Q, DF, D, PCLK, FCLKP, FCLKN, FCLKQP, FCLKQN, RESET, SDTAP, VALUE, DLYSTEP);
+module OSIDES32(Q, DF0, DF1, D, PCLK, FCLKP, FCLKN, FCLKQP, FCLKQN, RESET, SDTAP0, VALUE0, DLYSTEP0, SDTAP1, VALUE1, DLYSTEP1);
 output [31:0] Q;
 input D;
 input PCLK, FCLKP, FCLKN, FCLKQP, FCLKQN;
 input RESET;
-output DF;
-input  SDTAP;
-input  VALUE;
-input  [7:0] DLYSTEP;
+output DF0, DF1;
+input  SDTAP0, SDTAP1;
+input  VALUE0,VALUE1;
+input  [7:0] DLYSTEP0,DLYSTEP1;
 
-parameter C_STATIC_DLY = 0; //integer,0~255
-parameter DYN_DLY_EN = "FALSE";//"TRUE","FALSE"
-parameter ADAPT_EN = "FALSE";//"TRUE","FALSE"
+parameter C_STATIC_DLY_0 = 0; //integer,0~255
+parameter DYN_DLY_EN_0 = "FALSE";//"TRUE","FALSE"
+parameter ADAPT_EN_0 = "FALSE";//"TRUE","FALSE"
+
+parameter C_STATIC_DLY_1 = 0; //integer,0~255
+parameter DYN_DLY_EN_1 = "FALSE";//"TRUE","FALSE"
+parameter ADAPT_EN_1 = "FALSE";//"TRUE","FALSE"
 
 
 wire D_a,D_b;
@@ -11500,30 +12004,30 @@ wire grstn;
 assign grstn = GSR.GSRO;
 
 
-wire DF0;
+wire DF0,DF1;
 IODELAY dly_0 (
     .DO(D_a), 
     .DF(DF0), 
     .DI(D), 
-    .DLYSTEP(8'b0),
-    .SDTAP(1'b0),
-    .VALUE(1'b0)
+    .DLYSTEP(DLYSTEP0),
+    .SDTAP(SDTAP0),
+    .VALUE(VALUE0)
 );
-defparam dly_0.C_STATIC_DLY = 0;
-defparam dly_0.DYN_DLY_EN = "FALSE";
-defparam dly_0.ADAPT_EN = "FALSE";
+defparam dly_0.C_STATIC_DLY = C_STATIC_DLY_0;
+defparam dly_0.DYN_DLY_EN = DYN_DLY_EN_0;
+defparam dly_0.ADAPT_EN = ADAPT_EN_0;
 
 IODELAY dly_1 (
     .DO(D_b), 
-    .DF(DF), 
+    .DF(DF1), 
     .DI(D), 
-    .DLYSTEP(DLYSTEP), 
-    .SDTAP(SDTAP), 
-    .VALUE(VALUE)
+    .DLYSTEP(DLYSTEP1), 
+    .SDTAP(SDTAP1), 
+    .VALUE(VALUE1)
 );
-defparam dly_1.C_STATIC_DLY = C_STATIC_DLY;
-defparam dly_1.DYN_DLY_EN = DYN_DLY_EN;
-defparam dly_1.ADAPT_EN = ADAPT_EN;
+defparam dly_1.C_STATIC_DLY = C_STATIC_DLY_1;
+defparam dly_1.DYN_DLY_EN = DYN_DLY_EN_1;
+defparam dly_1.ADAPT_EN = ADAPT_EN_1;
 
 
 always @(posedge FCLKP or negedge grstn or posedge RESET) begin
@@ -11826,6 +12330,108 @@ always @(posedge PCLK or negedge grstn or posedge RESET) begin
 end
 
 assign Q = Q_data;
+
+endmodule
+
+//OSIDES64
+module OSIDES64(Q, DF0, DF1, DF2, DF3, D, PCLK, FCLKP, FCLKN, FCLKQP, FCLKQN, RESET, SDTAP0, VALUE0, DLYSTEP0, SDTAP1, VALUE1, DLYSTEP1, SDTAP2, VALUE2, DLYSTEP2, SDTAP3, VALUE3, DLYSTEP3 );
+output [63:0] Q;
+input D;
+input PCLK, FCLKP, FCLKN, FCLKQP, FCLKQN;
+input RESET;
+output DF0, DF1, DF2, DF3;
+input  SDTAP0, SDTAP1, SDTAP2, SDTAP3;
+input  VALUE0, VALUE1, VALUE2, VALUE3;
+input  [7:0] DLYSTEP0, DLYSTEP1, DLYSTEP2, DLYSTEP3;
+
+parameter C_STATIC_DLY_0 = 0; //integer,0~255
+parameter DYN_DLY_EN_0 = "FALSE";//"TRUE","FALSE"
+parameter ADAPT_EN_0 = "FALSE";//"TRUE","FALSE"
+
+parameter C_STATIC_DLY_1 = 0; //integer,0~255
+parameter DYN_DLY_EN_1 = "FALSE";//"TRUE","FALSE"
+parameter ADAPT_EN_1 = "FALSE";//"TRUE","FALSE"
+
+parameter C_STATIC_DLY_2 = 0; //integer,0~255
+parameter DYN_DLY_EN_2 = "FALSE";//"TRUE","FALSE"
+parameter ADAPT_EN_2 = "FALSE";//"TRUE","FALSE"
+
+parameter C_STATIC_DLY_3 = 0; //integer,0~255
+parameter DYN_DLY_EN_3 = "FALSE";//"TRUE","FALSE"
+parameter ADAPT_EN_3 = "FALSE";//"TRUE","FALSE"
+
+wire [31:0] parallel_data_0,parallel_data_1;
+//osides32_0
+OSIDES32 osides32_0(
+        .Q        		(parallel_data_0),
+        .D        		(D            	),
+        .DF0       		(DF0           	),
+        .DF1       		(DF1           	),
+        .PCLK     		(PCLK         	),
+        .FCLKP    		(FCLKP       	),
+        .FCLKN    		(FCLKN      	),
+        .FCLKQP   		(FCLKQP      	),
+        .FCLKQN   		(FCLKQN      	),
+        .RESET    		(RESET			),
+        .SDTAP0    		(SDTAP0 		),
+        .VALUE0    		(VALUE0			),
+        .DLYSTEP0  		(DLYSTEP0		),
+        .SDTAP1    		(SDTAP1			),
+        .VALUE1    		(VALUE1			),
+        .DLYSTEP1  		(DLYSTEP1		)
+
+    );
+
+defparam osides32_0.C_STATIC_DLY_0 = C_STATIC_DLY_0;
+defparam osides32_0.DYN_DLY_EN_0 = DYN_DLY_EN_0;
+defparam osides32_0.ADAPT_EN_0 = ADAPT_EN_0;
+defparam osides32_0.C_STATIC_DLY_1 = C_STATIC_DLY_1;
+defparam osides32_0.DYN_DLY_EN_1 = DYN_DLY_EN_1;
+defparam osides32_0.ADAPT_EN_1 = ADAPT_EN_1;
+
+//osides32_1
+OSIDES32 osides32_1(
+        .Q        		(parallel_data_1),
+        .D        		(D            	),
+        .DF0       		(DF2           	),
+        .DF1       		(DF3           	),
+        .PCLK     		(PCLK         	),
+        .FCLKP    		(FCLKP       	),
+        .FCLKN    		(FCLKN      	),
+        .FCLKQP   		(FCLKQP      	),
+        .FCLKQN   		(FCLKQN      	),
+        .RESET    		(RESET			),
+        .SDTAP0    		(SDTAP2 		),
+        .VALUE0    		(VALUE2			),
+        .DLYSTEP0  		(DLYSTEP2		),
+        .SDTAP1    		(SDTAP3			),
+        .VALUE1    		(VALUE3			),
+        .DLYSTEP1  		(DLYSTEP3		)
+    );
+defparam osides32_1.C_STATIC_DLY_0 = C_STATIC_DLY_2;
+defparam osides32_1.DYN_DLY_EN_0 = DYN_DLY_EN_2;
+defparam osides32_1.ADAPT_EN_0 = ADAPT_EN_2;
+defparam osides32_1.C_STATIC_DLY_1 = C_STATIC_DLY_3;
+defparam osides32_1.DYN_DLY_EN_1 = DYN_DLY_EN_3;
+defparam osides32_1.ADAPT_EN_1 = ADAPT_EN_3;
+
+assign	Q = {
+				parallel_data_0[31]	,parallel_data_0[30],parallel_data_1[31],parallel_data_1[30],
+				parallel_data_0[29]	,parallel_data_0[28],parallel_data_1[29],parallel_data_1[28],
+				parallel_data_0[27]	,parallel_data_0[26],parallel_data_1[27],parallel_data_1[26],
+				parallel_data_0[25]	,parallel_data_0[24],parallel_data_1[25],parallel_data_1[24],
+				parallel_data_0[23]	,parallel_data_0[22],parallel_data_1[23],parallel_data_1[22],
+				parallel_data_0[21]	,parallel_data_0[20],parallel_data_1[21],parallel_data_1[20],
+				parallel_data_0[19]	,parallel_data_0[18],parallel_data_1[19],parallel_data_1[18],
+				parallel_data_0[17]	,parallel_data_0[16],parallel_data_1[17],parallel_data_1[16],
+				parallel_data_0[15]	,parallel_data_0[14],parallel_data_1[15],parallel_data_1[14],
+				parallel_data_0[13]	,parallel_data_0[12],parallel_data_1[13],parallel_data_1[12],
+				parallel_data_0[11]	,parallel_data_0[10],parallel_data_1[11],parallel_data_1[10],
+				parallel_data_0[9]	,parallel_data_0[8]	,parallel_data_1[9]	,parallel_data_1[8]	,
+				parallel_data_0[7]	,parallel_data_0[6]	,parallel_data_1[7]	,parallel_data_1[6]	,
+				parallel_data_0[5]	,parallel_data_0[4]	,parallel_data_1[5]	,parallel_data_1[4]	,
+				parallel_data_0[3]	,parallel_data_0[2]	,parallel_data_1[3]	,parallel_data_1[2]	,
+				parallel_data_0[1]	,parallel_data_0[0]	,parallel_data_1[1]	,parallel_data_1[0]	};
 
 endmodule
 
@@ -12740,6 +13346,94 @@ always
        end
 
 endmodule
+
+//OSCB, gw5a-15k
+module OSCB (OSCOUT, OSCREF, OSCEN, FMODE, RTRIM, RTCTRIM);
+parameter FREQ_MODE = "25"; //"25": 25Mhz;  "210": 210MHz
+parameter FREQ_DIV = 10; // 3, 2~126(only even num)
+parameter DYN_TRIM_EN = "FALSE"; //"TRUE","FALSE". TRUE:select port RTRIM and RTCTRIM
+
+output OSCOUT;
+output OSCREF;//25M, osc as reference for serdes and pll
+input OSCEN, FMODE;
+input [7:0] RTRIM;//trim OSCREF 
+input [5:0] RTCTRIM; //tc_trim OSCREF
+
+reg oscr,osc_ref,osc_210,oscr_210;
+reg OSCOUT,OSCREF;
+realtime half_clk,half_clkref,half_clk_210,half_clk210;
+
+initial begin
+    oscr = 1'b0;
+    half_clk = 	20*FREQ_DIV;
+    osc_ref = 1'b0;
+    half_clkref = 	20;
+    osc_210 = 1'b0; 
+    half_clk210 = 	2.381;
+    oscr_210 = 1'b0; 
+    half_clk_210 = 	2.381*FREQ_DIV;
+
+end
+
+always @(OSCEN,FMODE,oscr,oscr_210)
+begin
+    if(OSCEN == 1'b1)
+    begin
+        if(FREQ_MODE == "25")
+        begin
+            OSCOUT <= oscr;
+            OSCREF <= osc_ref;
+        end else begin
+            if(FMODE == 1'b0)
+            begin
+                OSCOUT <= oscr;
+                OSCREF <= osc_ref;
+            end else begin
+                OSCOUT <= oscr_210;
+                OSCREF <= osc_210;
+            end
+        end
+    end else begin
+        OSCOUT <= 1'b1;
+        OSCREF <= 1'b1;
+    end
+end
+
+always
+       begin
+            #half_clk;
+            oscr = 1'b1;	   
+            #half_clk;
+            oscr = 1'b0;
+       end
+
+always
+       begin
+            #half_clkref;
+            osc_ref = 1'b1;	   
+            #half_clkref;
+            osc_ref = 1'b0;
+       end
+
+always
+       begin
+            #half_clk210;
+            osc_210 = 1'b1;	   
+            #half_clk210;
+            osc_210 = 1'b0;
+       end
+
+always
+       begin
+            #half_clk_210;
+            oscr_210 = 1'b1;	   
+            #half_clk_210;
+            oscr_210 = 1'b0;
+       end
+
+
+endmodule
+
 
 
 //PLL
@@ -13949,7 +14643,7 @@ begin
     clk3_dt_delay <= (0.05 * clk3_dt_step);
 end
 
-always @(clkout0_duty or clkout1_duty or clkout2_duty or clkout3_duty or clk0_dt_dir or clk1_dt_dir or clk2_dt_dir or clk3_dt_dir or clk0_dt_step or clk1_dt_step or clk2_dt_step or clk3_dt_step) begin
+always @(clkout0_duty or clkout1_duty or clkout2_duty or clkout3_duty or clk0_dt_dir or clk1_dt_dir or clk2_dt_dir or clk3_dt_dir or clk0_dt_delay or clk1_dt_delay or clk2_dt_delay or clk3_dt_delay) begin
     if (clk0_dt_dir == 1'b1) begin
         tclk0_duty <= clkout0_duty + clk0_dt_delay;
     end else begin
@@ -14611,7 +15305,7 @@ assign CLKOUT6 = (CLK6_OUT_SEL == 1'b1)? CLKIN : ((cken6 == 1'b1) ? clk6_out : 1
 endmodule
 
 
-//PLLA,gw5a-25
+//
 module PLLA (CLKOUT0, CLKOUT1, CLKOUT2, CLKOUT3, CLKOUT4, CLKOUT5, CLKOUT6, CLKFBOUT, MDRDO, LOCK, CLKIN, CLKFB, PSSEL, PSDIR, PSPULSE, SSCPOL, SSCON, SSCMDSEL, SSCMDSEL_FRAC, MDWDI, MDCLK, MDOPC, MDAINC, RESET, PLLPWD, RESET_I, RESET_O);
 input CLKIN;
 input CLKFB;
@@ -15749,7 +16443,7 @@ begin
     clk3_dt_delay <= (0.05 * clk3_dt_step);
 end
 
-always @(clkout0_duty or clkout1_duty or clkout2_duty or clkout3_duty or clk0_dt_dir or clk1_dt_dir or clk2_dt_dir or clk3_dt_dir or clk0_dt_step or clk1_dt_step or clk2_dt_step or clk3_dt_step) begin
+always @(clkout0_duty or clkout1_duty or clkout2_duty or clkout3_duty or clk0_dt_dir or clk1_dt_dir or clk2_dt_dir or clk3_dt_dir or clk0_dt_delay or clk1_dt_delay or clk2_dt_delay or clk3_dt_delay) begin
     if (clk0_dt_dir == 1'b1) begin
         tclk0_duty <= clkout0_duty + clk0_dt_delay;
     end else begin
@@ -16411,6 +17105,7 @@ assign CLKOUT6 = (CLK6_OUT_SEL == 1'b1)? CLKIN : ((cken6 == 1'b1) ? clk6_out : 1
 endmodule
 
 
+
 //AE350_SOC
 module AE350_SOC (
             POR_N,          //Power on reset, 0 is reset state
@@ -16765,6 +17460,7 @@ input		RET2N;
 
 endmodule
 
+
 //AE350_RAM
 module AE350_RAM (
             POR_N,          //Power on reset, 0 is reset state
@@ -16836,6 +17532,7 @@ input		RET2N;
 endmodule
 
 
+
 //SAMB,spi address for multi boot
 module SAMB(SPIAD, LOAD, ADWSEL);
 parameter MODE = 2'b00; //00,normal mode; 01, fast mode; 10,dual mode; 11,quad mode
@@ -16847,10 +17544,10 @@ input ADWSEL; //0, the address is 24-bit; 1, the address is 32-bit(add 0 to the 
 endmodule
 
 //OTP,One-Time-Programming
-module OTP (DOUT, READ, SHIFT);
-parameter MODE = 1'b0; //1'b0,read DNA info; 1'b1, read usr info
+module OTP (DOUT, CLK, READ, SHIFT);
+parameter MODE = 2'b01; //2'b01,read DNA info; 2'b00, read usr info; 2'b10, read usr control
 
-input READ, SHIFT;
+input CLK, READ, SHIFT;
 output DOUT;
 
 endmodule
@@ -16911,6 +17608,39 @@ input [6:0] ERRINJ0LOC,ERRINJ1LOC;
 endmodule
 
 
+//CMSERB,GW5A-60
+module CMSERB(RUNNING, CRCERR, CRCDONE, ECCCORR, ECCUNCORR, ERRLOC, ECCDEC, DSRRD, DSRWR, ASRRESET, ASRINC, REFCLK, CLK, SEREN, ERR0INJECT, ERR1INJECT, ERRINJ0LOC, ERRINJ1LOC);
+output RUNNING;//The high level of this signal indicates CMSER is running
+output CRCERR;//one cycle high pulse to indicate the CRC error event
+output CRCDONE;//one cycle high pulse to indicate the completion of CRC calculation and comparison
+output ECCCORR;//one cycle high pulse to indicate the correctable ECC error event
+output ECCUNCORR; //one cycle high pulse to indicate the uncorrectable ECC error event
+output [12:0] ERRLOC;//the location of ECC error.
+output ECCDEC;//The indication of ECC block decoding is running.1: one ECC block is decoding at that clock cycle;0: no ECC decoding at that clock cycle
+output DSRRD;//one cycle high pulse to indicate the reading operation of DSR
+output DSRWR; //one cycle high pulse to indicate the writing operation of DSR
+output ASRRESET;//one cycle high pulse to indicate the reset of ASR
+output ASRINC;//one cycle high pulse to indicate the increase of ASR address
+output REFCLK;//the output reference clock for the generation of user CMSER interface design.
+
+input CLK;//SER clock
+input [2:0] SEREN;//(the critical signal using TMR scheme for error reduction).rising edge (at least two of three bits are detected to transit from "0" to "1") to start CMSER; falling edge (at least two bites are detected to transit from "1" to "0") to stop CMSER
+input ERR0INJECT,ERR1INJECT;
+input [6:0] ERRINJ0LOC,ERRINJ1LOC;
+
+
+endmodule
+
+//SAMBA,spi address for multi boot,GW5A-60
+module SAMBA (SPIAD, LOAD);
+parameter MODE = 2'b00; //00,normal mode; 01, fast mode; 10,dual mode; 11,quad mode
+
+input SPIAD;//spi flash address
+input LOAD;//Select dynamic address signal SPIAD at high level
+
+endmodule
+
+
 /********ADC***********/
 //ADC for LRC,GW5AT-138K
 module ADCLRC (
@@ -16934,7 +17664,6 @@ module ADCLRC (
   input  CLK,           //clk input，1/2 shared
   input  DRSTN,         //0/1 shared, Digital part reset signal, active low
   input  ADCREQI,       //Measurement request signal, valid rising edge, asynchronous signal
-  //input  ADCREGI,       //Measurement request signal, valid rising edge, asynchronous signal
 
   //output
   output ADCRDY,          //The measurement completion signal, active high
@@ -17060,6 +17789,112 @@ module ADC (
 
 
 endmodule
+
+
+//ADC_SAR,integrated saradc and adc functions.
+module ADC_SAR (
+//`ifdef ADC
+  input  ADCMODE,          //Mode selection
+  input  [2:0] VSENCTL,    //Input source selection
+  input  CLK,              //clk input
+  //Digital
+  output ADCENO,           //Enable signal, active high
+  input  DRSTN,            //Digital part reset signal, active low
+  input  ADCREQI,          //Measurement request signal
+  output ADCRDY,           //The measurement completion signal, active high
+  output [13:0] ADCVALUE,  //The measurement result output
+  input  MDRP_CLK,         //mdrp clock
+  input  [7:0] MDRP_WDATA, //mdrp write data
+  input  MDRP_A_INC,       //mdrp self-increased address
+  input  [1:0] MDRP_OPCODE,//mdrp opcode
+  output [7:0] MDRP_RDATA, //mdrp read data
+  //Analog
+  output ADC1BIT,          //Analog data output
+  output ADCCLKO,          //Analog clock output
+  input  ADCENI,           //fabric adc enable input
+//`endif
+// SAR
+//`ifdef SARADC
+  output [12:0] ADCBIT,    //Measurement result output
+  output CLKO,             //output clk
+  output EOC,              //The measurement completion signal
+  input  CLKI,             //fabric input clk
+  input  [6:0] CHEN,       //channel select
+  input  RSTN,             //resetn,active low
+  input  SOC              //Measurement request signal
+//`endif
+);
+
+  parameter BUF_EN = 29'b0;    // signal source selecor switch
+// Δ-Σ
+//`ifdef ADC
+  parameter CLK_SEL        = 1'b1;     // clk source select
+  parameter DIV_CTL        = 2'd0;     // clock division.0:/1,1:/2,2:/4,3:/8
+  parameter ADC_EN_SEL     = 1'b0;     // adc_en source select
+  parameter PHASE_SEL      = 1'b0;     // adc internal data phase select
+
+  //Digital terminal options
+  parameter CSR_ADC_MODE         = 1'b1;          // Mode selection
+  parameter CSR_VSEN_CTRL        = 3'd0;       // signal source:vccx/vccio_*/vcc_reg -> 7, signal source:vcc_ext -> 4, others -> 0
+  parameter CSR_SAMPLE_CNT_SEL   = 3'd4;       // total samples configuration, 0~4:64, 128, 256, 512, 1024 sampling points, and the other values are 2048 sampling points.The total number of samples shall be greater than 7 * sampling period, i.e.  SAMPLR_CNT_SEL >= RATE_CHANGE_CTRL-1
+  parameter CSR_RATE_CHANGE_CTRL = 3'd4;       // Sampling period configuration, 0~4:4、8、16、32、64，other values are 128
+  parameter CSR_FSCAL            = 10'd730;    // Parameter 1: temperature mode 510~948, typical value 730; Voltage mode 452~840, typical value 653
+  parameter CSR_OFFSET           = -12'd1180;  // Parameter 2, signed number, temperature mode - 1560~- 760, typical value - 1180; Voltage mode - 410~410, typical value 0
+
+//`endif
+// SAR
+//`ifdef SARADC
+  parameter ADC_CLK_DIV        = 2'b00;     // clock division.00:/1,01:/2,10:/4,11:/8
+  parameter ADC_CLKDIV_EN      = 1'b0;     // clock division enable
+  parameter CLK_SRC_SEL        = 1'b1;     // source clock sel
+  parameter VREF_BUF_EN        = 1'b1;     // BGR vref buffer enable
+  parameter COUNT_LEN          = 5'b10100; // ADC counter length
+  parameter DAC_SAMPLE_END     = 5'b10010; // DAC sample end point
+  parameter DAC_SAMPLE_START   = 5'b01101; // DAC sample start point
+  parameter SH_SAMPLE_END      = 5'b01011; // SH sample start point
+  parameter SH_SAMPLE_START    = 5'b00001; // SH sample end point
+  parameter AUTO_CHOP_EN       = 1'b0;     // auto chop
+  parameter CHOP_CLK_DIV       = 4'b0;     // chop clock divider
+
+//`endif
+
+endmodule
+
+
+//LICD(lossless image compress/decompress),15k
+module LICD (ENC_CODE,ENC_CODEVLD,ENC_VIDDEO,DEC_DFETCH,DEC_VIDSAMP2,DEC_VIDSAMP1,DEC_VIDSAMP0,DEC_VIDDEO,ENC_CLK,ENC_CE,ENC_RST,ENC_VIDDE,ENC_VIDSAMP2,ENC_VIDSAMP1,ENC_VIDSAMP0,DEC_CLK,DEC_CE,DEC_RST,DEC_VIDDE,DEC_DATAI);
+//encoder
+    input               ENC_CLK;  
+    input               ENC_CE; 
+    input               ENC_RST;
+    input               ENC_VIDDE;
+    input    [23:0]     ENC_VIDSAMP2; // enc[2] input sample
+    input    [23:0]     ENC_VIDSAMP1; // enc[1] input sample
+    input    [23:0]     ENC_VIDSAMP0; // enc[0] input sample
+    output   [95:0]     ENC_CODE;     //use [31:0] in 32-bit mode; use [63:0] in 64-bit mode; use [95:0] in 96-bit mode
+    output              ENC_CODEVLD;
+    output              ENC_VIDDEO;
+//decoder
+    input               DEC_CLK;
+    input               DEC_CE;
+    input               DEC_RST;
+    input               DEC_VIDDE;
+    input    [95:0]     DEC_DATAI; //use [31:0] in 32-bit mode; use [63:0] in 64-bit mode; use [95:0] in 96-bit mode
+    output              DEC_DFETCH;
+    output   [23:0]     DEC_VIDSAMP2; // dec[2] output sample
+    output   [23:0]     DEC_VIDSAMP1; // dec[1] output sample
+    output   [23:0]     DEC_VIDSAMP0; // dec[0] output sample 
+    output              DEC_VIDDEO;    
+
+    //configuration
+    parameter   STAGE_NUM = 2'b00;        //# of samples to be proceessed by each encdec per clock cycle. 'b01=1; 'b00=3; others=2
+    parameter   ENCDEC_NUM = 2'b00;       //# of encdec. 'b01=3; 'b00=2; others=1
+    parameter   CODE_WIDTH = 2'b00;       //the bus width of encoded data. 'b00=64; 'b01=32; others=96
+    parameter   INTERLEAVE_EN = 3'b000;   //bit[0]=encdec[0]; bit[1]=encdec[1]; bit[2]=encdec[2]. 'b1=interleave; 'b0=non-interleave
+    parameter   INTERLEAVE_MODE = 3'b000;  //bit[0]=encdec[0]; bit[1]=encdec[1]; bit[2]=encdec[2]. 'b0=AB mode; 'b1=ABC mode
+
+endmodule
+
 
 
 //MIPI_DPHY_RX for 5AT138K
@@ -17271,7 +18106,7 @@ input TXDPEN_LN0, TXDPEN_LN1, TXDPEN_LN2, TXDPEN_LN3, TXDPEN_LNCK, TXHCLK_EN;
 input [15:0]  CKLN_HSTXD,D0LN_HSTXD,D1LN_HSTXD,D2LN_HSTXD,D3LN_HSTXD;
 input HSTXD_VLD;
 input CK0, CK90, CK180, CK270;
-   
+
 input DO_LPTX0_N, DO_LPTX1_N, DO_LPTX2_N, DO_LPTX3_N, DO_LPTXCK_N, DO_LPTX0_P, DO_LPTX1_P, DO_LPTX2_P, DO_LPTX3_P, DO_LPTXCK_P;
 input HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK, 
      HSRX_ODTEN_D0, HSRX_ODTEN_D1, HSRX_ODTEN_D2, HSRX_ODTEN_D3, LPRX_EN_CK,
@@ -17358,7 +18193,7 @@ parameter        RX_RD_START_DEPTH              = 5'b00001;
 parameter        RX_SYNC_MODE                   = 1'b0 ; 
 parameter        RX_WORD_ALIGN_BYPASS           = 1'b0 ; 
 parameter        RX_WORD_ALIGN_DATA_VLD_SRC_SEL = 1'b0 ; 
-parameter        RX_WORD_LITTLE_ENDIAN          = 1'b0 ; 
+parameter        RX_WORD_LITTLE_ENDIAN          = 1'b1 ; 
 parameter        TX_BYPASS_MODE                 = 1'b0 ; 
 parameter        TX_BYTECLK_SYNC_MODE           = 1'b0 ; 
 parameter        TX_OCLK_USE_CIBCLK             = 1'b0 ; 
@@ -17559,6 +18394,510 @@ parameter        TEST_P_IMP_LN1                 = 1'b0 ;
 parameter        TEST_P_IMP_LN2                 = 1'b0 ;   
 parameter        TEST_P_IMP_LN3                 = 1'b0 ;   
 parameter        TEST_P_IMP_LNCK                = 1'b0 ;   
+
+endmodule
+
+
+//MIPI_DPHY for 60K
+module MIPI_DPHYA ( ALPEDO_LANE0, ALPEDO_LANE1, ALPEDO_LANE2, ALPEDO_LANE3, ALPEDO_LANECK,  RX_CLK_O, TX_CLK_O, D0LN_DESKEW_DONE, D0LN_DESKEW_ERROR, D0LN_HSRXD, D0LN_HSRXD_VLD, D1LN_DESKEW_DONE, D1LN_DESKEW_ERROR, D1LN_HSRXD, D1LN_HSRXD_VLD, D2LN_DESKEW_DONE, D2LN_DESKEW_ERROR, D2LN_HSRXD, D2LN_HSRXD_VLD, D3LN_DESKEW_DONE, D3LN_DESKEW_ERROR, D3LN_HSRXD, D3LN_HSRXD_VLD, DI_LPRX0_N, DI_LPRX0_P, DI_LPRX1_N, DI_LPRX1_P, DI_LPRX2_N, DI_LPRX2_P, DI_LPRX3_N, DI_LPRX3_P, DI_LPRXCK_N, DI_LPRXCK_P, MRDATA, CK_N, CK_P, D0_N, D0_P, D1_N, D1_P, D2_N, D2_P, D3_N, D3_P, ALP_EDEN_LANE0, ALP_EDEN_LANE1, ALP_EDEN_LANE2, ALP_EDEN_LANE3, ALP_EDEN_LANECK, ALPEN_LN0, ALPEN_LN1, ALPEN_LN2, ALPEN_LN3, ALPEN_LNCK, HSRX_STOP, HSTXEN_LN0, HSTXEN_LN1, HSTXEN_LN2, HSTXEN_LN3, HSTXEN_LNCK, LPTXEN_LN0, LPTXEN_LN1, LPTXEN_LN2, LPTXEN_LN3, LPTXEN_LNCK, PWRON_RX, PWRON_TX, RESET, RX_CLK_1X, TX_CLK_1X, TXDPEN_LN0, TXDPEN_LN1, TXDPEN_LN2, TXDPEN_LN3, TXDPEN_LNCK, TXHCLK_EN, CKLN_HSTXD, D0LN_DESKEW_REQ, D0LN_HSRX_DREN, D0LN_HSTXD, D1LN_DESKEW_REQ, D1LN_HSRX_DREN, D1LN_HSTXD, D2LN_DESKEW_REQ, D2LN_HSRX_DREN, D2LN_HSTXD, D3LN_DESKEW_REQ, D3LN_HSRX_DREN, D3LN_HSTXD,HSTXD_VLD, DO_LPTX0_N, DO_LPTX1_N, DO_LPTX2_N, DO_LPTX3_N,  DO_LPTXCK_N, DO_LPTX0_P, DO_LPTX1_P,  DO_LPTX2_P, DO_LPTX3_P, DO_LPTXCK_P, HSRX_DLYDIR_LANE0, HSRX_DLYDIR_LANE1, HSRX_DLYDIR_LANE2, HSRX_DLYDIR_LANE3, HSRX_DLYDIR_LANECK, HSRX_DLYLDN_LANE0, HSRX_DLYLDN_LANE1, HSRX_DLYLDN_LANE2, HSRX_DLYLDN_LANE3, HSRX_DLYLDN_LANECK, HSRX_DLYMV_LANE0, HSRX_DLYMV_LANE1, HSRX_DLYMV_LANE2, HSRX_DLYMV_LANE3, HSRX_DLYMV_LANECK, HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK, HSRX_ODTEN_D0, HSRX_ODTEN_D1, HSRX_ODTEN_D2, HSRX_ODTEN_D3, LPRX_EN_CK, LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2, LPRX_EN_D3, MA_INC, MCLK, MOPCODE, MWDATA, RX_DRST_N, TX_DRST_N, WALIGN_DVLD, CK0, CK90, CK180, CK270, SPLL_CKN, SPLL_CKP);
+
+output RX_CLK_O, TX_CLK_O;
+output [15:0] D0LN_HSRXD, D1LN_HSRXD, D2LN_HSRXD, D3LN_HSRXD;//data lane HS data output to fabric
+output D0LN_HSRXD_VLD,D1LN_HSRXD_VLD,D2LN_HSRXD_VLD,D3LN_HSRXD_VLD;//data lane HS data output valid to fabric
+
+input  D0LN_HSRX_DREN, D1LN_HSRX_DREN,  D2LN_HSRX_DREN,  D3LN_HSRX_DREN;
+  
+output  DI_LPRX0_N, DI_LPRX0_P, DI_LPRX1_N, DI_LPRX1_P, DI_LPRX2_N,  DI_LPRX2_P, DI_LPRX3_N, DI_LPRX3_P, DI_LPRXCK_N, DI_LPRXCK_P;
+
+inout  CK_N, CK_P, D0_N, D0_P, D1_N, D1_P, D2_N, D2_P, D3_N, D3_P;
+
+input HSRX_STOP, HSTXEN_LN0, HSTXEN_LN1, HSTXEN_LN2, HSTXEN_LN3, HSTXEN_LNCK,
+     LPTXEN_LN0, LPTXEN_LN1, LPTXEN_LN2, LPTXEN_LN3, LPTXEN_LNCK;
+input PWRON_RX, PWRON_TX, RESET, RX_CLK_1X, TX_CLK_1X;
+input TXDPEN_LN0, TXDPEN_LN1, TXDPEN_LN2, TXDPEN_LN3, TXDPEN_LNCK, TXHCLK_EN;
+input [15:0]  CKLN_HSTXD,D0LN_HSTXD,D1LN_HSTXD,D2LN_HSTXD,D3LN_HSTXD;
+input HSTXD_VLD;
+input CK0, CK90, CK180, CK270;
+
+input DO_LPTX0_N, DO_LPTX1_N, DO_LPTX2_N, DO_LPTX3_N, DO_LPTXCK_N, DO_LPTX0_P, DO_LPTX1_P, DO_LPTX2_P, DO_LPTX3_P, DO_LPTXCK_P;
+input HSRX_EN_CK, HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_EN_D3, HSRX_ODTEN_CK, 
+     HSRX_ODTEN_D0, HSRX_ODTEN_D1, HSRX_ODTEN_D2, HSRX_ODTEN_D3, LPRX_EN_CK,
+     LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2, LPRX_EN_D3; 
+input RX_DRST_N, TX_DRST_N, WALIGN_DVLD;
+
+output [7:0] MRDATA;
+input MA_INC, MCLK;
+input [1:0] MOPCODE;
+input [7:0] MWDATA;
+
+input SPLL_CKN, SPLL_CKP;
+
+/********Reserved port********/
+output  ALPEDO_LANE0, ALPEDO_LANE1, ALPEDO_LANE2, ALPEDO_LANE3, ALPEDO_LANECK;
+output D1LN_DESKEW_DONE,D2LN_DESKEW_DONE,D3LN_DESKEW_DONE,D0LN_DESKEW_DONE;
+output D1LN_DESKEW_ERROR, D2LN_DESKEW_ERROR, D3LN_DESKEW_ERROR, D0LN_DESKEW_ERROR;
+input D0LN_DESKEW_REQ, D1LN_DESKEW_REQ, D2LN_DESKEW_REQ, D3LN_DESKEW_REQ;
+input HSRX_DLYDIR_LANE0, HSRX_DLYDIR_LANE1, HSRX_DLYDIR_LANE2, HSRX_DLYDIR_LANE3, HSRX_DLYDIR_LANECK;
+input HSRX_DLYLDN_LANE0, HSRX_DLYLDN_LANE1, HSRX_DLYLDN_LANE2, HSRX_DLYLDN_LANE3, HSRX_DLYLDN_LANECK;
+input HSRX_DLYMV_LANE0, HSRX_DLYMV_LANE1,  HSRX_DLYMV_LANE2, HSRX_DLYMV_LANE3, HSRX_DLYMV_LANECK;
+input  ALP_EDEN_LANE0, ALP_EDEN_LANE1, ALP_EDEN_LANE2, ALP_EDEN_LANE3, ALP_EDEN_LANECK, ALPEN_LN0, ALPEN_LN1, ALPEN_LN2, ALPEN_LN3, ALPEN_LNCK;
+
+
+parameter        TX_PLLCLK = "NONE"; //"NONE", "SLOW", "FAST"  
+parameter        RX_ALIGN_BYTE                  = 8'b10111000 ; 
+parameter        RX_HS_8BIT_MODE                = 1'b0 ; 
+parameter        RX_LANE_ALIGN_EN               = 1'b0 ; 
+parameter        TX_HS_8BIT_MODE                = 1'b0 ; 
+parameter        HSREG_EN_LN0                   = 1'b0;  
+parameter        HSREG_EN_LN1                   = 1'b0;  
+parameter        HSREG_EN_LN2                   = 1'b0;  
+parameter        HSREG_EN_LN3                   = 1'b0;  
+parameter        HSREG_EN_LNCK                  = 1'b0;  
+parameter        LANE_DIV_SEL                   = 2'b00;  
+parameter        HSRX_EN                        = 1'b1 ;  
+parameter        HSRX_LANESEL                   = 4'b1111 ;   
+parameter        HSRX_LANESEL_CK                = 1'b1 ;   
+parameter        HSTX_EN_LN0                    = 1'b0 ;   
+parameter        HSTX_EN_LN1                    = 1'b0 ;   
+parameter        HSTX_EN_LN2                    = 1'b0 ;   
+parameter        HSTX_EN_LN3                    = 1'b0 ;   
+parameter        HSTX_EN_LNCK                   = 1'b0 ;   
+parameter        LPTX_EN_LN0                    = 1'b1 ;   
+parameter        LPTX_EN_LN1                    = 1'b1 ;   
+parameter        LPTX_EN_LN2                    = 1'b1 ;   
+parameter        LPTX_EN_LN3                    = 1'b1 ;   
+parameter        LPTX_EN_LNCK                   = 1'b1 ;   
+parameter        TXDP_EN_LN0                    = 1'b0 ;  
+parameter        TXDP_EN_LN1                    = 1'b0 ;   
+parameter        TXDP_EN_LN2                    = 1'b0 ;   
+parameter        TXDP_EN_LN3                    = 1'b0 ;   
+parameter        TXDP_EN_LNCK                   = 1'b0 ;
+
+parameter        SPLL_DIV_SEL                   = 2'b00;//00:2; 01:4; 10:8; 11:16 
+parameter        DPHY_CK_SEL                    = 2'b01;//00/10:0; 01:gpll; 11: spll
+
+/********Reserved parameters********/
+parameter        CKLN_DELAY_EN                  = 1'b0;  
+parameter        CKLN_DELAY_OVR_VAL             = 7'b0000000; 
+parameter        D0LN_DELAY_EN                  = 1'b0;  
+parameter        D0LN_DELAY_OVR_VAL             = 7'b0000000; 
+parameter        D0LN_DESKEW_BYPASS             = 1'b0;  
+parameter        D1LN_DELAY_EN                  = 1'b0;  
+parameter        D1LN_DELAY_OVR_VAL             = 7'b0000000; 
+parameter        D1LN_DESKEW_BYPASS             = 1'b0;  
+parameter        D2LN_DELAY_EN                  = 1'b0;  
+parameter        D2LN_DELAY_OVR_VAL             = 7'b0000000; 
+parameter        D2LN_DESKEW_BYPASS             = 1'b0;  
+parameter        D3LN_DELAY_EN                  = 1'b0;  
+parameter        D3LN_DELAY_OVR_VAL             = 7'b0000000; 
+parameter        D3LN_DESKEW_BYPASS             = 1'b0;  
+parameter        DESKEW_EN_LOW_DELAY            = 1'b0;  
+parameter        DESKEW_EN_ONE_EDGE             = 1'b0;  
+parameter        DESKEW_FAST_LOOP_TIME          = 4'b0000;  
+parameter        DESKEW_FAST_MODE               = 1'b0;  
+parameter        DESKEW_HALF_OPENING            = 6'b010110; 
+parameter        DESKEW_LSB_MODE                = 2'b00;  
+parameter        DESKEW_M                       = 3'b011;  
+parameter        DESKEW_M_TH                    = 13'b0000110100110; 
+parameter        DESKEW_MAX_SETTING           = 7'b0100001; 
+parameter        DESKEW_ONE_CLK_EDGE_EN       = 1'b0 ; 
+parameter        DESKEW_RST_BYPASS              = 1'b0 ; 
+parameter        RX_BYTE_LITTLE_ENDIAN          = 1'b1 ; 
+parameter        RX_CLK_1X_SYNC_SEL             = 1'b0 ; 
+parameter        RX_INVERT                      = 1'b0 ; 
+parameter        RX_ONE_BYTE0_MATCH             = 1'b0 ; 
+parameter        RX_RD_START_DEPTH              = 5'b00001; 
+parameter        RX_SYNC_MODE                   = 1'b0 ; 
+parameter        RX_WORD_ALIGN_BYPASS           = 1'b0 ; 
+parameter        RX_WORD_ALIGN_DATA_VLD_SRC_SEL = 1'b0 ; 
+parameter        RX_WORD_LITTLE_ENDIAN          = 1'b1 ; 
+parameter        TX_BYPASS_MODE                 = 1'b0 ; 
+parameter        TX_BYTECLK_SYNC_MODE           = 1'b0 ; 
+parameter        TX_OCLK_USE_CIBCLK             = 1'b0 ; 
+parameter        TX_RD_START_DEPTH              = 5'b00001; 
+parameter        TX_SYNC_MODE                   = 1'b0 ; 
+parameter        TX_WORD_LITTLE_ENDIAN          = 1'b1 ; 
+parameter        EQ_CS_LANE0                    = 3'b100;  
+parameter        EQ_CS_LANE1                    = 3'b100;  
+parameter        EQ_CS_LANE2                    = 3'b100;  
+parameter        EQ_CS_LANE3                    = 3'b100;  
+parameter        EQ_CS_LANECK                   = 3'b100;  
+parameter        EQ_RS_LANE0                    = 3'b100;  
+parameter        EQ_RS_LANE1                    = 3'b100;  
+parameter        EQ_RS_LANE2                    = 3'b100;  
+parameter        EQ_RS_LANE3                    = 3'b100;  
+parameter        EQ_RS_LANECK                   = 3'b100;  
+parameter        HSCLK_LANE_LN0                 = 1'b0;  
+parameter        HSCLK_LANE_LN1                 = 1'b0;  
+parameter        HSCLK_LANE_LN2                 = 1'b0;  
+parameter        HSCLK_LANE_LN3                 = 1'b0;  
+parameter        HSCLK_LANE_LNCK                = 1'b1;  
+parameter        ALP_ED_EN_LANE0                = 1'b1 ; 
+parameter        ALP_ED_EN_LANE1                = 1'b1 ;  
+parameter        ALP_ED_EN_LANE2                = 1'b1 ;  
+parameter        ALP_ED_EN_LANE3                = 1'b1 ;  
+parameter        ALP_ED_EN_LANECK               = 1'b1 ; 
+parameter        ALP_ED_TST_LANE0               = 1'b0 ;  
+parameter        ALP_ED_TST_LANE1               = 1'b0 ;  
+parameter        ALP_ED_TST_LANE2               = 1'b0 ;  
+parameter        ALP_ED_TST_LANE3               = 1'b0 ;  
+parameter        ALP_ED_TST_LANECK              = 1'b0 ;  
+parameter        ALP_EN_LN0                     = 1'b0 ; 
+parameter        ALP_EN_LN1                     = 1'b0 ;  
+parameter        ALP_EN_LN2                     = 1'b0 ;  
+parameter        ALP_EN_LN3                     = 1'b0 ; 
+parameter        ALP_EN_LNCK                    = 1'b0 ; 
+parameter        ALP_HYS_EN_LANE0               = 1'b1 ;  
+parameter        ALP_HYS_EN_LANE1               = 1'b1 ;  
+parameter        ALP_HYS_EN_LANE2               = 1'b1 ;  
+parameter        ALP_HYS_EN_LANE3               = 1'b1 ;  
+parameter        ALP_HYS_EN_LANECK              = 1'b1 ;  
+parameter        ALP_TH_LANE0                   = 4'b1000 ;   
+parameter        ALP_TH_LANE1                   = 4'b1000 ;   
+parameter        ALP_TH_LANE2                   = 4'b1000 ;   
+parameter        ALP_TH_LANE3                   = 4'b1000 ;   
+parameter        ALP_TH_LANECK                  = 4'b1000 ;   
+parameter        ANA_BYTECLK_PH                 = 2'b00 ;  
+parameter        BIT_REVERSE_LN0                = 1'b0 ;  
+parameter        BIT_REVERSE_LN1                = 1'b0 ;  
+parameter        BIT_REVERSE_LN2                = 1'b0 ;  
+parameter        BIT_REVERSE_LN3                = 1'b0 ;  
+parameter        BIT_REVERSE_LNCK               = 1'b0 ;  
+parameter        BYPASS_TXHCLKEN                = 1'b1 ;  
+parameter        BYPASS_TXHCLKEN_SYNC           = 1'b0 ;  
+parameter        BYTE_CLK_POLAR                 = 1'b0 ;  
+parameter        BYTE_REVERSE_LN0               = 1'b0 ;  
+parameter        BYTE_REVERSE_LN1               = 1'b0 ;  
+parameter        BYTE_REVERSE_LN2               = 1'b0 ;  
+parameter        BYTE_REVERSE_LN3               = 1'b0 ;  
+parameter        BYTE_REVERSE_LNCK              = 1'b0 ;  
+parameter        EN_CLKB1X                      = 1'b1 ;  
+parameter        EQ_PBIAS_LANE0                 = 4'b1000 ;   
+parameter        EQ_PBIAS_LANE1                 = 4'b1000 ;   
+parameter        EQ_PBIAS_LANE2                 = 4'b1000 ;   
+parameter        EQ_PBIAS_LANE3                 = 4'b1000 ;   
+parameter        EQ_PBIAS_LANECK                = 4'b1000 ;   
+parameter        EQ_ZLD_LANE0                   = 4'b1000 ;   
+parameter        EQ_ZLD_LANE1                   = 4'b1000 ;   
+parameter        EQ_ZLD_LANE2                   = 4'b1000 ;   
+parameter        EQ_ZLD_LANE3                   = 4'b1000 ;   
+parameter        EQ_ZLD_LANECK                  = 4'b1000 ;   
+parameter        HIGH_BW_LANE0                  = 1'b1 ;   
+parameter        HIGH_BW_LANE1                  = 1'b1 ;   
+parameter        HIGH_BW_LANE2                  = 1'b1 ;   
+parameter        HIGH_BW_LANE3                  = 1'b1 ;   
+parameter        HIGH_BW_LANECK                 = 1'b1 ;   
+parameter        HSREG_VREF_CTL                 = 3'b100 ;   
+parameter        HSREG_VREF_EN                  = 1'b1 ;  
+parameter        HSRX_DLY_CTL_CK                = 7'b0000000 ;   
+parameter        HSRX_DLY_CTL_LANE0             = 7'b0000000 ;   
+parameter        HSRX_DLY_CTL_LANE1             = 7'b0000000 ;   
+parameter        HSRX_DLY_CTL_LANE2             = 7'b0000000 ;   
+parameter        HSRX_DLY_CTL_LANE3             = 7'b0000000 ;   
+parameter        HSRX_DLY_SEL_LANE0             = 1'b0 ;  
+parameter        HSRX_DLY_SEL_LANE1             = 1'b0 ;   
+parameter        HSRX_DLY_SEL_LANE2             = 1'b0 ;   
+parameter        HSRX_DLY_SEL_LANE3             = 1'b0 ;   
+parameter        HSRX_DLY_SEL_LANECK            = 1'b0 ;   
+parameter        HSRX_DUTY_LANE0                = 4'b1000 ;  
+parameter        HSRX_DUTY_LANE1                = 4'b1000 ;  
+parameter        HSRX_DUTY_LANE2                = 4'b1000 ;  
+parameter        HSRX_DUTY_LANE3                = 4'b1000 ;  
+parameter        HSRX_DUTY_LANECK               = 4'b1000 ;  
+parameter        HSRX_EQ_EN_LANE0               = 1'b1 ;  
+parameter        HSRX_EQ_EN_LANE1               = 1'b1 ;  
+parameter        HSRX_EQ_EN_LANE2               = 1'b1 ;  
+parameter        HSRX_EQ_EN_LANE3               = 1'b1 ;  
+parameter        HSRX_EQ_EN_LANECK              = 1'b1 ;  
+parameter        HSRX_IBIAS                     = 4'b0011 ;   
+parameter        HSRX_IBIAS_TEST_EN             = 1'b0 ;   
+parameter        HSRX_IMARG_EN                  = 1'b0 ;   
+parameter        HSRX_ODT_EN                    = 1'b1 ;   
+parameter        HSRX_ODT_TST                   = 4'b0000 ;   
+parameter        HSRX_ODT_TST_CK                = 1'b0 ;   
+parameter        HSRX_SEL                       = 4'b0000 ;   
+parameter        HSRX_STOP_EN                   = 1'b0 ; 
+parameter        HSRX_TST                       = 4'b0000 ;   
+parameter        HSRX_TST_CK                    = 1'b0 ;   
+parameter        HSRX_WAIT4EDGE                 = 1'b1 ;   
+parameter        HYST_NCTL                      = 2'b01 ;  
+parameter        HYST_PCTL                      = 2'b01 ;  
+parameter        IBIAS_TEST_EN                  = 1'b0 ;   
+parameter        LB_CH_SEL                      = 1'b0 ;   
+parameter        LB_EN_LN0                      = 1'b0 ;   
+parameter        LB_EN_LN1                      = 1'b0 ;   
+parameter        LB_EN_LN2                      = 1'b0 ;   
+parameter        LB_EN_LN3                      = 1'b0 ;   
+parameter        LB_EN_LNCK                     = 1'b0 ;   
+parameter        LB_POLAR_LN0                   = 1'b0 ;   
+parameter        LB_POLAR_LN1                   = 1'b0 ;   
+parameter        LB_POLAR_LN2                   = 1'b0 ;   
+parameter        LB_POLAR_LN3                   = 1'b0 ;   
+parameter        LB_POLAR_LNCK                  = 1'b0 ;   
+parameter        LOW_LPRX_VTH                   = 1'b0 ;   
+parameter        LPBK_DATA2TO1                  = 4'b0000;  
+parameter        LPBK_DATA2TO1_CK               = 1'b0 ;   
+parameter        LPBK_EN                        = 1'b0 ;   
+parameter        LPBK_SEL                       = 4'b0000;  
+parameter        LPBKTST_EN                     = 4'b0000;  
+parameter        LPBKTST_EN_CK                  = 1'b0 ;   
+parameter        LPRX_EN                        = 1'b1 ;   
+parameter        LPRX_TST                       = 4'b0000;  
+parameter        LPRX_TST_CK                    = 1'b0 ;   
+parameter        LPTX_DAT_POLAR_LN0             = 1'b0 ;   
+parameter        LPTX_DAT_POLAR_LN1             = 1'b0 ;   
+parameter        LPTX_DAT_POLAR_LN2             = 1'b0 ;   
+parameter        LPTX_DAT_POLAR_LN3             = 1'b0 ;   
+parameter        LPTX_DAT_POLAR_LNCK            = 1'b0 ;   
+parameter        LPTX_NIMP_LN0                  = 3'b100 ; 
+parameter        LPTX_NIMP_LN1                  = 3'b100 ; 
+parameter        LPTX_NIMP_LN2                  = 3'b100 ; 
+parameter        LPTX_NIMP_LN3                  = 3'b100 ; 
+parameter        LPTX_NIMP_LNCK                 = 3'b100 ; 
+parameter        LPTX_PIMP_LN0                  = 3'b100 ; 
+parameter        LPTX_PIMP_LN1                  = 3'b100 ; 
+parameter        LPTX_PIMP_LN2                  = 3'b100 ; 
+parameter        LPTX_PIMP_LN3                  = 3'b100 ; 
+parameter        LPTX_PIMP_LNCK                 = 3'b100 ; 
+parameter        MIPI_PMA_DIS_N                 = 1'b1 ;   
+parameter        PGA_BIAS_LANE0                 = 4'b1000 ;   
+parameter        PGA_BIAS_LANE1                 = 4'b1000 ;   
+parameter        PGA_BIAS_LANE2                 = 4'b1000 ;   
+parameter        PGA_BIAS_LANE3                 = 4'b1000 ;   
+parameter        PGA_BIAS_LANECK                = 4'b1000 ;   
+parameter        PGA_GAIN_LANE0                 = 4'b1000 ;   
+parameter        PGA_GAIN_LANE1                 = 4'b1000 ;   
+parameter        PGA_GAIN_LANE2                 = 4'b1000 ;   
+parameter        PGA_GAIN_LANE3                 = 4'b1000 ;   
+parameter        PGA_GAIN_LANECK                = 4'b1000 ;   
+parameter        RX_ODT_TRIM_LANE0              = 4'b1000 ;   
+parameter        RX_ODT_TRIM_LANE1              = 4'b1000 ;   
+parameter        RX_ODT_TRIM_LANE2              = 4'b1000 ;   
+parameter        RX_ODT_TRIM_LANE3              = 4'b1000 ;   
+parameter        RX_ODT_TRIM_LANECK             = 4'b1000 ;   
+parameter        SLEWN_CTL_LN0                  = 4'b1111 ;  
+parameter        SLEWN_CTL_LN1                  = 4'b1111 ;   
+parameter        SLEWN_CTL_LN2                  = 4'b1111 ;   
+parameter        SLEWN_CTL_LN3                  = 4'b1111 ;   
+parameter        SLEWN_CTL_LNCK                 = 4'b1111 ;   
+parameter        SLEWP_CTL_LN0                  = 4'b1111 ;   
+parameter        SLEWP_CTL_LN1                  = 4'b1111 ;   
+parameter        SLEWP_CTL_LN2                  = 4'b1111 ;   
+parameter        SLEWP_CTL_LN3                  = 4'b1111 ;   
+parameter        SLEWP_CTL_LNCK                 = 4'b1111 ;   
+parameter        STP_UNIT                       = 2'b01 ;  
+parameter        TERMN_CTL_LN0                  = 4'b1000 ;   
+parameter        TERMN_CTL_LN1                  = 4'b1000 ;   
+parameter        TERMN_CTL_LN2                  = 4'b1000 ;   
+parameter        TERMN_CTL_LN3                  = 4'b1000 ;   
+parameter        TERMN_CTL_LNCK                 = 4'b1000 ;   
+parameter        TERMP_CTL_LN0                  = 4'b1000 ;   
+parameter        TERMP_CTL_LN1                  = 4'b1000 ;   
+parameter        TERMP_CTL_LN2                  = 4'b1000 ;   
+parameter        TERMP_CTL_LN3                  = 4'b1000 ;   
+parameter        TERMP_CTL_LNCK                 = 4'b1000 ;   
+parameter        TEST_EN_LN0                    = 1'b0 ;   
+parameter        TEST_EN_LN1                    = 1'b0 ;   
+parameter        TEST_EN_LN2                    = 1'b0 ;   
+parameter        TEST_EN_LN3                    = 1'b0 ;   
+parameter        TEST_EN_LNCK                   = 1'b0 ;   
+parameter        TEST_N_IMP_LN0                 = 1'b0 ;   
+parameter        TEST_N_IMP_LN1                 = 1'b0 ;   
+parameter        TEST_N_IMP_LN2                 = 1'b0 ;   
+parameter        TEST_N_IMP_LN3                 = 1'b0 ;   
+parameter        TEST_N_IMP_LNCK                = 1'b0 ;   
+parameter        TEST_P_IMP_LN0                 = 1'b0 ;   
+parameter        TEST_P_IMP_LN1                 = 1'b0 ;   
+parameter        TEST_P_IMP_LN2                 = 1'b0 ;   
+parameter        TEST_P_IMP_LN3                 = 1'b0 ;   
+parameter        TEST_P_IMP_LNCK                = 1'b0 ;   
+
+endmodule
+
+
+//MIPI CPHY
+module MIPI_CPHY (D0LN_HSRXD, D0LN_HSRXD_VLD, D0LN_HSRX_DEMAP_INVLD,
+     D0LN_HSRX_FIFO_RDE_ERR, D0LN_HSRX_FIFO_WRF_ERR,
+     D0LN_HSRX_WA, D0LN_RX_CLK_1X_O, D1LN_HSRXD, 
+     D1LN_HSRXD_VLD, D1LN_HSRX_DEMAP_INVLD,
+     D1LN_HSRX_FIFO_RDE_ERR, D1LN_HSRX_FIFO_WRF_ERR,
+     D1LN_HSRX_WA, D1LN_RX_CLK_1X_O, D2LN_HSRXD, 
+     D2LN_HSRXD_VLD, D2LN_HSRX_DEMAP_INVLD,
+     D2LN_HSRX_FIFO_RDE_ERR, D2LN_HSRX_FIFO_WRF_ERR,
+     D2LN_HSRX_WA, D2LN_RX_CLK_1X_O, HSTX_FIFO_AE, HSTX_FIFO_AF,
+     HSTX_FIFO_RDE_ERR, HSTX_FIFO_WRF_ERR,
+     RX_CLK_MUXED, TX_CLK_1X_O, DI_LPRX0_A, DI_LPRX0_B, DI_LPRX0_C, 
+     DI_LPRX1_A, DI_LPRX1_B, DI_LPRX1_C, DI_LPRX2_A, DI_LPRX2_B, DI_LPRX2_C,  
+     MDRP_RDATA, D0A, D0B, D0C, D1A, D1B, D1C, D2A, D2B, D2C, 
+     D0LN_HSRX_EN,  D0LN_HSTX_DATA, D0LN_HSTX_DATA_VLD, D0LN_HSTX_EN,
+     D0LN_HSTX_MAP_DIS, D0LN_RX_CLK_1X_I, D0LN_RX_DRST_N, D0LN_TX_DRST_N, 
+     D1LN_HSRX_EN,  D1LN_HSTX_DATA, D1LN_HSTX_DATA_VLD, D1LN_HSTX_EN,
+     D1LN_HSTX_MAP_DIS, D1LN_RX_CLK_1X_I, D1LN_RX_DRST_N, D1LN_TX_DRST_N, 
+     D2LN_HSRX_EN, D2LN_HSTX_DATA, D2LN_HSTX_DATA_VLD, D2LN_HSTX_EN,
+     D2LN_HSTX_MAP_DIS, D2LN_RX_CLK_1X_I, D2LN_RX_DRST_N, D2LN_TX_DRST_N, 
+     HSTX_ENLN0, HSTX_ENLN1, HSTX_ENLN2, LPTX_ENLN0, LPTX_ENLN1, 
+     LPTX_ENLN2, MDRP_A_D_I, MDRP_A_INC_I,
+     MDRP_CLK_I, MDRP_OPCODE_I, PWRON_RX_LN0, PWRON_RX_LN1, 
+     PWRON_RX_LN2, PWRON_TX, ARST_RXLN0, ARST_RXLN1, ARST_RXLN2, 
+     ARSTN_TX, RX_CLK_EN_LN0, RX_CLK_EN_LN1, RX_CLK_EN_LN2, 
+     TX_CLK_1X_I, TXDP_ENLN0, TXDP_ENLN1, TXDP_ENLN2, TXHCLK_EN, 
+     DO_LPTX_A_LN0, DO_LPTX_A_LN1, DO_LPTX_A_LN2, DO_LPTX_B_LN0, DO_LPTX_B_LN1,
+     DO_LPTX_B_LN2, DO_LPTX_C_LN0, DO_LPTX_C_LN1, DO_LPTX_C_LN2,
+     GPLL_CK0, GPLL_CK90, GPLL_CK180, GPLL_CK270, 
+     HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2, HSRX_ODT_EN_D0, HSRX_ODT_EN_D1, 
+     HSRX_ODT_EN_D2, LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2, SPLL0_CKN, SPLL0_CKP, SPLL1_CKN, SPLL1_CKP );
+
+output [41:0] D0LN_HSRXD, D1LN_HSRXD, D2LN_HSRXD;
+output D0LN_HSRXD_VLD, D1LN_HSRXD_VLD, D2LN_HSRXD_VLD;
+output [1:0] D0LN_HSRX_DEMAP_INVLD, D1LN_HSRX_DEMAP_INVLD, D2LN_HSRX_DEMAP_INVLD;
+output D0LN_HSRX_FIFO_RDE_ERR, D0LN_HSRX_FIFO_WRF_ERR, D1LN_HSRX_FIFO_RDE_ERR, D1LN_HSRX_FIFO_WRF_ERR, D2LN_HSRX_FIFO_RDE_ERR, D2LN_HSRX_FIFO_WRF_ERR;
+output [1:0] D0LN_HSRX_WA, D1LN_HSRX_WA, D2LN_HSRX_WA;
+output D0LN_RX_CLK_1X_O, D1LN_RX_CLK_1X_O, D2LN_RX_CLK_1X_O;   
+output HSTX_FIFO_AE, HSTX_FIFO_AF;
+output HSTX_FIFO_RDE_ERR, HSTX_FIFO_WRF_ERR;
+output RX_CLK_MUXED;
+output TX_CLK_1X_O;
+output DI_LPRX0_A, DI_LPRX0_B, DI_LPRX0_C, DI_LPRX1_A, DI_LPRX1_B, DI_LPRX1_C, DI_LPRX2_A, DI_LPRX2_B, DI_LPRX2_C;
+output [7:0] MDRP_RDATA; 
+
+inout  D0A, D0B, D0C, D1A, D1B, D1C, D2A, D2B, D2C;
+
+input  D0LN_HSRX_EN, D0LN_HSTX_EN, D1LN_HSRX_EN, D1LN_HSTX_EN, D2LN_HSRX_EN, D2LN_HSTX_EN;
+input  [41:0] D0LN_HSTX_DATA,D1LN_HSTX_DATA, D2LN_HSTX_DATA;
+input  D0LN_HSTX_DATA_VLD, D1LN_HSTX_DATA_VLD, D2LN_HSTX_DATA_VLD;
+input  [1:0] D0LN_HSTX_MAP_DIS, D1LN_HSTX_MAP_DIS, D2LN_HSTX_MAP_DIS;
+input  D0LN_RX_CLK_1X_I,D1LN_RX_CLK_1X_I, D2LN_RX_CLK_1X_I;
+input  D0LN_RX_DRST_N, D0LN_TX_DRST_N, D1LN_RX_DRST_N, D1LN_TX_DRST_N, D2LN_RX_DRST_N, D2LN_TX_DRST_N;
+input  HSTX_ENLN0, HSTX_ENLN1, HSTX_ENLN2, LPTX_ENLN0, LPTX_ENLN1, LPTX_ENLN2;
+input  [7:0] MDRP_A_D_I;
+input  MDRP_A_INC_I;
+input  MDRP_CLK_I;
+input  [1:0] MDRP_OPCODE_I;
+input  PWRON_RX_LN0, PWRON_RX_LN1, PWRON_RX_LN2, PWRON_TX;
+input  ARST_RXLN0, ARST_RXLN1, ARST_RXLN2; 
+input  ARSTN_TX;
+input  RX_CLK_EN_LN0, RX_CLK_EN_LN1, RX_CLK_EN_LN2; 
+input  TX_CLK_1X_I;
+input  TXDP_ENLN0, TXDP_ENLN1, TXDP_ENLN2; 
+input  TXHCLK_EN; 
+input  DO_LPTX_A_LN0, DO_LPTX_A_LN1, DO_LPTX_A_LN2, DO_LPTX_B_LN0, DO_LPTX_B_LN1, DO_LPTX_B_LN2, DO_LPTX_C_LN0, DO_LPTX_C_LN1, DO_LPTX_C_LN2;
+input  GPLL_CK0,GPLL_CK90, GPLL_CK180, GPLL_CK270;
+input  HSRX_EN_D0, HSRX_EN_D1, HSRX_EN_D2; 
+input  HSRX_ODT_EN_D0, HSRX_ODT_EN_D1, HSRX_ODT_EN_D2;
+input  LPRX_EN_D0, LPRX_EN_D1, LPRX_EN_D2; 
+input  SPLL0_CKN, SPLL0_CKP, SPLL1_CKN, SPLL1_CKP;
+
+
+parameter TX_PLLCLK = "NONE"; //"NONE", "SLOW", "FAST"  
+
+parameter D0LN_HS_TX_EN = 1'b1; //data lane HS TX enable; 1=enable,0=disable
+parameter D1LN_HS_TX_EN = 1'b1;
+parameter D2LN_HS_TX_EN = 1'b1;
+parameter D0LN_HS_RX_EN = 1'b1; //data lane HS RX enable; 1=enable,0=disable
+parameter D1LN_HS_RX_EN = 1'b1;
+parameter D2LN_HS_RX_EN = 1'b1;
+
+parameter TX_HS_21BIT_MODE = 1'b0; //Selection of tx data width from Fabric;1=21bit input mode,0=42bit input mode
+parameter RX_OUTCLK_SEL = 2'b00; //the RX out clock to global buffer selection; 00: lane0 RX clk,01: lane1 RX clk, 10: lane2 RX clk, 11: 1'b0
+parameter TX_W_LENDIAN = 1'b1; //in 42-bit mode use this bit to set which byte will be sent out firstly; 0=send out higher 21-bit data firstly, 1=send out lower 21-bit data firstly
+
+parameter CLK_SEL = 2'b00; //MIPI TX lane clk select: 00:gpll;01:spll0; 1x:spll1
+parameter LNDIV_RATIO = 4'b0000; //MIPI TX lane divider ratio config. 0000~1111: /2 ~ /30.
+parameter LNDIV_EN = 1'b0; //MIPI TX lane divide enable
+
+parameter D0LN_TX_REASGN_A = 2'b00; //the data of the lane0 pina can be reassigned to pina,pinb or pinc; 00=connected to  pina, 01=connected to  pinb, 1x=connected to  pinc
+parameter D0LN_TX_REASGN_B = 2'b01; //the data of the lane0 pinb can be reassigned to pina,pinb or pinc; 00=connected to  pina, 01=connected to  pinb, 1x=connected to  pinc
+parameter D0LN_TX_REASGN_C = 2'b10; //the data of the lane0 pinc can be reassigned to pina,pinb or pinc; 00=connected to  pina, 01=connected to  pinb, 1x=connected to  pinc
+parameter D0LN_RX_HS_21BIT_MODE = 1'b0; //Selection of lane0 rx data width to Fabric; 1=21bit input mode,0=42bit input mode
+
+parameter D0LN_RX_WA_SYNC_PAT0_EN = 1'b1;  //lane0 word aligner sync pattern0(default:44444) enable; 1=enable to detect sync pattern0, 0=disable
+parameter D0LN_RX_WA_SYNC_PAT0_H = 7'b1001001;  //the higher 7-bit sync pat0 value(sync pat0  includes the 5-symbol(15-bit), 'h49
+parameter D0LN_RX_WA_SYNC_PAT0_L = 8'b00100100;  //the lower 8-bit sync pat0 value(sync pat0  includes the 5-symbol(15-bit), 'h24
+parameter D0LN_RX_WA_SYNC_PAT1_EN = 1'b1;  //lane0 word aligner sync pattern1(default:44444) enable; 1=enable to detect sync pattern1, 0=disable
+parameter D0LN_RX_WA_SYNC_PAT1_H = 7'b0101001;  //the higher 7-bit sync pat1 value(sync pat1  includes the 5-symbol(15-bit), 'h29
+parameter D0LN_RX_WA_SYNC_PAT1_L = 8'b00100100;  //the lower 8-bit sync pat1 value(sync pat1  includes the 5-symbol(15-bit), 'h24
+parameter D0LN_RX_WA_SYNC_PAT2_EN = 1'b1;  //lane0 word aligner sync pattern2(default:44444) enable; 1=enable to detect sync pattern2, 0=disable
+parameter D0LN_RX_WA_SYNC_PAT2_H = 7'b0011001;  //the higher 7-bit sync pat2 value(sync pat2  includes the 5-symbol(15-bit), 'h19
+parameter D0LN_RX_WA_SYNC_PAT2_L = 8'b00100100;  //the lower 8-bit sync pat2 value(sync pat2  includes the 5-symbol(15-bit), 'h24
+parameter D0LN_RX_WA_SYNC_PAT3_EN = 1'b0;  //lane0 word aligner sync pattern3(default:44444) enable; 1=enable to detect sync pattern3, 0=disable
+parameter D0LN_RX_WA_SYNC_PAT3_H = 7'b0001001;  //the higher 7-bit sync pat3 value(sync pat3  includes the 5-symbol(15-bit), 'h09
+parameter D0LN_RX_WA_SYNC_PAT3_L = 8'b00100100;  //the lower 8-bit sync pat2 value(sync pat2  includes the 5-symbol(15-bit), 'h24
+
+parameter D0LN_RX_W_LENDIAN = 1'b1;  //in 42-bit mode use this bit to set which byte will be sent in firstly for the lane0; 0= put the received data to the higher 21-bit data firstly, 1= put the received data to the lower 21-bit data firstly
+
+parameter D0LN_RX_REASGN_A = 2'b00; //the data of the lane0 pina can be reassigned to pina ; pinb or pinc; 00=connected to pina, 01=connected to pinb, 1x=connected to pinc
+parameter D0LN_RX_REASGN_B = 2'b01; //the data of the lane0 pinb can be reassigned to pina ; pinb or pinc; 00=connected to pina, 01=connected to pinb, 1x=connected to pinc
+parameter D0LN_RX_REASGN_C = 2'b10; //the data of the lane0 pinc can be reassigned to pina ; pinb or pinc; 00=connected to pina, 01=connected to pinb, 1x=connected to pinc
+
+parameter HSRX_LNSEL = 3'b111; //Data Lane Select: each bit controls a lane, [0]=1'b1 Lane0 on,[1]=1'b1 Lane2 on,[2]=1'b1 Lane2 on
+
+parameter EQ_RS_LN0 = 3'b001; //Data lane0: EQ degeneration resistor control. (mc1_eq_rs_lane0[2:0]=eq_rs_lane0[2:0])
+parameter EQ_CS_LN0 = 3'b101; //Data lane0: EQ degeneration cap control.(mc1_eq_cs_lane0[2:0]=eq_cs_lane0[2:0])
+parameter PGA_GAIN_LN0 = 4'b0110; //Data lane1: PGA amplifier gain config.
+parameter PGA_BIAS_LN0 = 4'b1000; //Data lane1: PGA amplifier tail current config.
+parameter EQ_PBIAS_LN0 = 4'b0100; //Data Lane0: Equalizer source current setting  default 4'b1000
+parameter EQ_ZLD_LN0 = 4'b1000; //Data Lane0: Preamplifier Resistive Load Setting: 4'b0000  smallest res loading
+
+parameter D1LN_TX_REASGN_A = 2'b00; //the data of the lane1 pina can be reassigned to pina ; pinb or pinc; 00=connected to  pina,01=connected to  pinb,1x=connected to  pinc
+parameter D1LN_TX_REASGN_B = 2'b01; //the data of the lane1 pinb can be reassigned to pina ; pinb or pinc;00=connected to  pina,01=connected to  pinb,1x=connected to  pinc
+parameter D1LN_TX_REASGN_C = 2'b10; //the data of the lane1 pinc can be reassigned to pina ; pinb or pinc;00=connected to  pina,01=connected to  pinb,1x=connected to  pinc
+parameter D1LN_RX_HS_21BIT_MODE = 1'b0; //Selection of lane1 rx data width to Fabric;1=21bit input mode,0=42bit input mode
+
+parameter D1LN_RX_WA_SYNC_PAT0_EN = 1'b1;  //lane1 word aligner sync pattern0(default:44444) enable;1=enable to detect sync pattern0, 0=disable
+parameter D1LN_RX_WA_SYNC_PAT0_H = 7'b1001001;  //the higher 7-bit sync pat0 value(sync pat0  includes the 5-symbol(15-bit)
+parameter D1LN_RX_WA_SYNC_PAT0_L = 8'b00100100;  //the lower 8-bit sync pat0 value(sync pat0  includes the 5-symbol(15-bit)
+parameter D1LN_RX_WA_SYNC_PAT1_EN = 1'b1;  //lane1 word aligner sync pattern1(default:24444) enable;1=enable to detect sync pattern1,0=disable
+parameter D1LN_RX_WA_SYNC_PAT1_H = 7'b0101001;  //the higher 7-bit sync pat1 value(sync pat1  includes the 5-symbol(15-bit)
+parameter D1LN_RX_WA_SYNC_PAT1_L = 8'b00100100;  //the lower 8-bit sync pat1 value(sync pat1  includes the 5-symbol(15-bit)
+parameter D1LN_RX_WA_SYNC_PAT2_EN = 1'b1;  //lane1 word aligner sync pattern2(default:14444) enable;1=enable to detect sync pattern2,0=disable
+parameter D1LN_RX_WA_SYNC_PAT2_H = 7'b0011001;  //the higher 7-bit sync pat2 value(sync pat2  includes the 5-symbol(15-bit)
+parameter D1LN_RX_WA_SYNC_PAT2_L = 8'b00100100;  //the lower 8-bit sync pat2 value(sync pat2  includes the 5-symbol(15-bit)
+parameter D1LN_RX_WA_SYNC_PAT3_EN = 1'b0;  //lane1 word aligner sync pattern3(default:04444) enable;1=enable to detect sync pattern3,0=disable
+parameter D1LN_RX_WA_SYNC_PAT3_H = 7'b0001001;  //the higher 7-bit sync pat3 value(sync pat3  includes the 5-symbol(15-bit)
+parameter D1LN_RX_WA_SYNC_PAT3_L = 8'b00100100;  //the lower 8-bit sync pat3 value(sync pat3  includes the 5-symbol(15-bit)
+parameter D1LN_RX_W_LENDIAN = 1'b1;  //in 42-bit mode use this bit to set which byte will be sent in firstly for the lane1;0= put the received data to the higher 21-bit data firstly,1= put the received data to the lower 21-bit data firstly
+
+parameter D1LN_RX_REASGN_A = 2'b00; //the data of the lane1 pina can be reassigned to pina ; pinb or pinc; 00=connected to pina,01=connected to pinb,1x=connected to
+parameter D1LN_RX_REASGN_B = 2'b01; //the data of the lane1 pinb can be reassigned to pina ; pinb or pinc; 00=connected to pina,01=connected to pinb,1x=connected to pinc
+parameter D1LN_RX_REASGN_C = 2'b10; //the data of the lane1 pinc can be reassigned to pina ; pinb or pinc; 00=connected to pina,01=connected to pinb,1x=connected to pinc
+
+parameter EQ_RS_LN1 = 3'b001; //Data lane1: EQ degeneration resistor control.    (mc1_eq_rs_lane0[2:0]=eq_rs_lane0[2:0])
+parameter EQ_CS_LN1 = 3'b101; //Data lane1: EQ degeneration cap control.(mc1_eq_cs_lane0[2:0]=eq_cs_lane0[2:0])
+parameter PGA_GAIN_LN1 = 4'b0110; //Data lane1: PGA amplifier gain config.
+parameter PGA_BIAS_LN1 = 4'b1000; //Data lane1: PGA amplifier tail current config.
+parameter EQ_PBIAS_LN1 = 4'b0100; //Data Lane1: Equalizer source current setting  default 4'b1000
+parameter EQ_ZLD_LN1 = 4'b1000; //Data Lane1: Preamplifier Resistive Load Setting: 4'b0000  smallest res loading
+
+parameter D2LN_TX_REASGN_A = 2'b00; //the data of the lane2 pina can be reassigned to pina ; pinb or pinc; 00=connected to  pina,01=connected to  pinb,1x=connected to  pinc
+parameter D2LN_TX_REASGN_B = 2'b01; //the data of the lane2 pinb can be reassigned to pina ; pinb or pinc; 00=connected to  pina,01=connected to  pinb,1x=connected to  pinc
+parameter D2LN_TX_REASGN_C = 2'b10; //the data of the lane2 pinc can be reassigned to pina ; pinb or pinc; 00=connected to  pina,01=connected to  pinb,1x=connected to  pinc
+parameter D2LN_RX_HS_21BIT_MODE = 1'b0; //Selection of lane2 rx data width to Fabric;1=21bit input mode,0=42bit input mode
+
+parameter D2LN_RX_WA_SYNC_PAT0_EN = 1'b1;  //lane2 word aligner sync pattern0(default:44444) enable;1=enable to detect sync pattern0, 0=disable
+parameter D2LN_RX_WA_SYNC_PAT0_H = 7'b1001001;  //the higher 7-bit sync pat0 value(sync pat0  includes the 5-symbol(15-bit)
+parameter D2LN_RX_WA_SYNC_PAT0_L = 8'b00100100;  //the lower 8-bit sync pat0 value(sync pat0  includes the 5-symbol(15-bit)
+parameter D2LN_RX_WA_SYNC_PAT1_EN = 1'b1;  //lane2 word aligner sync pattern1(default:24444) enable;1=enable to detect sync pattern1,0=disable
+parameter D2LN_RX_WA_SYNC_PAT1_H = 7'b0101001;  //the higher 7-bit sync pat1 value(sync pat1  includes the 5-symbol(15-bit)
+parameter D2LN_RX_WA_SYNC_PAT1_L = 8'b00100100;  //the lower 8-bit sync pat1 value(sync pat1  includes the 5-symbol(15-bit)
+parameter D2LN_RX_WA_SYNC_PAT2_EN = 1'b1;  //lane2 word aligner sync pattern2(default:14444) enable;1=enable to detect sync pattern2,0=disable
+parameter D2LN_RX_WA_SYNC_PAT2_H = 7'b0011001;  //the higher 7-bit sync pat2 value(sync pat2  includes the 5-symbol(15-bit)
+parameter D2LN_RX_WA_SYNC_PAT2_L = 8'b00100100;  //the lower 8-bit sync pat2 value(sync pat2  includes the 5-symbol(15-bit)
+parameter D2LN_RX_WA_SYNC_PAT3_EN = 1'b0;  //lane2 word aligner sync pattern3(default:04444) enable;1=enable to detect sync pattern3,0=disable
+parameter D2LN_RX_WA_SYNC_PAT3_H = 7'b0001001;  //the higher 7-bit sync pat3 value(sync pat3  includes the 5-symbol(15-bit)
+parameter D2LN_RX_WA_SYNC_PAT3_L = 8'b00100100;  //the lower 8-bit sync pat3 value(sync pat3  includes the 5-symbol(15-bit)
+parameter D2LN_RX_W_LENDIAN = 1'b1;  //in 42-bit mode use this bit to set which byte will be sent in firstly for the lane2; 0= put the received data to the higher 21-bit data firstly,1= put the received data to the lower 21-bit data firstly
+
+parameter D2LN_RX_REASGN_A = 2'b00; //the data of the lane2 pina can be reassigned to pina ; pinb or pinc; 00=connected to pina,01=connected to pinb,1x=connected to pinc
+parameter D2LN_RX_REASGN_B = 2'b01; //the data of the lane2 pinb can be reassigned to pina ; pinb or pinc; 00=connected to pina,01=connected to pinb,1x=connected to pinc
+parameter D2LN_RX_REASGN_C = 2'b10; //the data of the lane2 pinc can be reassigned to pina ; pinb or pinc; 00=connected to pina,01=connected to pinb,1x=connected to pinc
+
+parameter EQ_RS_LN2 = 3'b001; //Data lane2: EQ degeneration resistor control.    (mc1_eq_rs_lane0[2:0]=eq_rs_lane0[2:0])
+parameter EQ_CS_LN2 = 3'b101; //Data lane2: EQ degeneration cap control.(mc1_eq_cs_lane0[2:0]=eq_cs_lane0[2:0])
+parameter PGA_GAIN_LN2 = 4'b0110; //Data lane2: PGA amplifier gain config.
+parameter PGA_BIAS_LN2 = 4'b1000; //Data lane2: PGA amplifier tail current config.
+parameter EQ_PBIAS_LN2 = 4'b0100; //Data Lane2: Equalizer source current setting  default 4'b1000
+parameter EQ_ZLD_LN2 = 4'b1000; //Data Lane2: Preamplifier Resistive Load Setting: 4'b0000  smallest res loading
+
 
 endmodule
 
@@ -18124,6 +19463,775 @@ module GTR12_PMAC (
 );
 endmodule
 
+////
+//GTR12_QUADA,60k
+module GTR12_QUADA(
+// ports to fabric
+    output              LN0_TXM_O                                       ,
+    output              LN0_TXP_O                                       ,
+    output              LN1_TXM_O                                       ,
+    output              LN1_TXP_O                                       ,
+    output              LN2_TXM_O                                       ,
+    output              LN2_TXP_O                                       ,
+    output              LN3_TXM_O                                       ,
+    output              LN3_TXP_O                                       ,
+    input               LN0_RXM_I                                       ,
+    input               LN0_RXP_I                                       ,
+    input               LN1_RXM_I                                       ,
+    input               LN1_RXP_I                                       ,
+    input               LN2_RXM_I                                       ,
+    input               LN2_RXP_I                                       ,
+    input               LN3_RXM_I                                       ,
+    input               LN3_RXP_I                                       ,
+    input               REFCLKM0_I                                      ,
+    input               REFCLKM1_I                                      ,
+    input               REFCLKP0_I                                      ,
+    input               REFCLKP1_I                                      ,
+    input               REFCLKM2_I                                      ,
+    input               REFCLKM3_I                                      ,
+    input               REFCLKP2_I                                      ,
+    input               REFCLKP3_I                                      ,
+    output              FABRIC_LN0_RXDET_RESULT                         ,
+    output              FABRIC_LN1_RXDET_RESULT                         ,
+    output              FABRIC_LN2_RXDET_RESULT                         ,
+    output              FABRIC_LN3_RXDET_RESULT                         ,
+    output              FABRIC_PMA_CM0_DR_REFCLK_DET_O                  ,
+    output              FABRIC_PMA_CM1_DR_REFCLK_DET_O                  ,
+    input               FABRIC_PMA_PD_REFHCLK_I                         ,
+    input   [2:0]       FABRIC_REFCLK1_INPUT_SEL_I                      ,
+    input   [2:0]       FABRIC_REFCLK_INPUT_SEL_I                       ,
+    input               FABRIC_BURN_IN_I                                ,
+    input   [1:0]       FABRIC_CK_SOC_DIV_I                             ,
+    output              FABRIC_CM1_LIFE_CLK_O                           ,
+    output              FABRIC_CM_LIFE_CLK_O                            ,
+    output              FABRIC_CMU1_CK_REF_O                            ,
+    output              FABRIC_CMU1_OK_O                                ,
+    output              FABRIC_CMU1_REFCLK_GATE_ACK_O                   ,
+    input               FABRIC_CMU1_REFCLK_GATE_I                       ,
+    output              FABRIC_CMU_CK_REF_O                             ,
+    output              FABRIC_CMU_OK_O                                 ,
+    output              FABRIC_CMU_REFCLK_GATE_ACK_O                    ,
+    input               FABRIC_CMU_REFCLK_GATE_I                        ,
+    input               FABRIC_GLUE_MAC_INIT_INFO_I                     ,
+    output              FABRIC_LANE0_CMU_CK_REF_O                       ,
+    output              FABRIC_LANE1_CMU_CK_REF_O                       ,
+    output              FABRIC_LANE2_CMU_CK_REF_O                       ,
+    output              FABRIC_LANE3_CMU_CK_REF_O                       ,
+    output  [5:0]       FABRIC_LN0_ASTAT_O                              ,
+    output              FABRIC_LN0_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN0_CTRL_I                               ,
+    input               FABRIC_LN0_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN0_PD_I                                 ,
+    output              FABRIC_LN0_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN0_RATE_I                               ,
+    input               FABRIC_LN0_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN0_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN0_STAT_O                               ,
+    input   [79:0]      FABRIC_LN0_TXDATA_I                             ,
+    output  [5:0]       FABRIC_LN1_ASTAT_O                              ,
+    output              FABRIC_LN1_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN1_CTRL_I                               ,
+    input               FABRIC_LN1_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN1_PD_I                                 ,
+    output              FABRIC_LN1_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN1_RATE_I                               ,
+    input               FABRIC_LN1_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN1_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN1_STAT_O                               ,
+    input   [79:0]      FABRIC_LN1_TXDATA_I                             ,
+    output  [5:0]       FABRIC_LN2_ASTAT_O                              ,
+    output              FABRIC_LN2_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN2_CTRL_I                               ,
+    input               FABRIC_LN2_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN2_PD_I                                 ,
+    output              FABRIC_LN2_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN2_RATE_I                               ,
+    input               FABRIC_LN2_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN2_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN2_STAT_O                               ,
+    input   [79:0]      FABRIC_LN2_TXDATA_I                             ,
+    output  [5:0]       FABRIC_LN3_ASTAT_O                              ,
+    output              FABRIC_LN3_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN3_CTRL_I                               ,
+    input               FABRIC_LN3_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN3_PD_I                                 ,
+    output              FABRIC_LN3_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN3_RATE_I                               ,
+    input               FABRIC_LN3_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN3_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN3_STAT_O                               ,
+    input   [79:0]      FABRIC_LN3_TXDATA_I                             ,
+    output              FABRIC_REFCLK_GATE_ACK_O                        ,
+    input               FABRIC_REFCLK_GATE_I                            ,
+    input               LANE0_PCS_RX_RST                                ,
+    input               LANE1_PCS_RX_RST                                ,
+    input               LANE2_PCS_RX_RST                                ,
+    input               LANE3_PCS_RX_RST                                ,
+    input               LANE0_ALIGN_TRIGGER                             ,
+    input               LANE1_ALIGN_TRIGGER                             ,
+    input               LANE2_ALIGN_TRIGGER                             ,
+    input               LANE3_ALIGN_TRIGGER                             ,
+    input               LANE0_CHBOND_START                              ,
+    input               LANE1_CHBOND_START                              ,
+    input               LANE2_CHBOND_START                              ,
+    input               LANE3_CHBOND_START                              ,
+    output              LANE0_ALIGN_LINK                                ,
+    output              LANE0_K_LOCK                                    ,
+    output  [1:0]       LANE0_DISP_ERR_O                                ,
+    output  [1:0]       LANE0_DEC_ERR_O                                 ,
+    output  [1:0]       LANE0_CUR_DISP_O                                ,
+    output              LANE1_ALIGN_LINK                                ,
+    output              LANE1_K_LOCK                                    ,
+    output  [1:0]       LANE1_DISP_ERR_O                                ,
+    output  [1:0]       LANE1_DEC_ERR_O                                 ,
+    output  [1:0]       LANE1_CUR_DISP_O                                ,
+    output              LANE2_ALIGN_LINK                                ,
+    output              LANE2_K_LOCK                                    ,
+    output  [1:0]       LANE2_DISP_ERR_O                                ,
+    output  [1:0]       LANE2_DEC_ERR_O                                 ,
+    output  [1:0]       LANE2_CUR_DISP_O                                ,
+    output              LANE3_ALIGN_LINK                                ,
+    output              LANE3_K_LOCK                                    ,
+    output  [1:0]       LANE3_DISP_ERR_O                                ,
+    output  [1:0]       LANE3_DEC_ERR_O                                 ,
+    output  [1:0]       LANE3_CUR_DISP_O                                ,
+    input               LANE0_PCS_TX_RST                                ,
+    input               LANE1_PCS_TX_RST                                ,
+    input               LANE2_PCS_TX_RST                                ,
+    input               LANE3_PCS_TX_RST                                ,
+    input               LANE0_FABRIC_RX_CLK                             ,
+    input               LANE1_FABRIC_RX_CLK                             ,
+    input               LANE2_FABRIC_RX_CLK                             ,
+    input               LANE3_FABRIC_RX_CLK                             ,
+    input               LANE0_FABRIC_C2I_CLK                            ,
+    input               LANE1_FABRIC_C2I_CLK                            ,
+    input               LANE2_FABRIC_C2I_CLK                            ,
+    input               LANE3_FABRIC_C2I_CLK                            ,
+    output              LANE0_PCS_RX_O_FABRIC_CLK                       ,
+    output              LANE1_PCS_RX_O_FABRIC_CLK                       ,
+    output              LANE2_PCS_RX_O_FABRIC_CLK                       ,
+    output              LANE3_PCS_RX_O_FABRIC_CLK                       ,
+    input               LANE0_FABRIC_TX_CLK                             ,
+    input               LANE1_FABRIC_TX_CLK                             ,
+    input               LANE2_FABRIC_TX_CLK                             ,
+    input               LANE3_FABRIC_TX_CLK                             ,
+    output              LANE0_PCS_TX_O_FABRIC_CLK                       ,
+    output              LANE1_PCS_TX_O_FABRIC_CLK                       ,
+    output              LANE2_PCS_TX_O_FABRIC_CLK                       ,
+    output              LANE3_PCS_TX_O_FABRIC_CLK                       ,
+    output              FABRIC_CMU0_CLK                                 ,
+    output              FABRIC_CMU1_CLK                                 ,
+    output              FABRIC_QUAD_CLK_RX                              ,
+    input               LANE0_RX_IF_FIFO_RDEN                           ,
+    input               LANE1_RX_IF_FIFO_RDEN                           ,
+    input               LANE2_RX_IF_FIFO_RDEN                           ,
+    input               LANE3_RX_IF_FIFO_RDEN                           ,
+    output  [4:0]       LANE0_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE0_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE0_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE1_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE1_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE1_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE2_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE2_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE2_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE3_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE3_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE3_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE0_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE0_TX_IF_FIFO_AFULL                          ,
+    output              LANE0_TX_IF_FIFO_FULL                           ,
+    output  [4:0]       LANE1_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE1_TX_IF_FIFO_AFULL                          ,
+    output              LANE1_TX_IF_FIFO_FULL                           ,
+    output  [4:0]       LANE2_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE2_TX_IF_FIFO_AFULL                          ,
+    output              LANE2_TX_IF_FIFO_FULL                           ,
+    output  [4:0]       LANE3_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE3_TX_IF_FIFO_AFULL                          ,
+    output              LANE3_TX_IF_FIFO_FULL                           ,
+    input               FABRIC_CMU0_RESETN_I                            ,
+    input               FABRIC_CMU0_PD_I                                ,
+    input               FABRIC_CMU0_IDDQ_I                              ,
+    input               FABRIC_CMU1_RESETN_I                            ,
+    input               FABRIC_CMU1_PD_I                                ,
+    input               FABRIC_CMU1_IDDQ_I                              ,
+    input               FABRIC_PLL_CDN_I                                ,
+    input               FABRIC_LN0_CPLL_RESETN_I                        ,
+    input               FABRIC_LN0_CPLL_PD_I                            ,
+    input               FABRIC_LN0_CPLL_IDDQ_I                          ,
+    input               FABRIC_LN1_CPLL_RESETN_I                        ,
+    input               FABRIC_LN1_CPLL_PD_I                            ,
+    input               FABRIC_LN1_CPLL_IDDQ_I                          ,
+    input               FABRIC_LN2_CPLL_RESETN_I                        ,
+    input               FABRIC_LN2_CPLL_PD_I                            ,
+    input               FABRIC_LN2_CPLL_IDDQ_I                          ,
+    input               FABRIC_LN3_CPLL_RESETN_I                        ,
+    input               FABRIC_LN3_CPLL_PD_I                            ,
+    input               FABRIC_LN3_CPLL_IDDQ_I                          ,
+    input               FABRIC_CM1_PD_REFCLK_DET_I                      ,
+    input               FABRIC_CM0_PD_REFCLK_DET_I                      ,
+    output              FABRIC_CLK_MON_O                                ,
+    output              FABRIC_GEARFIFO_ERR_RPT                         ,
+    input   [42:0]      FABRIC_LN0_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN0_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN0_RATE_I_H                             ,
+    output              FABRIC_LN0_RX_VLD_OUT                           ,
+    output              FABRIC_LN0_RXELECIDLE_O                         ,
+    output              FABRIC_LN0_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN0_STAT_O_H                             ,
+    input               FABRIC_LN0_TX_VLD_IN                            ,
+    input   [42:0]      FABRIC_LN1_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN1_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN1_RATE_I_H                             ,
+    output              FABRIC_LN1_RX_VLD_OUT                           ,
+    output              FABRIC_LN1_RXELECIDLE_O                         ,
+    output              FABRIC_LN1_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN1_STAT_O_H                             ,
+    input               FABRIC_LN1_TX_VLD_IN                            ,
+    input   [42:0]      FABRIC_LN2_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN2_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN2_RATE_I_H                             ,
+    output              FABRIC_LN2_RX_VLD_OUT                           ,
+    output              FABRIC_LN2_RXELECIDLE_O                         ,
+    output              FABRIC_LN2_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN2_STAT_O_H                             ,
+    input               FABRIC_LN2_TX_VLD_IN                            ,
+    input   [42:0]      FABRIC_LN3_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN3_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN3_RATE_I_H                             ,
+    output              FABRIC_LN3_RX_VLD_OUT                           ,
+    output              FABRIC_LN3_RXELECIDLE_O                         ,
+    output              FABRIC_LN3_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN3_STAT_O_H                             ,
+    input               FABRIC_LN3_TX_VLD_IN                            ,
+    input               FABRIC_POR_N_I                                  ,
+    input               FABRIC_QUAD_MCU_REQ_I                           ,
+    //new port
+    input   [3:0]       FABRIC_CLK_REF_CORE_I                           ,
+    input               FABRIC_CM3_PD_REFCLK_DET_I                      ,
+    input               FABRIC_CM2_PD_REFCLK_DET_I                      ,
+    output              FABRIC_PMA_CM3_DR_REFCLK_DET_O                  ,
+    output              FABRIC_PMA_CM2_DR_REFCLK_DET_O                  ,
+    output              QUAD_PCLK1                                      ,
+    output              QUAD_PCLK0                                      ,
+    output              FABRIC_LANE0_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE0_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE0_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN0_TX_DISPARITY_I                       ,
+    output              FABRIC_LANE1_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE1_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE1_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN1_TX_DISPARITY_I                       ,
+    output              FABRIC_LANE2_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE2_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE2_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN2_TX_DISPARITY_I                       ,
+    output              FABRIC_LANE3_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE3_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE3_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN3_TX_DISPARITY_I                       ,
+
+//ports that are special
+    input               CK_AHB_I                                        ,
+    input               AHB_RSTN                                        ,
+    input               TEST_DEC_EN                                     ,
+    output              FABRIC_LANE0_CMU_OK_O                           ,
+    output              FABRIC_LANE1_CMU_OK_O                           ,
+    output              FABRIC_LANE2_CMU_OK_O                           ,
+    output              FABRIC_LANE3_CMU_OK_O                           ,
+    input               QUAD_PCIE_CLK                                   ,
+    input               PCIE_DIV2_REG                                   ,
+    input               PCIE_DIV4_REG                                   ,
+    input               PMAC_LN_RSTN                                    ,
+    //new port
+    output              CKP_MIPI_1                                      ,
+    output              CKP_MIPI_0                                      ,
+    output              CKN_MIPI_1                                      ,
+    output              CKN_MIPI_0                                      ,
+    input   [3:0]       CLK_VIQ_I                                       
+
+);
+
+
+endmodule
+
+//GTR12_UPARA,60k/15k
+module GTR12_UPARA (
+// ports to fabric
+    input               CSR_TCK                                         ,
+    input               CSR_TMS                                         ,
+    input               CSR_TDI                                         ,
+    output              CSR_TDO                                         ,
+    input               UPAR_CLK                                        ,
+    input               UPAR_RST                                        ,
+    input               SPI_CLK                                         ,
+    input               UPAR_WREN_S                                     ,
+    input   [23:0]      UPAR_ADDR_S                                     ,
+    input   [31:0]      UPAR_WRDATA_S                                   ,
+    input               UPAR_RDEN_S                                     ,
+    input   [7:0]       UPAR_STRB_S                                     ,
+    input               UPAR_BUS_WIDTH_S                                ,
+    output  [31:0]      UPAR_RDDATA_S                                   ,
+    output              UPAR_RDVLD_S                                    ,
+    output              UPAR_READY_S                                    ,
+    input               SPI_MOSI                                        ,
+    output              SPI_MISO                                        ,
+    input               SPI_SS                                          ,
+    output              AHB_CLK_O                                       ,
+    input   [4:0]       CSR_MODE                                        ,
+    input               FABRIC_DFT_EDT_UPDATE                           ,
+    input               FABRIC_DFT_IJTAG_CE                             ,
+    input               FABRIC_DFT_IJTAG_RESET                          ,
+    input               FABRIC_DFT_IJTAG_SE                             ,
+    input               FABRIC_DFT_IJTAG_SEL                            ,
+    input               FABRIC_DFT_IJTAG_SI                             ,
+    input               FABRIC_DFT_IJTAG_TCK                            ,
+    input               FABRIC_DFT_IJTAG_UE                             ,
+    input               FABRIC_DFT_PLL_BYPASS_CLK                       ,
+    input               FABRIC_DFT_PLL_BYPASS_MODE                      ,
+    input               FABRIC_DFT_SCAN_CLK                             ,
+    input               FABRIC_DFT_SCAN_EN                              ,
+    input               FABRIC_DFT_SCAN_IN0                             ,
+    input               FABRIC_DFT_SCAN_IN1                             ,
+    input               FABRIC_DFT_SCAN_IN2                             ,
+    input               FABRIC_DFT_SCAN_IN3                             ,
+    input               FABRIC_DFT_SCAN_IN4                             ,
+    input               FABRIC_DFT_SCAN_IN5                             ,
+    input               FABRIC_DFT_SCAN_IN6                             ,
+    input               FABRIC_DFT_SCAN_RSTN                            ,
+    input               FABRIC_DFT_SHIFT_SCAN_EN                        ,
+//ports that are special
+    output              QUAD_CFG_TEST_DEC_EN                            ,
+    output              AHB_RSTN_O                                      
+
+);
+
+endmodule
+
+
+//GTR12_PMACA,60k/15k
+module GTR12_PMACA (
+// ports to fabric
+    output  [3:0]       PL_EXIT                                         ,
+    output  [64:0]      TL_FLR_REQ0                                     ,
+    input   [64:0]      TL_FLR_ACK0                                     ,
+    input   [21:0]      TL_CLOCK_FREQ                                   ,
+    output              PL_WAKE_OEN                                     ,
+    input               PL_WAKE_IN                                      ,
+    output              PL_CLKREQ_OEN                                   ,
+    input               PL_CLKREQ_IN                                    ,
+    input               PL_LTSSM_ENABLE                                 ,
+    output              TL_RX_SOP0                                      ,
+    output              TL_RX_EOP0                                      ,
+    output  [255:0]     TL_RX_DATA0                                     ,
+    output  [7:0]       TL_RX_VALID0                                    ,
+    output  [31:0]      TL_RX_PROT0                                     ,
+    output  [19:0]      TL_RX_BARDEC0                                   ,
+    output  [15:0]      TL_RX_MCHIT0                                    ,
+    output  [7:0]       TL_RX_ERR0                                      ,
+    input               TL_RX_MASKNP0                                   ,
+    input               TL_RX_WAIT0                                     ,
+    input               TL_TX_SOP0                                      ,
+    input               TL_TX_EOP0                                      ,
+    input   [255:0]     TL_TX_DATA0                                     ,
+    input   [7:0]       TL_TX_VALID0                                    ,
+    input   [31:0]      TL_TX_PROT0                                     ,
+    input               TL_TX_STREAM0                                   ,
+    input   [7:0]       TL_TX_ERR0                                      ,
+    output              TL_TX_WAIT0                                     ,
+    output  [95:0]      TL_TX_CREDITS0                                  ,
+    output  [31:0]      TL_TX_PROTERR0                                  ,
+    input               TL_TX_PROTACK0                                  ,
+    input   [7:0]       TL_BRSW_IN                                      ,
+    output  [7:0]       TL_BRSW_OUT                                     ,
+    input               TL_INT_STATUS0                                  ,
+    input               TL_INT_REQ0                                     ,
+    input   [4:0]       TL_INT_MSINUM0                                  ,
+    input   [6:0]       TL_INT_VFNUM0                                   ,
+    output              TL_INT_ACK0                                     ,
+    input               TL_INT_STATUS1                                  ,
+    input               TL_INT_REQ1                                     ,
+    input   [4:0]       TL_INT_MSINUM1                                  ,
+    input   [6:0]       TL_INT_VFNUM1                                   ,
+    output              TL_INT_ACK1                                     ,
+    output  [3:0]       TL_INT_PINSTATE                                 ,
+    input   [3:0]       TL_INT_PINCONTROL                               ,
+    input               TL_PM_EVENT0                                    ,
+    input   [9:0]       TL_PM_DATA0                                     ,
+    input               TL_PM_EVENT1                                    ,
+    input   [9:0]       TL_PM_DATA1                                     ,
+    input               TL_PM_CLKCONTROL                                ,
+    output  [3:0]       TL_PM_CLKSTATUS                                 ,
+    input   [7:0]       TL_PM_BWCHANGE                                  ,
+    input               TL_PM_TOCONTROL                                 ,
+    output              TL_PM_TOSTATUS                                  ,
+    input               TL_PM_AUXPWR                                    ,
+    input   [3:0]       TL_PM_OBFFCONTROL                               ,
+    output  [3:0]       TL_PM_OBFFSTATUS                                ,
+    input   [38:0]      TL_REPORT_ERROR0                                ,
+    input   [7:0]       TL_REPORT_STATE0                                ,
+    input   [64:0]      TL_REPORT_CPLPENDING0                           ,
+    input   [255:0]     TL_REPORT_HEADER0                               ,
+    input   [7:0]       TL_REPORT_STATE1                                ,
+    output  [7:0]       TL_REPORT_EVENT                                 ,
+    input   [7:0]       TL_REPORT_HOTPLUG                               ,
+    output  [3:0]       TL_REPORT_TIMER                                 ,
+    input   [32:0]      TL_REPORT_LATENCY                               ,
+    input               FABRIC_PL_NPOR                                  ,
+    input               FABRIC_PL_RSTN                                  ,
+    input               FABRIC_PL_RSTNP                                 ,
+    input               FABRIC_PL_SRST                                  ,
+    input               FABRIC_TL_NPOR                                  ,
+    input               FABRIC_TL_RSTN                                  ,
+    input               FABRIC_TL_RSTNP                                 ,
+    input               FABRIC_TL_CRSTN                                 ,
+    input               FABRIC_TL_SRST                                  ,
+    input               FABRIC_TL_CRST                                  ,
+    input               FABRIC_PL_PCLK_STOP                             ,
+    input               FABRIC_CTRL_GATE_TL_CLK                         ,
+    output              PCIE_HALF_CLK                                   ,
+    output  [31:0]      FABRIC_TEST_BUS_MON                             ,
+    output  [18:0]      TL_CFGEXPADDR0                                  ,
+    output  [18:0]      TL_CFGEXPADDR1                                  ,
+    input   [31:0]      TL_CFGEXPRDATA0                                 ,
+    input   [31:0]      TL_CFGEXPRDATA1                                 ,
+    output              TL_CFGEXPREAD0                                  ,
+    output              TL_CFGEXPREAD1                                  ,
+    output  [3:0]       TL_CFGEXPSTRB0                                  ,
+    output  [3:0]       TL_CFGEXPSTRB1                                  ,
+    input               TL_CFGEXPVALID0                                 ,
+    input               TL_CFGEXPVALID1                                 ,
+    output  [31:0]      TL_CFGEXPWDATA0                                 ,
+    output  [31:0]      TL_CFGEXPWDATA1                                 ,
+    output              TL_CFGEXPWRITE0                                 ,
+    output              TL_CFGEXPWRITE1                                 ,
+    output  [12:0]      TLCFG_BUSDEV                                    ,
+    
+    //new port
+    input               TL_EN_PF0_FLR                                   ,
+    output              FABRIC_PCIE_PRGM_ACTIVE                         ,
+    output              TL_APB_PREADY                                   ,
+    output  [31:0]      TL_APB_PRDATA                                   ,
+    input   [3:0]       TL_APB_PSTRB                                    ,
+    input   [31:0]      TL_APB_PWDATA                                   ,
+    input               TL_APB_PWRITE                                   ,
+    input               TL_APB_PENABLE                                  ,
+    input   [20:0]      TL_APB_PADDR                                    ,
+    input               TL_EN_PF0_REPORT_ERROR                          ,
+    input               TL_EN_PF0_REPORT_HEADER                         ,
+    input               TL_EN_PF0_REPORT_CPLPENDING                     ,
+
+//ports that are special
+    input               OSC_CLK                                         ,
+    input               TL_CLKP                                         ,
+    output              PCIE_CLK                                        ,
+    output              PMAC_LN_RSTN                                    ,
+    input               Q0_CPLL0_OK_I                                   ,
+    input               Q0_CPLL1_OK_I                                   ,
+    input               Q0_CPLL2_OK_I                                   ,
+    input               Q0_CPLL3_OK_I                                   ,
+    input               Q1_CPLL0_OK_I                                   ,
+    input               Q1_CPLL1_OK_I                                   ,
+    input               Q1_CPLL2_OK_I                                   ,
+    input               Q1_CPLL3_OK_I                                   ,
+    input               FABRIC_PCLK_I                                   ,
+    output              PCIE_DIV2_REG                                   ,
+    output              PCIE_DIV4_REG                                   
+                       
+);
+
+endmodule
+
+
+//GTR12_QUADB, 15k
+module GTR12_QUADB(
+// ports to fabric
+    output              LN0_TXM_O                                       ,
+    output              LN0_TXP_O                                       ,
+    output              LN1_TXM_O                                       ,
+    output              LN1_TXP_O                                       ,
+    output              LN2_TXM_O                                       ,
+    output              LN2_TXP_O                                       ,
+    output              LN3_TXM_O                                       ,
+    output              LN3_TXP_O                                       ,
+    input               LN0_RXM_I                                       ,
+    input               LN0_RXP_I                                       ,
+    input               LN1_RXM_I                                       ,
+    input               LN1_RXP_I                                       ,
+    input               LN2_RXM_I                                       ,
+    input               LN2_RXP_I                                       ,
+    input               LN3_RXM_I                                       ,
+    input               LN3_RXP_I                                       ,
+    input               REFCLKM0_I                                      ,
+    input               REFCLKM1_I                                      ,
+    input               REFCLKP0_I                                      ,
+    input               REFCLKP1_I                                      ,
+    output              FABRIC_LN0_RXDET_RESULT                         ,
+    output              FABRIC_LN1_RXDET_RESULT                         ,
+    output              FABRIC_LN2_RXDET_RESULT                         ,
+    output              FABRIC_LN3_RXDET_RESULT                         ,
+    output              FABRIC_PMA_CM0_DR_REFCLK_DET_O                  ,
+    output              FABRIC_PMA_CM1_DR_REFCLK_DET_O                  ,
+    input               FABRIC_PMA_PD_REFHCLK_I                         ,
+    input   [2:0]       FABRIC_REFCLK1_INPUT_SEL_I                      ,
+    input   [2:0]       FABRIC_REFCLK_INPUT_SEL_I                       ,
+    input               FABRIC_BURN_IN_I                                ,
+    input   [1:0]       FABRIC_CK_SOC_DIV_I                             ,
+    output              FABRIC_CM1_LIFE_CLK_O                           ,
+    output              FABRIC_CM_LIFE_CLK_O                            ,
+    output              FABRIC_CMU1_CK_REF_O                            ,
+    output              FABRIC_CMU1_OK_O                                ,
+    output              FABRIC_CMU1_REFCLK_GATE_ACK_O                   ,
+    input               FABRIC_CMU1_REFCLK_GATE_I                       ,
+    output              FABRIC_CMU_CK_REF_O                             ,
+    output              FABRIC_CMU_OK_O                                 ,
+    output              FABRIC_CMU_REFCLK_GATE_ACK_O                    ,
+    input               FABRIC_CMU_REFCLK_GATE_I                        ,
+    input               FABRIC_GLUE_MAC_INIT_INFO_I                     ,
+    output              FABRIC_LANE0_CMU_CK_REF_O                       ,
+    output              FABRIC_LANE1_CMU_CK_REF_O                       ,
+    output              FABRIC_LANE2_CMU_CK_REF_O                       ,
+    output              FABRIC_LANE3_CMU_CK_REF_O                       ,
+    output  [5:0]       FABRIC_LN0_ASTAT_O                              ,
+    output              FABRIC_LN0_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN0_CTRL_I                               ,
+    input               FABRIC_LN0_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN0_PD_I                                 ,
+    output              FABRIC_LN0_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN0_RATE_I                               ,
+    input               FABRIC_LN0_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN0_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN0_STAT_O                               ,
+    input   [79:0]      FABRIC_LN0_TXDATA_I                             ,
+    output  [5:0]       FABRIC_LN1_ASTAT_O                              ,
+    output              FABRIC_LN1_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN1_CTRL_I                               ,
+    input               FABRIC_LN1_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN1_PD_I                                 ,
+    output              FABRIC_LN1_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN1_RATE_I                               ,
+    input               FABRIC_LN1_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN1_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN1_STAT_O                               ,
+    input   [79:0]      FABRIC_LN1_TXDATA_I                             ,
+    output  [5:0]       FABRIC_LN2_ASTAT_O                              ,
+    output              FABRIC_LN2_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN2_CTRL_I                               ,
+    input               FABRIC_LN2_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN2_PD_I                                 ,
+    output              FABRIC_LN2_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN2_RATE_I                               ,
+    input               FABRIC_LN2_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN2_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN2_STAT_O                               ,
+    input   [79:0]      FABRIC_LN2_TXDATA_I                             ,
+    output  [5:0]       FABRIC_LN3_ASTAT_O                              ,
+    output              FABRIC_LN3_BURN_IN_TOGGLE_O                     ,
+    input   [42:0]      FABRIC_LN3_CTRL_I                               ,
+    input               FABRIC_LN3_IDDQ_I                               ,
+    input   [2:0]       FABRIC_LN3_PD_I                                 ,
+    output              FABRIC_LN3_PMA_RX_LOCK_O                        ,
+    input   [1:0]       FABRIC_LN3_RATE_I                               ,
+    input               FABRIC_LN3_RSTN_I                               ,
+    output  [87:0]      FABRIC_LN3_RXDATA_O                             ,
+    output  [12:0]      FABRIC_LN3_STAT_O                               ,
+    input   [79:0]      FABRIC_LN3_TXDATA_I                             ,
+    output              FABRIC_REFCLK_GATE_ACK_O                        ,
+    input               FABRIC_REFCLK_GATE_I                            ,
+    input               LANE0_PCS_RX_RST                                ,
+    input               LANE1_PCS_RX_RST                                ,
+    input               LANE2_PCS_RX_RST                                ,
+    input               LANE3_PCS_RX_RST                                ,
+    input               LANE0_ALIGN_TRIGGER                             ,
+    input               LANE1_ALIGN_TRIGGER                             ,
+    input               LANE2_ALIGN_TRIGGER                             ,
+    input               LANE3_ALIGN_TRIGGER                             ,
+    input               LANE0_CHBOND_START                              ,
+    input               LANE1_CHBOND_START                              ,
+    input               LANE2_CHBOND_START                              ,
+    input               LANE3_CHBOND_START                              ,
+    output              LANE0_ALIGN_LINK                                ,
+    output              LANE0_K_LOCK                                    ,
+    output  [1:0]       LANE0_DISP_ERR_O                                ,
+    output  [1:0]       LANE0_DEC_ERR_O                                 ,
+    output  [1:0]       LANE0_CUR_DISP_O                                ,
+    output              LANE1_ALIGN_LINK                                ,
+    output              LANE1_K_LOCK                                    ,
+    output  [1:0]       LANE1_DISP_ERR_O                                ,
+    output  [1:0]       LANE1_DEC_ERR_O                                 ,
+    output  [1:0]       LANE1_CUR_DISP_O                                ,
+    output              LANE2_ALIGN_LINK                                ,
+    output              LANE2_K_LOCK                                    ,
+    output  [1:0]       LANE2_DISP_ERR_O                                ,
+    output  [1:0]       LANE2_DEC_ERR_O                                 ,
+    output  [1:0]       LANE2_CUR_DISP_O                                ,
+    output              LANE3_ALIGN_LINK                                ,
+    output              LANE3_K_LOCK                                    ,
+    output  [1:0]       LANE3_DISP_ERR_O                                ,
+    output  [1:0]       LANE3_DEC_ERR_O                                 ,
+    output  [1:0]       LANE3_CUR_DISP_O                                ,
+    input               LANE0_PCS_TX_RST                                ,
+    input               LANE1_PCS_TX_RST                                ,
+    input               LANE2_PCS_TX_RST                                ,
+    input               LANE3_PCS_TX_RST                                ,
+    input               LANE0_FABRIC_RX_CLK                             ,
+    input               LANE1_FABRIC_RX_CLK                             ,
+    input               LANE2_FABRIC_RX_CLK                             ,
+    input               LANE3_FABRIC_RX_CLK                             ,
+    input               LANE0_FABRIC_C2I_CLK                            ,
+    input               LANE1_FABRIC_C2I_CLK                            ,
+    input               LANE2_FABRIC_C2I_CLK                            ,
+    input               LANE3_FABRIC_C2I_CLK                            ,
+    output              LANE0_PCS_RX_O_FABRIC_CLK                       ,
+    output              LANE1_PCS_RX_O_FABRIC_CLK                       ,
+    output              LANE2_PCS_RX_O_FABRIC_CLK                       ,
+    output              LANE3_PCS_RX_O_FABRIC_CLK                       ,
+    input               LANE0_FABRIC_TX_CLK                             ,
+    input               LANE1_FABRIC_TX_CLK                             ,
+    input               LANE2_FABRIC_TX_CLK                             ,
+    input               LANE3_FABRIC_TX_CLK                             ,
+    output              LANE0_PCS_TX_O_FABRIC_CLK                       ,
+    output              LANE1_PCS_TX_O_FABRIC_CLK                       ,
+    output              LANE2_PCS_TX_O_FABRIC_CLK                       ,
+    output              LANE3_PCS_TX_O_FABRIC_CLK                       ,
+    output              FABRIC_CMU0_CLK                                 ,
+    output              FABRIC_CMU1_CLK                                 ,
+    output              FABRIC_QUAD_CLK_RX                              ,
+    input               LANE0_RX_IF_FIFO_RDEN                           ,
+    input               LANE1_RX_IF_FIFO_RDEN                           ,
+    input               LANE2_RX_IF_FIFO_RDEN                           ,
+    input               LANE3_RX_IF_FIFO_RDEN                           ,
+    output  [4:0]       LANE0_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE0_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE0_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE1_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE1_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE1_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE2_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE2_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE2_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE3_RX_IF_FIFO_RDUSEWD                        ,
+    output              LANE3_RX_IF_FIFO_AEMPTY                         ,
+    output              LANE3_RX_IF_FIFO_EMPTY                          ,
+    output  [4:0]       LANE0_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE0_TX_IF_FIFO_AFULL                          ,
+    output              LANE0_TX_IF_FIFO_FULL                           ,
+    output  [4:0]       LANE1_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE1_TX_IF_FIFO_AFULL                          ,
+    output              LANE1_TX_IF_FIFO_FULL                           ,
+    output  [4:0]       LANE2_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE2_TX_IF_FIFO_AFULL                          ,
+    output              LANE2_TX_IF_FIFO_FULL                           ,
+    output  [4:0]       LANE3_TX_IF_FIFO_WRUSEWD                        ,
+    output              LANE3_TX_IF_FIFO_AFULL                          ,
+    output              LANE3_TX_IF_FIFO_FULL                           ,
+    input               FABRIC_CMU0_RESETN_I                            ,
+    input               FABRIC_CMU0_PD_I                                ,
+    input               FABRIC_CMU0_IDDQ_I                              ,
+    input               FABRIC_CMU1_RESETN_I                            ,
+    input               FABRIC_CMU1_PD_I                                ,
+    input               FABRIC_CMU1_IDDQ_I                              ,
+    input               FABRIC_PLL_CDN_I                                ,
+    input               FABRIC_LN0_CPLL_RESETN_I                        ,
+    input               FABRIC_LN0_CPLL_PD_I                            ,
+    input               FABRIC_LN0_CPLL_IDDQ_I                          ,
+    input               FABRIC_LN1_CPLL_RESETN_I                        ,
+    input               FABRIC_LN1_CPLL_PD_I                            ,
+    input               FABRIC_LN1_CPLL_IDDQ_I                          ,
+    input               FABRIC_LN2_CPLL_RESETN_I                        ,
+    input               FABRIC_LN2_CPLL_PD_I                            ,
+    input               FABRIC_LN2_CPLL_IDDQ_I                          ,
+    input               FABRIC_LN3_CPLL_RESETN_I                        ,
+    input               FABRIC_LN3_CPLL_PD_I                            ,
+    input               FABRIC_LN3_CPLL_IDDQ_I                          ,
+    input               FABRIC_CM1_PD_REFCLK_DET_I                      ,
+    input               FABRIC_CM0_PD_REFCLK_DET_I                      ,
+    output              FABRIC_CLK_MON_O                                ,
+    output              FABRIC_GEARFIFO_ERR_RPT                         ,
+    input   [42:0]      FABRIC_LN0_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN0_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN0_RATE_I_H                             ,
+    output              FABRIC_LN0_RX_VLD_OUT                           ,
+    output              FABRIC_LN0_RXELECIDLE_O                         ,
+    output              FABRIC_LN0_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN0_STAT_O_H                             ,
+    input               FABRIC_LN0_TX_VLD_IN                            ,
+    input   [42:0]      FABRIC_LN1_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN1_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN1_RATE_I_H                             ,
+    output              FABRIC_LN1_RX_VLD_OUT                           ,
+    output              FABRIC_LN1_RXELECIDLE_O                         ,
+    output              FABRIC_LN1_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN1_STAT_O_H                             ,
+    input               FABRIC_LN1_TX_VLD_IN                            ,
+    input   [42:0]      FABRIC_LN2_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN2_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN2_RATE_I_H                             ,
+    output              FABRIC_LN2_RX_VLD_OUT                           ,
+    output              FABRIC_LN2_RXELECIDLE_O                         ,
+    output              FABRIC_LN2_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN2_STAT_O_H                             ,
+    input               FABRIC_LN2_TX_VLD_IN                            ,
+    input   [42:0]      FABRIC_LN3_CTRL_I_H                             ,
+    input   [2:0]       FABRIC_LN3_PD_I_H                               ,
+    input   [1:0]       FABRIC_LN3_RATE_I_H                             ,
+    output              FABRIC_LN3_RX_VLD_OUT                           ,
+    output              FABRIC_LN3_RXELECIDLE_O                         ,
+    output              FABRIC_LN3_RXELECIDLE_O_H                       ,
+    output  [12:0]      FABRIC_LN3_STAT_O_H                             ,
+    input               FABRIC_LN3_TX_VLD_IN                            ,
+    input               FABRIC_POR_N_I                                  ,
+    input               FABRIC_QUAD_MCU_REQ_I                           ,
+    //new port
+    input   [3:0]       FABRIC_CLK_REF_CORE_I                           ,
+    input               FABRIC_CM3_PD_REFCLK_DET_I                      ,
+    input               FABRIC_CM2_PD_REFCLK_DET_I                      ,
+    output              FABRIC_PMA_CM3_DR_REFCLK_DET_O                  ,
+    output              FABRIC_PMA_CM2_DR_REFCLK_DET_O                  ,
+    output              QUAD_PCLK1                                      ,
+    output              QUAD_PCLK0                                      ,
+    output              FABRIC_LANE0_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE0_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE0_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN0_TX_DISPARITY_I                       ,
+    output              FABRIC_LANE1_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE1_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE1_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN1_TX_DISPARITY_I                       ,
+    output              FABRIC_LANE2_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE2_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE2_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN2_TX_DISPARITY_I                       ,
+    output              FABRIC_LANE3_64B66B_TX_INVLD_BLK                ,
+    output              FABRIC_LANE3_64B66B_TX_FETCH                    ,
+    output              FABRIC_LANE3_64B66B_RX_VALID                    ,
+    input   [7:0]       FABRIC_LN3_TX_DISPARITY_I                       ,
+
+//ports that are special
+    input               CK_AHB_I                                        ,
+    input               AHB_RSTN                                        ,
+    input               TEST_DEC_EN                                     ,
+    output              FABRIC_LANE0_CMU_OK_O                           ,
+    output              FABRIC_LANE1_CMU_OK_O                           ,
+    output              FABRIC_LANE2_CMU_OK_O                           ,
+    output              FABRIC_LANE3_CMU_OK_O                           ,
+    input               QUAD_PCIE_CLK                                   ,
+    input               PCIE_DIV2_REG                                   ,
+    input               PCIE_DIV4_REG                                   ,
+    input               PMAC_LN_RSTN                                    ,
+    //new port
+    output              CKP_MIPI_1                                      ,
+    output              CKP_MIPI_0                                      ,
+    output              CKN_MIPI_1                                      ,
+    output              CKN_MIPI_0                                      ,
+    input   [1:0]       CLK_VIQ_I                                       
+
+);
+
+
+endmodule
+
 
 // DQS
 module DQS(DQSR90, DQSW0, DQSW270, RPOINT, WPOINT, RVALID, RBURST, RFLAG, WFLAG, DQSIN, DLLSTEP, WSTEP, READ, RLOADN, RMOVE, RDIR, WLOADN, WMOVE, WDIR, HOLD, RCLKSEL, PCLK, FCLK, RESET);
@@ -18141,4 +20249,7 @@ parameter FIFO_MODE_SEL = 1'b0; // FIFO mode select,1'b0: DDR memory mode;1'b1: 
 parameter RD_PNTR = 3'b000; // FIFO read pointer setting
 parameter DQS_MODE = "X1"; // "X1", "X2_DDR2", "X2_DDR3","X4","X2_DDR3_EXT"
 parameter HWL = "false";   //"true"; "false"
+
 endmodule
+
+

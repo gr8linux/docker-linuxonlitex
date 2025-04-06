@@ -5,4 +5,5 @@
     <depend>GAOIns</depend>
     <depend>RtlGAOIns</depend>
     <depend>GPC</depend>
+    <depend>GVIO</depend>
 </plugin>

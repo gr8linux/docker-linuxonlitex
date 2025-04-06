@@ -1,6 +1,6 @@
 
 // ===========Oooo==========================================Oooo========
-// =  Copyright (C) 2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+// =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 // =                     All rights reserved.
 // =====================================================================
 //
@@ -16293,7 +16293,7 @@ begin
     clkb_dt_delay <= (0.05 * clkb_dt_step);
 end
 
-always @(clkouta_duty or clkoutb_duty or clka_dt_dir or clkb_dt_dir or clka_dt_step or clkb_dt_step) begin
+always @(clkouta_duty or clkoutb_duty or clka_dt_dir or clkb_dt_dir or clka_dt_delay or clkb_dt_delay) begin
     if (clka_dt_dir == 1'b1) begin
         tclka_duty <= clkouta_duty + clka_dt_delay;
     end else begin

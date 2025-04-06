@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="LICD" id="licd" version= "1.0" category="Hard Module|LICD">LICD</ip>
+    <target module="Gowin_LICD">gowin_licd</target>
+    <docs>
+        <doc type="summary">/doc/licd.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5ART-15A-*</device>
+        <device supported="true">GW5AT-15B-*</device>
+        <device supported="true">GW5ART-15B-*</device>
+        <device supported="true">GW5ANT-15A-*</device>
+        <device supported="true">GW5ANRT-15A-*</device>
+        <device supported="true">GW5AT-15A-*</device>
+    </devices>
+</ipcore>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="MIPI DSI/CSI-2 Transmitter" id="mipi_dsi_csi2_tx" version= "1.1" category="Soft IP Core|Interface and Interconnect">MIPI DSI/CSI-2 Transmitter</ip>
+    <target module="MIPI_DSI_CSI2_TX_Top">mipi_dsi_csi2_tx</target>
+    <docs>
+        <doc type="summary">/doc/mipi_dsi_csi2_tx_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW1N-*</device>
+        <device supported="true">GW1NR-*</device>
+        <device supported="true">GW1AN-1C-*</device>
+        <device supported="true">GW1NS-*</device>
+        <device supported="false">GW1NS-2-*</device>
+        <device supported="false">GW1NS-2C-*</device>
+        <device supported="true">GW1NSR-*</device>
+        <device supported="false">GW1NSR-2-*</device>
+        <device supported="false">GW1NSR-2C-*</device>
+        <device supported="true">GW1NSER-*</device>
+        <device supported="true">GW1NRF-*</device>
+	<device supported="true">GW1NZ-*</device>
+        <device supported="true">GW2A-*</device>
+        <device supported="true">GW2AR-*</device>
+        <device supported="true">GW2ANR-*</device>
+        <device supported="true">GW2AN-*</device>
+        <device supported="true">GW1AN-9A-*</device>
+        <device supported="true">GW5A-*</device>
+        <device supported="true">GW5ART-*</device>
+        <device supported="true">GW5ANT-*</device>
+        <device supported="true">GW5ANRT-*</device>
+        <device supported="true">GW5AS-*</device>
+        <device supported="true">GW5AR-*</device>
+        <device supported="true">GW5AT-*</device>
+        <device supported="true">GW5AST-*</device>
+    </devices>
+</ipcore>

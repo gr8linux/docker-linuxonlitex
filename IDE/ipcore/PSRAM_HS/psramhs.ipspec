@@ -7,5 +7,21 @@
         <doc type="help">/doc/psramhs_help.html</doc>
     </docs>
     <devices>
+        <device supported="true">*</device>
+        <device supported="false">GW5A-*</device>
+        <device supported="false">GW5ANRT-*</device>
+        <device supported="false">GW5ANT-*</device>
+        <device supported="false">GW5AR-*</device>
+        <device supported="false">GW5ART-*</device>
+        <device supported="false">GW5AS-*</device>
+        <device supported="false">GW5AST-*</device>
+        <device supported="false">GW5AT-*</device>
+        <device supported="false">GW3A-20A-*</device>
+        <device supported="false">GW1AN-1C-*</device>
+        <device supported="false">GW1N-1-*</device>
+        <device supported="false">GW1N-1S-*</device>
+        <device supported="false">GW1N-1SB-*</device>
+        <device supported="false">GW1NZ-1-*</device>
+        <device supported="false">GW1NZ-1C-*</device>
     </devices>
 </ipcore>

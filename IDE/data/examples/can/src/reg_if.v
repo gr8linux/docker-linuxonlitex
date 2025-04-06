@@ -15,8 +15,8 @@ module reg_if(
     input   rcv_en
 );
 
-assign t_htrans = 2'b10;
-assign t_hsize = 3'b010;
+//assign t_htrans = 2'b10;
+//assign t_hsize = 3'b010;
 assign t_hready_in = 1'b1;
 
 reg [2:0] c_state,n_state;
@@ -94,7 +94,7 @@ always@(posedge hclk or negedge rstn) begin
     end
     else begin
         if (start_cnt < 12'hfff) begin
-            start_cnt <= start_cnt + 1;
+            start_cnt <= start_cnt + 1'b1;
         end
     end
 end
@@ -191,7 +191,7 @@ always@(posedge hclk or negedge rstn) begin
         end
         else begin
             if (cpu_ack) begin
-                cnt <= cnt + 1;
+                cnt <= cnt + 1'b1;
             end
         end
     end

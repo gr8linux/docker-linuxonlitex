@@ -1,0 +1,65 @@
+{
+ "Device" : "GW1N-2C",
+ "Files" : [
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/define.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/ex.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/ex_mem.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/hilo_reg.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/id.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/id_ex.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/if_id.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mem.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mem_wb.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/pc_reg.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/regfile.sv",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/rom.sv",
+   "Type" : "verilog"
+  }
+ ],
+ "IncludePath" : [
+
+ ],
+ "LoopLimit" : 2000,
+ "ResultFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/impl/temp/rtl_parser.result",
+ "Top" : "",
+ "VerilogStd" : "sysv",
+ "VhdlStd" : "vhdl_93"
+}

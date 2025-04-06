@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="USB 2.0 Host Controller" id="usb20_host_controller" version= "2.0" category="Soft IP Core|Interface and Interconnect">USB 2.0 Host Controller</ip>
+    <target module="USB20_Host_Controller_Top">usb20_host_controller</target>
+    <docs>
+        <doc type="summary">/doc/usb_2.0_host_controller_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW2A-*</device>
+        <device supported="true">GW2AN-*</device>
+        <device supported="true">GW2ANR-*</device>
+        <device supported="true">GW2AR-*</device>
+        <device supported="true">GW5AT-138-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+        <device supported="true">GW5A-60B-*</device>
+        <device supported="true">GW5ART-15A-*</device>
+        <device supported="true">GW5AT-15B-*</device>
+        <device supported="true">GW5ART-15B-*</device>
+        <device supported="true">GW5ANT-15A-*</device>
+        <device supported="true">GW5ANRT-15A-*</device>
+        <device supported="true">GW5AT-15A-*</device>
+        <device supported="true">GW5AT-138B-*</device>
+        <device supported="true">GW5AT-75B-*</device>
+        <device supported="true">GW5AST-138B-*</device>
+        <device supported="true">GW5A-138C-*</device>
+        <device supported="true">GW5AS-138C-*</device>
+        <device supported="true">GW5AST-138C-*</device>
+        <device supported="true">GW5AT-138C-*</device>
+        <device supported="true">GW5AT-75C-*</device>
+        <device supported="true">GW5A-138B-*</device>
+        <device supported="true">GW5AS-138B-*</device>
+        <device supported="true">GW5A-25B-*</device>
+        <device supported="true">GW5AR-25B-*</device>
+        <device supported="true">GW5AS-25B-*</device>
+        <device supported="false">GW2AN-9X-*</device>
+        <device supported="false">GW1AN-9A-*</device>
+    </devices>
+</ipcore>

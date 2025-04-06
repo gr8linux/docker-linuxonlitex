@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="2.5G Serial Ethernet" id="two_giga_serial_ethernet" version="1.2" category="Serdes|Telecommunication|Ethernet">2.5G Serial Ethernet</ip>
+    <target module="Two_Giga_Serial_Ethernet_Top">two_giga_serial_ethernet</target>
+    <docs>
+        <doc type="summary">/doc/2.5g_serial_ethernet_information.html</doc>
+    </docs>
+    <devices>
+	<device supported="true">GW5AT-138-*</device>
+        <device supported="true">GW5AT-138B-*</device>
+        <device supported="true">GW5AT-75B-*</device>
+        <device supported="true">GW5AST-138B-*</device>
+        <device supported="true">GW5AST-138C-*</device>
+        <device supported="true">GW5AT-138C-*</device>
+        <device supported="true">GW5AT-75C-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+    </devices>
+</ipcore>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="SPI MASTER" id="spi_master" version= "1.0" category="Soft IP Core|Interface and Interconnect">SPI MASTER</ip>
+    <target module="SPI_MASTER_Top">spi_master</target>
+    <docs>
+        <doc type="summary">/doc/spimaster.html</doc>
+        <doc type="help">/doc/spimaster_help.html</doc>
+    </docs>
+    <devices>
+    </devices>
+</ipcore>
+

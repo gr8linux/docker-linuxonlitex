@@ -1,0 +1,10 @@
+IO_LOC "r_en" 38;
+IO_PORT "r_en" PULL_MODE=UP DRIVE=8;
+IO_LOC "w_en" 45;
+IO_PORT "w_en" PULL_MODE=UP DRIVE=8;
+IO_LOC "error" 26;
+IO_PORT "error" PULL_MODE=UP DRIVE=8;
+IO_LOC "rst_n" 40;
+IO_PORT "rst_n" PULL_MODE=UP DRIVE=8;
+IO_LOC "clk" 11;
+IO_PORT "clk" PULL_MODE=UP;

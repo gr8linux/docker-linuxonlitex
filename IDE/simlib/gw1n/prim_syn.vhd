@@ -1,6 +1,6 @@
 
 -- ===========Oooo==========================================Oooo========
--- =  Copyright (C) 2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+-- =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 -- =                     All rights reserved.
 -- =====================================================================
 --
@@ -3353,6 +3353,53 @@ COMPONENT PLL
 end COMPONENT;
 	attribute syn_black_box of PLL : Component is true;
 
+--------------------------------rPLL--------------------------
+COMPONENT rPLL
+        GENERIC(
+             FCLKIN : STRING := "100.0"; --frequency of the clkin(M)
+             DEVICE : STRING := "GW1N-4"; --"GW1N-1","GW1N-4","GW1N-9","GW1NR-4","GW1NR-9","GW1N-4B","GW1NR-4B","GW1NZ-1","GW1N-1S","GW1NRF-4B","GW1N-9C","GW1NR-9C","GW1N-4D","GW1NR-4D"
+             DYN_IDIV_SEL : STRING := "false"; --true:IDSEL; false:IDIV_SEL
+             IDIV_SEL : integer := 0; --Input divider IDIV, 0:1,1:2...63:64.  1~64
+             DYN_FBDIV_SEL : STRING := "false";
+             FBDIV_SEL : integer := 0; --Feedback divider FBDIV,  0:1,1:2...63:64. 1~64
+             DYN_ODIV_SEL : STRING := "false"; --true:ODSEL; false:ODIV_SEL
+             ODIV_SEL : integer := 8; --2/4/8/16/32/48/64/80/96/112/128
+             PSDA_SEL : STRING := "0000"; --
+             DYN_DA_EN : STRING := "false"; --true:PSDA or DUTYDA or FDA; false: DA_SEL
+             DUTYDA_SEL : STRING := "1000"; --
+             CLKOUT_FT_DIR : bit := '1'; -- CLKOUT fine tuning direction. '1' only
+             CLKOUTP_FT_DIR : bit := '1'; -- '1' only
+             CLKOUT_DLY_STEP : integer := 0; -- 0,1,2,4
+             CLKOUTP_DLY_STEP : integer := 0; -- 0,1,2
+
+             CLKOUTD3_SRC : STRING := "CLKOUT"; --select div3 output, CLKOUTP or CLKOUT
+             CLKFB_SEL : STRING := "internal"; --"internal", "external"
+             CLKOUT_BYPASS : STRING := "false";
+             CLKOUTP_BYPASS : STRING := "false";
+             CLKOUTD_BYPASS : STRING := "false";
+             CLKOUTD_SRC : STRING := "CLKOUT"; --select div output,  CLKOUTP or CLKOUT
+             DYN_SDIV_SEL : integer := 2 -- 2~128,only even num
+	      );
+        PORT(
+             CLKIN : IN std_logic;
+             CLKFB : IN std_logic:='0';
+             IDSEL : In std_logic_vector(5 downto 0);
+             FBDSEL : In std_logic_vector(5 downto 0);
+             ODSEL : In std_logic_vector(5 downto 0);
+             RESET : in std_logic:='0';
+             RESET_P : in std_logic:='0';
+             PSDA,FDLY : In std_logic_vector(3 downto 0);
+             DUTYDA : In std_logic_vector(3 downto 0);
+             LOCK : OUT std_logic;
+             CLKOUT : OUT std_logic;
+             CLKOUTD : out std_logic;
+             CLKOUTP : out std_logic;
+             CLKOUTD3 : out std_logic
+        );
+end COMPONENT;
+	attribute syn_black_box of rPLL : Component is true;
+
+
 
 -----------------DLL---------------------------------
 COMPONENT DLL
@@ -3498,228 +3545,6 @@ COMPONENT FLASH128K
 end COMPONENT;
 	attribute syn_black_box of FLASH128K : Component is true;    
 
-------------------------------MCU---------------------------------------
-COMPONENT MCU
-    PORT(
-        FCLK : IN std_logic;
-        PORESETN : IN std_logic;
-        SYSRESETN : IN std_logic;
-        RTCSRCCLK : IN std_logic;
-        IOEXPOUTPUTO : OUT std_logic_vector(15 downto 0);
-        IOEXPOUTPUTENO : OUT std_logic_vector(15 downto 0);
-        IOEXPINPUTI : IN std_logic_vector(15 downto 0);
-        UART0TXDO : OUT std_logic;
-        UART1TXDO : OUT std_logic;
-        UART0BAUDTICK : OUT std_logic;
-        UART1BAUDTICK : OUT std_logic;
-        UART0RXDI : IN std_logic;
-        UART1RXDI : IN std_logic;
-        INTMONITOR : OUT std_logic;
-        MTXHRESETN : OUT std_logic;
-        SRAM0ADDR : OUT std_logic_vector(12 downto 0);
-        SRAM0WREN : OUT std_logic_vector(3 downto 0);
-        SRAM0WDATA : OUT std_logic_vector(31 downto 0);
-        SRAM0CS : OUT std_logic;
-        SRAM0RDATA : in std_logic_vector(31 downto 0);
-
-        TARGFLASH0HSEL : OUT std_logic;
-        TARGFLASH0HADDR : OUT std_logic_vector(28 downto 0);
-        TARGFLASH0HTRANS : OUT std_logic_vector(1 downto 0);
-        TARGFLASH0HWRITE : OUT std_logic;
-        TARGFLASH0HSIZE : OUT std_logic_vector(2 downto 0);
-        TARGFLASH0HBURST : OUT std_logic_vector(2 downto 0);
-        TARGFLASH0HPROT : OUT std_logic_vector(3 downto 0);
-        TARGFLASH0MEMATTR : OUT std_logic_vector(1 downto 0);
-        TARGFLASH0EXREQ : OUT std_logic;
-        TARGFLASH0HMASTER : OUT std_logic_vector(3 downto 0);
-        TARGFLASH0HWDATA : OUT std_logic_vector(31 downto 0);
-        TARGFLASH0HMASTLOCK : OUT std_logic;
-        TARGFLASH0HREADYMUX : OUT std_logic;
-        TARGFLASH0HAUSER : OUT std_logic;
-        TARGFLASH0HWUSER : OUT std_logic_vector(3 downto 0);
-        TARGFLASH0HRDATA : IN std_logic_vector(31 downto 0);
-        TARGFLASH0HRUSER : IN std_logic_vector(2 downto 0);
-        TARGFLASH0HRESP : IN std_logic;
-        TARGFLASH0EXRESP : IN std_logic;
-        TARGFLASH0HREADYOUT : IN std_logic;
-
-        TARGEXP0HSEL : OUT std_logic;
-        TARGEXP0HADDR : OUT std_logic_vector(31 downto 0);
-        TARGEXP0HTRANS : OUT std_logic_vector(1 downto 0);
-        TARGEXP0HWRITE : OUT std_logic;
-        TARGEXP0HSIZE : OUT std_logic_vector(2 downto 0);
-        TARGEXP0HBURST : OUT std_logic_vector(2 downto 0);
-        TARGEXP0HPROT : OUT std_logic_vector(3 downto 0);
-        TARGEXP0MEMATTR : OUT std_logic_vector(1 downto 0);
-        TARGEXP0EXREQ : OUT std_logic;
-        TARGEXP0HMASTER : OUT std_logic_vector(3 downto 0);
-        TARGEXP0HWDATA : OUT std_logic_vector(31 downto 0);
-        TARGEXP0HMASTLOCK : OUT std_logic;
-        TARGEXP0HREADYMUX : OUT std_logic;
-        TARGEXP0HAUSER : OUT std_logic;
-        TARGEXP0HWUSER : OUT std_logic_vector(3 downto 0);
-        TARGEXP0HRDATA : IN std_logic_vector(31 downto 0);
-        TARGEXP0HREADYOUT : IN std_logic;
-        TARGEXP0HRESP : IN std_logic;
-        TARGEXP0EXRESP : IN std_logic;
-        TARGEXP0HRUSER : IN std_logic_vector(2 downto 0);
-
-        INITEXP0HRDATA : OUT std_logic_vector(31 downto 0);
-        INITEXP0HREADY : OUT std_logic;
-        INITEXP0HRESP : OUT std_logic;
-        INITEXP0EXRESP : OUT std_logic;
-        INITEXP0HRUSER : OUT std_logic_vector(2 downto 0);
-        INITEXP0HSEL : IN std_logic;
-        INITEXP0HADDR : IN std_logic_vector(31 downto 0);
-        INITEXP0HTRANS : IN std_logic_vector(1 downto 0);
-        INITEXP0HWRITE : IN std_logic;
-        INITEXP0HSIZE : IN std_logic_vector(2 downto 0);
-        INITEXP0HBURST : IN std_logic_vector(2 downto 0);
-        INITEXP0HPROT : IN std_logic_vector(3 downto 0);
-        INITEXP0MEMATTR : IN std_logic_vector(1 downto 0);
-        INITEXP0EXREQ : IN std_logic;
-        INITEXP0HMASTER : IN std_logic_vector(3 downto 0);
-        INITEXP0HWDATA : IN std_logic_vector(31 downto 0);
-        INITEXP0HMASTLOCK : IN std_logic;
-        INITEXP0HAUSER : IN std_logic;
-        INITEXP0HWUSER : IN std_logic_vector(3 downto 0);
-
-        APBTARGEXP2PSTRB : OUT std_logic_vector(3 downto 0);
-        APBTARGEXP2PPROT : OUT std_logic_vector(2 downto 0);
-        APBTARGEXP2PSEL : OUT std_logic;
-        APBTARGEXP2PENABLE : OUT std_logic;
-        APBTARGEXP2PADDR : OUT std_logic_vector(11 downto 0);
-        APBTARGEXP2PWRITE : OUT std_logic;
-        APBTARGEXP2PWDATA : OUT std_logic_vector(31 downto 0);
-        APBTARGEXP2PRDATA : IN std_logic_vector(31 downto 0);
-        APBTARGEXP2PREADY : IN std_logic;
-        APBTARGEXP2PSLVERR : IN std_logic;
-
-        MTXREMAP : IN std_logic_vector(3 downto 0);
-
-        DAPSWDO : OUT std_logic;
-        DAPSWDOEN : OUT std_logic;
-        DAPTDO : OUT std_logic;
-        DAPJTAGNSW : OUT std_logic;
-        DAPNTDOEN : OUT std_logic;
-        DAPSWDITMS : IN std_logic;
-        DAPTDI : IN std_logic;
-        DAPNTRST : IN std_logic;
-        DAPSWCLKTCK : IN std_logic;
-
-        TPIUTRACEDATA : OUT std_logic_vector(3 downto 0);
-        TPIUTRACESWO : OUT std_logic;
-        TPIUTRACECLK : OUT std_logic;
-        FLASHERR : IN std_logic;
-        FLASHINT : IN std_logic
-     );
-end COMPONENT;
-	attribute syn_black_box of MCU : Component is true;    
-
-------------------------------USB20_PHY---------------------------------------
-COMPONENT USB20_PHY
-    GENERIC(
-             DATABUS16_8 : bit := '0'; --Selects between 8 and 16 bit data transfers
-             ADP_PRBEN : bit := '0'; --Enables/disables the ADP Probe comparator
-             TEST_MODE : bit_vector := X"00000";--used for testing and debugging purpose
-             HSDRV1 : bit := '0'; --High speed drive adjustment. Please connect to 0 for normal operation
-             HSDRV0 : bit := '0';
-             CLK_SEL : bit := '0';--Clock source selection signal. 0 to select external clock provided by the crystal connected on XIN, XOUT. 1 to select internal clock provided on INTCLK port
-             M : bit_vector := X"0000";--M divider input data bits
-             N : bit_vector := X"101000";--N divider input data bits
-             C : bit_vector := X"0000";--Control charge pump current input data bits, it supports from 30uA (00) to 60uA (11)
-             FOC_LOCK : bit := '0'--0: LOCK is generated by PLL lock detector. 1: LOCK is always high(always lock)
-
-    	      );
-    PORT(
-        DATAOUT : OUT std_logic_vector(15 downto 0);
-        TXREADY : OUT std_logic;
-        RXACTIVE : OUT std_logic;
-        RXVLD : OUT std_logic;
-        RXVLDH : OUT std_logic;
-        CLK : OUT std_logic;
-        RXERROR : OUT std_logic;
-        LINESTATE : OUT std_logic_vector(1 downto 0);
-        DP : INOUT std_logic;
-        DM : INOUT std_logic;
-        DATAIN : IN std_logic_vector(15 downto 0);
-        TXVLD : IN std_logic;
-        TXVLDH : IN std_logic;
-        RESET : IN std_logic;
-        SUSPENDM : IN std_logic;
-        XCVRSEL : IN std_logic_vector(1 downto 0);
-        TERMSEL : IN std_logic;
-        OPMODE : IN std_logic_vector(1 downto 0);
-
-        HOSTDIS : OUT std_logic;
-        IDDIG : OUT std_logic;
-        ADPPRB : OUT std_logic;
-        ADPSNS : OUT std_logic;
-        SESSVLD : OUT std_logic;
-        VBUSVLD : OUT std_logic;
-        RXDP : OUT std_logic;
-        RXDM : OUT std_logic;
-        RXRCV : OUT std_logic;
-        IDPULLUP : IN std_logic;
-        DPPD : IN std_logic;
-        DMPD : IN std_logic;
-        CHARGVBUS : IN std_logic;
-        DISCHARGVBUS : IN std_logic;
-        TXBITSTUFFEN : IN std_logic;
-        TXBITSTUFFENH : IN std_logic;
-        TXENN : IN std_logic;
-        TXDAT : IN std_logic;
-        TXSE0 : IN std_logic;
-        FSLSSERIAL : IN std_logic;
-        LBKERR : OUT std_logic;
-        CLKRDY : OUT std_logic;
-        INTCLK : IN std_logic;
-        ID : INOUT std_logic;
-        VBUS : INOUT std_logic;
-        REXT : INOUT std_logic;
-        XIN : IN std_logic;
-        XOUT : INOUT std_logic;
-        CLK480PAD : OUT std_logic;
-        TEST : IN std_logic;
-        SCANOUT1 : OUT std_logic;
-        SCANOUT2 : OUT std_logic;
-        SCANOUT3 : OUT std_logic;
-        SCANOUT4 : OUT std_logic;
-        SCANOUT5 : OUT std_logic;
-        SCANOUT6 : OUT std_logic;
-        SCANCLK : IN std_logic;
-        SCANEN : IN std_logic;
-        SCANMODE : IN std_logic;
-        TRESETN : IN std_logic;
-        SCANIN1 : IN std_logic;
-        SCANIN2 : IN std_logic;
-        SCANIN3 : IN std_logic;
-        SCANIN4 : IN std_logic;
-        SCANIN5 : IN std_logic;
-        SCANIN6 : IN std_logic
-
-     );
-end COMPONENT;
-	attribute syn_black_box of USB20_PHY : Component is true;    
-    attribute black_box_pad_pin of USB20_PHY : Component is "DP, DM, ID, VBUS, REXT, XOUT, XIN";
-    
-------------------------------ADC---------------------------------------
-COMPONENT ADC
-    GENERIC(
-        VREF_EN : bit := '0'; --0,disable-> adc_verf=VCCX; 1, enable->configured by parameter VREF_SEL
-        VREF_SEL : bit_vector := X"000"--000,VCCX; 001,34/40(*VCCX); 010,31/40(*VCCX); 011,29/40(*VCCX); 100,27/40(*VCCX); 101,22/40(*VCCX); 110,20/40(*VCCX); 111,from IO PAD VREF
-   	);
-    PORT(
-        CH : IN std_logic_vector(7 downto 0);
-        SEL : IN std_logic_vector(2 downto 0);
-        CLK,PD,SOC : IN std_logic;
-        VREF : IN std_logic;
-        EOC : OUT std_logic;
-        ADOUT : OUT std_logic_vector(11 downto 0)
-     );
-end COMPONENT;
-	attribute syn_black_box of ADC : Component is true;    
-    attribute black_box_pad_pin of ADC : Component is "CH, VREF";
 
 end components;
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="UHS PSRAM Memory Interface 2CH V2.0" id="uhs_psram_memory_interface_2ch_v2" version= "2.0" category="Soft IP Core|Memory Control|PSRAM Memory Interface V2.0">UHS PSRAM Memory Interface 2CH V2.0</ip>
+    <target module="UHS_PSRAM_Memory_Interface_2CH_V2_Top">uhs_psram_memory_interface_2ch_v2</target>
+    <docs>
+        <doc type="summary">/doc/uhspsram_2ch.html</doc>
+        <doc type="help">/doc/uhspsram_2ch_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">*</device>
+        <device supported="false">GW5A-*</device>
+        <device supported="false">GW5ANRT-*</device>
+        <device supported="false">GW5ANT-*</device>
+        <device supported="false">GW5AR-*</device>
+        <device supported="false">GW5ART-*</device>
+        <device supported="false">GW5AS-*</device>
+        <device supported="false">GW5AST-*</device>
+        <device supported="false">GW5AT-*</device>
+        <device supported="false">GW3A-20A-*</device>
+        <device supported="false">GW1AN-1C-*</device>
+        <device supported="false">GW1N-1-*</device>
+        <device supported="false">GW1N-1S-*</device>
+        <device supported="false">GW1N-1SB-*</device>
+        <device supported="false">GW1NZ-1-*</device>
+        <device supported="false">GW1NZ-1C-*</device>
+    </devices>
+</ipcore>

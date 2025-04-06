@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gowin-synthesis-project>
+<Project>
+    <Version>beta</Version>
+    <Device id="GW1N-9C" package="LQFP144" speed="6" partNumber="GW1N-LV9LQ144C6/I5"/>
+    <FileList>
+        <File path="C:/Gowin/Gowin_V1.9.10.01_x64/IDE/ipcore/FIFO_HS/data/fifo_hs.v" type="verilog"/>
+        <File path="C:/Gowin/Gowin_V1.9.10.01_x64/IDE/ipcore/FIFO_HS/data/fifo_hs_top.v" type="verilog"/>
+    </FileList>
+    <OptionList>
+        <Option type="disable_insert_pad" value="1"/>
+        <Option type="include_path" value="C:/Gowin/Gowin_V1.9.10.01_x64/IDE/ipcore/FIFO_HS/data"/>
+        <Option type="include_path" value="E:/FIFO_HS/src/FIFO_HS/temp/FIFOHS"/>
+        <Option type="output_file" value="FIFO_HS.vg"/>
+        <Option type="output_template" value="FIFO_HS_tmp.v"/>
+        <Option type="ram_balance" value="1"/>
+        <Option type="ram_rw_check" value="1"/>
+        <Option type="vcc" value="1.2"/>
+        <Option type="vccx" value="3.3"/>
+        <Option type="verilog_language" value="sysv-2017"/>
+    </OptionList>
+</Project>

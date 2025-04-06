@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="../../../data/ipcores/mkdown.css" />
+<title>PLLVR</title></head>
+<body class="markdown-body">
+<h1>PLLVR</h1>
+<hr />
+<h2>Information</h2>
+<p><strong>Type:</strong> PLLVR<br />
+<strong>Vendor:</strong> GOWIN Semiconductor<br />
+<strong>Summary:</strong> Gowin FPGA provides a Phase Locked Loop (PLLVR), which is used to generate multiple clocks with defined phase and frequency relationships to a given input clock.<br />
+<strong>Devices:</strong>  GW1NS-4, GW1NS-4C, GW1NSR-4, GW1NSER-4C, GW1NSR-4C     </p>
+<h2>Options</h2>
+<h3>General</h3>
+<ul>
+<li><strong>General Mode</strong> -In this mode, entering input clock frequency and expected frequencies, software will automatically calculate divide factors.  </li>
+<li><strong>Advanced Mode</strong> -This mode is for advanced users. Allows you to enter input clock frequency and divide factors to achieve expected output frequency.  </li>
+<li><strong>PLL Phase And Duty Cycle Adjustment</strong> -Allows you to select Static Mode or Dynamic Mode.</li>
+<li><strong>PLL Reset</strong> -Provides a reset port to reset the PLL.  </li>
+<li><strong>PLL Power Down</strong> -Provides a reset_p port to power down the PLL.  </li>
+<li><strong>PLL Regulator</strong> -Provides a vren port to PLL dynamic power regulation.  </li>
+</ul>
+<h3>CLKIN</h3>
+<ul>
+<li>CLKIN is the input reference clock for the PLL.  </li>
+<li><strong>Clock Frequency</strong> -Specify its frequency in MHz.  </li>
+<li><strong>Divide Factor</strong> -If in Advanced mode, also choose a divide factor which is from Dynamic or Static mode to achieve the expected output frequency. Static mode means select a static value from the drop-down list as divide factor, while Dynamic mode means that choose the value of port idsel as dynamic divide factor. When the Dynamic mode is selected, the user needs to set an initial value.  </li>
+</ul>
+<h3>CLKFB</h3>
+<ul>
+<li><strong>Source</strong> -Specify the source of feedback.  </li>
+<li><strong>Divide Factor</strong> -In Advanced mode, the divide factor in the feedback path can be selected from port fbdsel or from the drop-down list. In General mode, the divide factor is shown when the “Calculate” button is clicked. When the Dynamic mode is selected, the user needs to set an initial value.  </li>
+</ul>
+<h3>LOCK</h3>
+<ul>
+<li><strong>Enable LOCK</strong> -Selecting this option will produce the lock port in the generated module.  </li>
+</ul>
+<h3>CLKOUT</h3>
+<ul>
+<li><strong>Bypass</strong> -The bypass option means clkout = clkin, it connects the output to the input, bypassing the PLL circuit. Bypassing CLKOUT disables the CLKOUT expected frequency and tolerance fields. If both CLKOUT and CLKOUTP are in Bypass, then everything is disabled except the CLKIN frequency option.  </li>
+<li>The following options are not available when CLKOUT is in Bypass mode.  </li>
+<li><strong>VCO Divide Factor</strong> -In General mode, VCO Divide Factors cannot be selected. Clicking the “Calculate” button displays the actual values. In Advanced mode, Dynamic or Static mode can be selected. When the Dynamic mode is selected, the user needs to set an initial value.  </li>
+<li><strong>Expected Frequency</strong> -In General mode, set the output clock frequency. The value range on the interface is the recommended value. This option is disabled in advanced mode.  </li>
+<li><strong>Tolerance</strong> -Set a tolerance for the clkout frequency, as a percentage of requested frequency. Since the divide factors can only take a certain set of values, not all frequencies can be generated. The tolerance value is used to guide the tool to select a suitable divide factor.  </li>
+<li><strong>Actual Frequency</strong> -Clicking the “Calculate” button displays the actual frequency that the PLL can produce.  </li>
+</ul>
+<h3>CLKOUTP</h3>
+<ul>
+<li><strong>Enable CLKOUTP</strong> -Selecting this option will produce the clkoutp port in the generated module. Clkoutp has the same frequency as clkout and it has the specified phase or duty cycle relation with clkout.  </li>
+<li><strong>Bypass</strong> -This option will connect the output to the input, bypassing the PLL circuit. Bypassing clkoutp disables its frequency, tolerance, and phase shift fields.  </li>
+<li><strong>PLL Phase And Duty Cycle Adjustment(Static)</strong>  </li>
+<li><strong>Phase</strong> -You can select phase shift in 22.5-degree increments from 0 to 360.  </li>
+<li><strong>Duty Cycle</strong> -Allows duty cycle selection in 1/16 increments.  </li>
+</ul>
+<h3>CLKOUTD</h3>
+<ul>
+<li><strong>Enable CLKOUTD</strong> -Selecting this option will produces clkoutd port in the generated module. In general mode, select the expected frequency. In advanced mode, select the divide factor for the expected frequency.  </li>
+<li><strong>Bypass</strong> -The bypass option means clkoutd = clkin, it connects the output to the input, bypassing the PLL circuit.  </li>
+<li><strong>Source</strong> -If CLKOUTD is enabled, you can select CLKOUT or CLKOUTP as the source of CLKOUTD. If CLKOUTP is not enabled, CLKOUT is used as the source.  </li>
+<li><strong>Expected Frequency</strong> -In General mode, set the CLKOUTD Frequency. The value range on the interface is the recommended value. This option is disabled in advanced mode.  </li>
+<li><strong>Divide Factor</strong> -In General mode, the divide factor cannot be selected. Clicking the “Calculate” button the tool will automatically displays the actual values. In Advanced mode, select the CLKOUTD divide factor from the drop-down list.  </li>
+<li><strong>Tolerance</strong> -Set a tolerance for the CLKOUTD frequency, as a percentage of requested frequency. Since the divide factors can only take a certain set of values, not all frequencies can be generated. The tolerance value is used to guide the tool to select a suitable divide factor.  </li>
+<li><strong>Actual Frequency</strong> -Clicking the “Calculate” button displays the actual frequency that the PLL can produce.  </li>
+</ul>
+<h3>CLKOUTD3</h3>
+<ul>
+<li><strong>Enable CLKOUTD3</strong> -Selecting this option will produces clkoutd3 port in the generated module, and it is equal to clkout/3.  </li>
+<li><strong>Source</strong> -If CLKOUTD3 is enabled, you can select CLKOUT or CLKOUTP as the source of CLKOUTD3. If CLKOUTP is not enabled, CLKOUT is used as the source.  </li>
+</ul>
+<h3>Calculate</h3>
+<ul>
+<li>General Mode: The tool calculates Divide Factor settings based on input/output frequency.  </li>
+<li>Advanced Mode: The tool calculates output frequencies based on divide factors.  </li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,49 @@
+{
+ "Device" : "GW1N-4D",
+ "Files" : [
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/TOP.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/VGA_640x480.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/clk_01ms.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/clk_100ms.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/clk_10ms.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/clk_1ms.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/clk_5ms.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/demon1.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/src/draw_demon1.v",
+   "Type" : "verilog"
+  }
+ ],
+ "IncludePath" : [
+
+ ],
+ "LoopLimit" : 2000,
+ "ResultFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/game/impl/temp/rtl_parser.result",
+ "Top" : "",
+ "VerilogStd" : "verilog_2001",
+ "VhdlStd" : "vhdl_93"
+}

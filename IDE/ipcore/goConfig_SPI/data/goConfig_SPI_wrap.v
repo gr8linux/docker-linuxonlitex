@@ -1,0 +1,55 @@
+`include "goConfig_SPI_define.v"
+`include "static_macro_define.v"
+
+module `module_name (
+	// External Interface IO
+	input       GW_BACKGROUND_EXT_SCLK   ,
+	input       GW_BACKGROUND_EXT_CS_N     ,
+	input       GW_BACKGROUND_EXT_MOSI   ,
+	output      GW_BACKGROUND_EXT_MISO   ,
+	// Flash IO 
+	output      GW_BACKGROUND_INT_CLK    ,
+	output      GW_BACKGROUND_INT_DO     ,
+	output      GW_BACKGROUND_INT_MODEL  ,
+	input       GW_BACKGROUND_INT_DI     ,
+	input       GW_BACKGROUND_INT_DI_EN  ,
+	output      GW_BACKGROUND_INT_SEL    ,
+	// 
+	output      GW_BACKGROUND_RECONFIG_N ,
+	input       GW_BACKGROUND_EXT_SEL    ,
+	input       GW_OSC_CLK               
+); 
+
+    parameter   MODEL_LSB       =0;
+    parameter   CPOL            =0;
+    parameter   CPHA            =0;
+    parameter   BIT_WIDTH       =8;
+
+`getname(GW_BACKGROUND_SPI,`module_name)
+#(
+	.MODEL_LSB(MODEL_LSB),
+	.CPOL(CPOL),
+	.CPHA(CPHA),
+	.BIT_WIDTH(BIT_WIDTH)
+)
+ inst_GW_SPI(
+//SPI IO 
+	.GW_BACKGROUND_EXT_SCLK(GW_BACKGROUND_EXT_SCLK),
+	.GW_BACKGROUND_EXT_CS_N(GW_BACKGROUND_EXT_CS_N),
+	.GW_BACKGROUND_EXT_MOSI(GW_BACKGROUND_EXT_MOSI),
+	.GW_BACKGROUND_EXT_MISO(GW_BACKGROUND_EXT_MISO),
+//flash IO 
+	.GW_BACKGROUND_INT_CLK(GW_BACKGROUND_INT_CLK),
+	.GW_BACKGROUND_INT_DO(GW_BACKGROUND_INT_DO),
+	.GW_BACKGROUND_INT_MODEL(GW_BACKGROUND_INT_MODEL),
+	.GW_BACKGROUND_INT_DI(GW_BACKGROUND_INT_DI),
+	.GW_BACKGROUND_INT_DI_EN(GW_BACKGROUND_INT_DI_EN),
+	.GW_BACKGROUND_INT_SEL(GW_BACKGROUND_INT_SEL),
+//
+	.GW_BACKGROUND_RECONFIG_N(GW_BACKGROUND_RECONFIG_N),
+	.GW_BACKGROUND_EXT_SEL(GW_BACKGROUND_EXT_SEL),
+	.GW_OSC_CLK(GW_OSC_CLK)
+);
+
+
+endmodule

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="PLLO" id="clock_pllo" version= "1.0" category="Hard Module|CLOCK">PLLO</ip>
+    <target module="Gowin_PLLO">gowin_pllo</target>
+    <docs>
+        <doc type="summary">/doc/pllo.html</doc>
+        <doc type="help">/doc/pllo_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW1N-2-*</device>
+        <device supported="true">GW1NZR-2-*</device>
+        <device supported="true">GW1NR-2-*</device>
+        <device supported="true">GW2AN-18X-*</device>
+        <device supported="true">GW1N-1P5-*</device>
+        <device supported="true">GW1N-2B-*</device>
+        <device supported="true">GW1NZ-2B-*</device>
+        <device supported="true">GW1NR-2B-*</device>
+        <device supported="true">GW1N-1P5B-*</device>
+        <device supported="true">GW1N-2C-*</device>
+        <device supported="true">GW1NZ-2C-*</device>
+        <device supported="true">GW1NR-2C-*</device>
+        <device supported="true">GW1N-1P5C-*</device>
+        <device supported="true">GW2AN-9X-*</device>
+        <device supported="true">GW1AN-9A-*</device>
+        <device supported="true">GW2AN-4X-*</device>
+    </devices>
+</ipcore>

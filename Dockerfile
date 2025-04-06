@@ -27,28 +27,23 @@ RUN apt-get update && apt-get install -y \
     apt-transport-https \
     gnupg \
     cmake \
-    git  # Install Git
+    git  \
+    gcc-riscv64-unknown-elf
 
 # Install Meson
-RUN pip3 install meson
+RUN pip3 install meson ninja 
 
 # Install Git, (n)Migen / LiteX / Cores
 WORKDIR /root
-RUN wget https://raw.githubusercontent.com/enjoy-digital/litex/master/litex_setup.py
-RUN python3 litex_setup.py init install --user
+RUN wget https://raw.githubusercontent.com/enjoy-digital/litex/master/litex_setup.py 
+RUN python3 litex_setup.py init install --user --config full 
+RUN python3 ./litex_setup.py --update 
+RUN python3 ./litex_setup.py --gcc=riscv 
+RUN apt install libevent-dev libjson-c-dev verilator
 
-# Install RISC-V GCC
-WORKDIR /root
-RUN wget https://static.dev.sifive.com/dev-tools/freedom-tools/v2020.12/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz
-RUN tar -xf riscv64-*.tar.gz
-RUN mkdir /usr/local/riscv
-RUN cp -r riscv64-*/* /usr/local/riscv
 
 # Add Gowin Tools directory to PATH
 ENV PATH="/IDE/bin:${PATH}"
-
-# Set PATH for RISC-V GCC
-ENV PATH="/usr/local/riscv/bin:${PATH}"
 
 # Import the GPG key for Scala SBT repository
 RUN apt-get update && apt-get install -y gnupg2
@@ -60,7 +55,7 @@ RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/ap
 RUN apt-get update && apt-get install -y sbt
 
 # Copy the IDE folder into the Docker image
-RUN mkdir /IDE
+RUN mkdir /IDE 
 COPY ./IDE /IDE
 
 # Build and install openFPGALoader
@@ -105,7 +100,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Fix the issue over video core 
 WORKDIR /root/litex/litex
-RUN git checkout cd8218779e0eb05c73785cd6b8866dc3215c1710
+
 # Let the /home/linux-on-litex-vexriscv be the default when login to the docker
 
 WORKDIR /home/linux-on-litex-vexriscv

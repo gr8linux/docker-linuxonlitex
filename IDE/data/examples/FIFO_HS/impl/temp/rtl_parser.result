@@ -1,0 +1,38 @@
+[
+ {
+  "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/test_fifo.v",
+  "InstLine" : 2,
+  "InstName" : "test_fifo",
+  "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/test_fifo.v",
+  "ModuleLine" : 2,
+  "ModuleName" : "test_fifo",
+  "SubInsts" : [
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/test_fifo.v",
+    "InstLine" : 87,
+    "InstName" : "rstn_gen",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/rstn_gen.v",
+    "ModuleLine" : 1,
+    "ModuleName" : "rstn_gen"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/test_fifo.v",
+    "InstLine" : 397,
+    "InstName" : "u_fifo_hs_top",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/FIFO_HS/FIFO_HS.v",
+    "ModuleLine" : 752,
+    "ModuleName" : "FIFO_HS_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/FIFO_HS/FIFO_HS.v",
+      "InstLine" : 785,
+      "InstName" : "fifo_inst",
+      "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/FIFO_HS/src/FIFO_HS/FIFO_HS.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~fifo.FIFO_HS_Top"
+     }
+    ]
+   }
+  ]
+ }
+]

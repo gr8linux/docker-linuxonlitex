@@ -1,6 +1,6 @@
 
 -- ===========Oooo==========================================Oooo========
--- =  Copyright (C)2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+-- =  Copyright (C)2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 -- =                     All rights reserved.
 -- =====================================================================
 --
@@ -5358,6 +5358,29 @@ entity SAMB is
     	 LOADN_SPIAD : IN std_logic
     );
 end SAMB;
+
+------------------------------PWRGRD---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity PWRGRD is
+    PORT (
+         PDEN : in std_logic
+    );
+end PWRGRD;
+
+------------------------------TLVDS_OEN_BK---------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity TLVDS_OEN_BK is
+    GENERIC(
+	     OEN_BANK : STRING := "0" -- "0", "3", "4", "5"
+    );
+    PORT (
+         OEN : in std_logic
+    );
+end TLVDS_OEN_BK;
 
 -------------------------------------------------------------------
 -- below entity are not primitvie, for black box in synthesising

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="EOSC" id="clock_eosc" version= "1.0" category="Hard Module|CLOCK">EOSC</ip>
+    <target module="Gowin_EOSC">gowin_eosc</target>
+    <docs>
+        <doc type="summary">/doc/eosc.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW3A-20A-*</device>
+    </devices>
+</ipcore>

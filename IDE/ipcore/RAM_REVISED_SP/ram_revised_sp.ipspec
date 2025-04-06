@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="Revised SP" id="ram_revised_sp" version= "1.0" category="Hard Module|Memory|Block Memory">Revised SP</ip>
+    <target module="Gowin_SP">gowin_sp</target>
+    <docs>
+        <doc type="summary">/doc/ram_rsp.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW2A-18C-*</device>
+        <device supported="true">GW2AR-18C-*</device>
+        <device supported="true">GW2ANR-18C-*</device>
+        <device supported="true">GW2A-55C-*</device>
+        <device supported="true">GW2AN-55C-*</device>
+    </devices>
+</ipcore>

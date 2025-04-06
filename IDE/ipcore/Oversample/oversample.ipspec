@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="OverSample" id="io_oversample" version= "1.1" category="Hard Module|IO">OverSample</ip>
+    <target module="Gowin_OverSample">gowin_oversample</target>
+    <docs>
+        <doc type="summary">/doc/oversample.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5AT-138-*</device>
+        <device supported="true">GW5A-25A-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+        <device supported="true">GW5A-60B-*</device>
+        <device supported="true">GW5ART-15A-*</device>
+        <device supported="true">GW5AT-15B-*</device>
+        <device supported="true">GW5ART-15B-*</device>
+        <device supported="true">GW5ANT-15A-*</device>
+        <device supported="true">GW5ANRT-15A-*</device>
+        <device supported="true">GW5AT-15A-*</device>
+        <device supported="true">GW5AS-25A-*</device>
+        <device supported="true">GW5AR-25A-*</device>
+        <device supported="true">GW5AT-138B-*</device>
+        <device supported="true">GW5AT-75B-*</device>
+        <device supported="true">GW5AST-138B-*</device>
+        <device supported="true">GW5A-138C-*</device>
+        <device supported="true">GW5AS-138C-*</device>
+        <device supported="true">GW5AST-138C-*</device>
+        <device supported="true">GW5AT-138C-*</device>
+        <device supported="true">GW5AT-75C-*</device>
+        <device supported="true">GW5A-138B-*</device>
+        <device supported="true">GW5AS-138B-*</device>
+        <device supported="true">GW5A-25B-*</device>
+        <device supported="true">GW5AR-25B-*</device>
+        <device supported="true">GW5AS-25B-*</device>
+        <device supported="true">GW3A-20A-*</device>
+    </devices>
+</ipcore>

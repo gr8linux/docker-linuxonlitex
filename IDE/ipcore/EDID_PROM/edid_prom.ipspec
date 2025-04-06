@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ipcore>
-    <ip label="EDID PROM" id="edid_prom" version= "2.0" category="Soft IP Core|Multimedia">EDID PROM</ip>
+    <ip label="EDID PROM" id="edid_prom" version= "2.1" category="Soft IP Core|Multimedia">EDID PROM</ip>
     <target module="EDID_PROM_Top">edid_prom</target>
     <docs>
         <doc type="summary">/doc/edid_prom.html</doc>
         <doc type="help">/doc/edid_prom_help.html</doc>
     </docs>
     <devices>
+        <device supported="true">*</device>
+        <device supported="false">GW5AT-138-*</device>
+        <device supported="false">GW1N-4-*</device>
+        <device supported="false">GW1NR-4-*</device>
+        <device supported="false">GW1NRF-4B-*</device>
+        <device supported="false">GW1N-4B-*</device>
+        <device supported="false">GW1NR-4B-*</device>
+        <device supported="false">GW5ART-15A-*</device>
+        <device supported="false">GW5ANT-15A-*</device>
+        <device supported="false">GW5ANRT-15A-*</device>
+        <device supported="false">GW5AT-15A-*</device>
     </devices>
 </ipcore>

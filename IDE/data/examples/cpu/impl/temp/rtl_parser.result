@@ -1,0 +1,100 @@
+[
+ {
+  "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+  "InstLine" : 2,
+  "InstName" : "mips",
+  "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+  "ModuleLine" : 2,
+  "ModuleName" : "mips",
+  "SubInsts" : [
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 66,
+    "InstName" : "pc_reg0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/pc_reg.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "pc_reg"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 68,
+    "InstName" : "rom0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/rom.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "rom"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 70,
+    "InstName" : "if_id0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/if_id.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "if_id"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 73,
+    "InstName" : "id0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/id.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "id"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 83,
+    "InstName" : "regfile0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/regfile.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "regfile"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 90,
+    "InstName" : "id_ex0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/id_ex.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "id_ex"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 95,
+    "InstName" : "ex0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/ex.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "ex"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 101,
+    "InstName" : "ex_mem0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/ex_mem.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "ex_mem"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 106,
+    "InstName" : "mem0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mem.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "mem"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 112,
+    "InstName" : "mem_wb0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mem_wb.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "mem_wb"
+   },
+   {
+    "InstFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/mips.sv",
+    "InstLine" : 118,
+    "InstName" : "hilo_reg0",
+    "ModuleFile" : "/n9k/share/gwsw/sw_pub/swfiles/changhui/IntranetPool/SWQA/IDEtest/exampleProject/project/20240925/examplePrj/cpu/src/hilo_reg.sv",
+    "ModuleLine" : 2,
+    "ModuleName" : "hilo_reg"
+   }
+  ]
+ }
+]

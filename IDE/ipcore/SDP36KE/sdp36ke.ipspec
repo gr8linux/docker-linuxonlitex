@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="SDP36KE" id="sdp36ke" version= "1.0" category="Hard Module|Memory|Block Memory">SDP36KE</ip>
+    <target module="Gowin_SDP36KE">gowin_sdp36ke</target>
+    <docs>
+        <doc type="summary">/doc/ram_sdp36ke.html</doc>
+        <doc type="help">/doc/sdp36ke_help.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5AT-138-*</device>
+        <device supported="true">GW5AT-138B-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+        <device supported="true">GW5A-60B-*</device>
+        <device supported="true">GW5AT-75B-*</device>
+        <device supported="true">GW5AST-138B-*</device>
+        <device supported="true">GW5A-138C-*</device>
+        <device supported="true">GW5AS-138C-*</device>
+        <device supported="true">GW5AST-138C-*</device>
+        <device supported="true">GW5AT-138C-*</device>
+        <device supported="true">GW5AT-75C-*</device>
+        <device supported="true">GW5A-138B-*</device>
+        <device supported="true">GW5AS-138B-*</device>
+        <device supported="true">GW5ART-15A-*</device>
+        <device supported="true">GW5AT-15B-*</device>
+        <device supported="true">GW5ART-15B-*</device>
+        <device supported="true">GW5ANT-15A-*</device>
+        <device supported="true">GW5ANRT-15A-*</device>
+        <device supported="true">GW5AT-15A-*</device>
+    </devices>
+</ipcore>

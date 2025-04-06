@@ -1,0 +1,91 @@
+IO_LOC   "CLKX"     T15
+IO_LOC   "CLK"      H11
+
+IO_LOC  "LED1"      F16
+IO_LOC  "LED2"      G12
+IO_LOC  "LED3"      F13
+IO_LOC  "LED4"      F14
+
+IO_LOC   "KEY1"     T2
+IO_LOC   "KEY2"     T3
+IO_LOC   "KEY3"     T4
+IO_LOC   "KEY4"     T5
+
+IO_LOC   "SW1"      E9
+IO_LOC   "SW2"      E8
+IO_LOC   "SW3"      C7
+IO_LOC   "SW4"      D7
+
+IO_LOC   "JTAG_TDI"     A6
+IO_LOC   "JTAG_TDO"     C6
+IO_LOC   "JTAG_TMS"     B8
+IO_LOC   "JTAG_TCK"     A7
+
+IO_LOC   "SPI_CS"       M9
+IO_LOC   "SPI_CLK"      L10
+IO_LOC   "SPI_MISO"     P10
+IO_LOC   "SPI_MOSI"     R10
+
+IO_LOC   "J11_1"        D16
+IO_LOC   "J11_2"        E14
+IO_LOC   "J11_5"        E16
+IO_LOC   "J11_6"        F15
+IO_LOC   "J11_9"        G16
+IO_LOC   "J11_10"       H15
+IO_LOC   "J11_13"       H14
+IO_LOC   "J11_14"       H16
+IO_LOC   "J11_17"       J5
+IO_LOC   "J11_18"       K16
+
+IO_LOC   "J10_1"        K14
+IO_LOC   "J10_2"        K15
+IO_LOC   "J10_5"        L16
+IO_LOC   "J10_6"        L14
+IO_LOC   "J10_9"        N16
+IO_LOC   "J10_10"       N14
+IO_LOC   "J10_13"       N15
+IO_LOC   "J10_14"       P16
+IO_LOC   "J10_17"       P15
+IO_LOC   "J10_18"       R16
+
+IO_LOC   "J4_5"         M14
+IO_LOC   "J4_6"         K12
+IO_LOC   "J4_7"         J13
+IO_LOC   "J4_8"         H13
+IO_LOC   "J4_9"         G13
+IO_LOC   "J4_10"        L13
+IO_LOC   "J4_11"        L15
+IO_LOC   "J4_12"        M15
+IO_LOC   "J4_13"        J16
+IO_LOC   "J4_14"        L12
+IO_LOC   "J4_15"        K13
+IO_LOC   "J4_16"        K11
+IO_LOC   "J4_17"        J11
+IO_LOC   "J4_18"        J14
+IO_LOC   "J4_19"        J12
+IO_LOC   "J4_20"        G15
+IO_LOC   "J4_21"        E15
+IO_LOC   "J4_22"        C16
+IO_LOC   "J4_23"        D15
+IO_LOC   "J4_24"        D14
+IO_LOC   "J4_25"        G14
+IO_LOC   "J4_26"        H12
+IO_LOC   "J4_27"        F12
+IO_LOC   "J4_28"        G11
+
+IO_LOC   "J3_3"         A15     
+IO_LOC   "J3_4"         A14
+IO_LOC   "J3_5"         B14
+IO_LOC   "J3_6"         B13
+IO_LOC   "J3_7"         C12
+IO_LOC   "J3_8"         D11
+IO_LOC   "J3_9"         A12
+IO_LOC   "J3_10"        B12
+IO_LOC   "J3_11"        C11
+IO_LOC   "J3_12"        D10
+IO_LOC   "J3_13"        A11
+IO_LOC   "J3_14"        B11
+IO_LOC   "J3_15"        E10
+IO_LOC   "J3_16"        C9
+IO_LOC   "J3_17"        A9
+IO_LOC   "J3_18"        F10

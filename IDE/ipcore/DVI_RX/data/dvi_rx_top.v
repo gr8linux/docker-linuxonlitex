@@ -1,5 +1,5 @@
 // ==============0ooo===================================================0ooo===========
-// =  Copyright (C) 2014-2020 Gowin Semiconductor Technology Co.,Ltd.
+// =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 // =                     All rights reserved.
 // ====================================================================================
 // 
@@ -7,7 +7,7 @@
 //  \ \    /  \    / /   [File name   ] DVI_RX_Top.v
 //   \ \  / /\ \  / /    [Description ] DVI RX
 //    \ \/ /  \ \/ /     [Timestamp   ] Friday April 3 14:00:30 2020
-//     \  /    \  /      [version     ] 3.2
+//     \  /    \  /      [version     ] 4.0
 //      \/      \/
 //
 // ==============0ooo===================================================0ooo===========
@@ -27,6 +27,14 @@
 // ----------------------------------------------------------------------------------
 // V3.2    | Caojie     | 12/15/22     | 1. Fix using external clk bug
 // ----------------------------------------------------------------------------------
+// V3.3    | Caojie     | 09/06/23     | 1. Add 5A serial device
+// ----------------------------------------------------------------------------------
+// V3.4    | Caojie     | 26/04/24     | 1. Align module modify
+// ----------------------------------------------------------------------------------
+// V3.5    | Caojie     | 06/06/24     | 1. Auto Align module modify
+// ----------------------------------------------------------------------------------
+// V4.0    | Caojie     | 11/15/24     | 1. Auto Align module modify
+// ----------------------------------------------------------------------------------
 // ==============0ooo===================================================0ooo===========
 
 `include "top_define.v"
@@ -44,6 +52,9 @@ module `module_name
     output        O_tmds_clk    ,
     input         I_serial_clk  ,
 `else
+	output		  O_pll_lock	  ,
+`endif 
+`ifdef AUTO_PHASE
     output [3:0]  O_pll_phase     ,  
     output        O_pll_phase_lock,
 `endif  
@@ -71,7 +82,10 @@ module `module_name
 `ifdef RX_USE_EXTERNAL_CLK
     .O_tmds_clk   (O_tmds_clk   ),
     .I_serial_clk (I_serial_clk ),
-`else
+`else                             
+	.O_pll_lock	  (O_pll_lock	),
+`endif 
+`ifdef AUTO_PHASE
     .O_pll_phase     (O_pll_phase     ),  
     .O_pll_phase_lock(O_pll_phase_lock),
 `endif 

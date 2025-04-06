@@ -7,7 +7,7 @@
 //  \ \    /  \    / /   [File name   ] DVI_TX_Top.v
 //   \ \  / /\ \  / /    [Description ] DVI TX
 //    \ \/ /  \ \/ /     [Timestamp   ] Friday April 3 14:00:30 2020
-//     \  /    \  /      [version     ] 2.1
+//     \  /    \  /      [version     ] 2.3
 //      \/      \/
 //
 // ==============0ooo===================================================0ooo===========
@@ -17,9 +17,13 @@
 // ----------------------------------------------------------------------------------
 // V1.0    | Caojie     | 04/03/20     | Initial version 
 // ----------------------------------------------------------------------------------
-// V2.0    | Caojie     | 09/21/20     | add TLVDS and ELVDS option
+// V2.0    | Caojie     | 09/07/20     | 1. Add PLLVR and rPLL 
 // ----------------------------------------------------------------------------------
 // V2.1    | Caojie     | 02/19/21     | 1. Add PLLO 
+// ----------------------------------------------------------------------------------
+// V2.2    | Caojie     | 04/20/23     | 1. Support 5A serial devices
+// ----------------------------------------------------------------------------------
+// V2.3    | Caojie     | 10/07/23     | 1. Fixed a "no signal" bug
 // ----------------------------------------------------------------------------------
 // ==============0ooo===================================================0ooo===========
 
@@ -29,19 +33,19 @@
 
 module `module_name
 (
-    input            I_rst_n       ,  //asynchronous reset, low active
+    input         I_rst_n       ,  //asynchronous reset, low active
 `ifdef TX_USE_EXTERNAL_CLK
     input         I_serial_clk  ,
 `endif
-    input            I_rgb_clk     ,  //pixel clock
+    input         I_rgb_clk     ,  //pixel clock
     input         I_rgb_vs      , 
     input         I_rgb_hs      ,    
     input         I_rgb_de      , 
     input  [7:0]  I_rgb_r       ,  
     input  [7:0]  I_rgb_g       ,
     input  [7:0]  I_rgb_b       ,
-    output          O_tmds_clk_p  ,
-    output          O_tmds_clk_n  ,
+    output        O_tmds_clk_p  ,
+    output        O_tmds_clk_n  ,
     output [2:0]  O_tmds_data_p ,  //{r,g,b}
     output [2:0]  O_tmds_data_n
 );

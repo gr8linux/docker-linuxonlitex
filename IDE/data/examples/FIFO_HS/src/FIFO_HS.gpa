@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE GOWIN_POWER_ANALYSIS_CONFIG>
+<Config>
+    <Version>1.0</Version>
+    <TempGrade>COMMERCIAL</TempGrade>
+    <Process>TYPICAL</Process>
+    <AmbientTemp>25</AmbientTemp>
+    <VCC>1.2</VCC>
+    <VCCX>3.3</VCCX>
+    <HeatSink>None</HeatSink>
+    <AirFlow>0</AirFlow>
+    <NetRate type="toggle">
+        <Net name="clk" value="50.00"/>
+    </NetRate>
+    <DefaultConfig>
+        <DefaultIoToggleRate>12.50</DefaultIoToggleRate>
+        <DefaultRmToggleRate>12.50</DefaultRmToggleRate>
+    </DefaultConfig>
+    <GlobalEnable value="100">
+        <Clock name="clk" value="100"/>
+    </GlobalEnable>
+    <GlobalBsram clock_enable="100" read_probability="100" write_probability="100">
+        <BSRam name="u_fifo_hs_top/fifo_inst/Big.mem_Big.mem_0_0_s" clock_a_enable="100" clock_b_enable="100" port_a_write="100" port_b_read="100" type="6"/>
+    </GlobalBsram>
+</Config>

@@ -567,24 +567,12 @@
     <INPUT width="1">IB</INPUT>
     <INPUT width="1">IL</INPUT>
     <INPUT width="1">MODESEL</INPUT>
+    <INPUT width="1">OEN</INPUT>
+    <INPUT width="1">OENB</INPUT>
     <OUTPUT width="1">O</OUTPUT>
     <OUTPUT width="1">OB</OUTPUT>
-  </module>
-
-  <module>
-    <name>IBUF_R</name>
-    <INPUT width="1">I</INPUT>
-    <INPUT width="1">RTEN</INPUT>
-    <OUTPUT width="1">O</OUTPUT>
-  </module>
-
-  <module>
-    <name>IOBUF_R</name>
-    <INPUT width="1">I</INPUT>
-    <INPUT width="1">OEN</INPUT>
-    <INPUT width="1">RTEN</INPUT>
-    <OUTPUT width="1">O</OUTPUT>
     <INOUT width="1">IO</INOUT>
+    <INOUT width="1">IOB</INOUT>
   </module>
 
   <module>
@@ -610,6 +598,63 @@
     <INPUT width="1">I</INPUT>
     <INPUT width="1">IB</INPUT>
     <INPUT width="1">ADCEN</INPUT>
+  </module>
+
+  <module>
+    <name>MIPI_CPHY_IBUF</name>
+    <INPUT width="1">I0</INPUT>
+    <INPUT width="1">IB0</INPUT>
+    <INPUT width="1">I1</INPUT>
+    <INPUT width="1">IB1</INPUT>
+    <INPUT width="1">I2</INPUT>
+    <INPUT width="1">IB2</INPUT>
+    <INPUT width="1">OEN</INPUT>
+    <INPUT width="1">OENB</INPUT>
+    <INPUT width="1">HSEN</INPUT>
+    <OUTPUT width="1">OH0</OUTPUT>
+    <OUTPUT width="1">OL0</OUTPUT>
+    <OUTPUT width="1">OB0</OUTPUT>
+    <OUTPUT width="1">OH1</OUTPUT>
+    <OUTPUT width="1">OL1</OUTPUT>
+    <OUTPUT width="1">OB1</OUTPUT>
+    <OUTPUT width="1">OH2</OUTPUT>
+    <OUTPUT width="1">OL2</OUTPUT>
+    <OUTPUT width="1">OB2</OUTPUT>
+    <INOUT width="1">IO0</INOUT>
+    <INOUT width="1">IOB0</INOUT>
+    <INOUT width="1">IO1</INOUT>
+    <INOUT width="1">IOB1</INOUT>
+    <INOUT width="1">IO2</INOUT>
+    <INOUT width="1">IOB2</INOUT>
+  </module>
+
+  <module>
+    <name>MIPI_CPHY_OBUF</name>
+    <INPUT width="1">I0</INPUT>
+    <INPUT width="1">IB0</INPUT>
+    <INPUT width="1">IL0</INPUT>
+    <INPUT width="1">I1</INPUT>
+    <INPUT width="1">IB1</INPUT>
+    <INPUT width="1">IL1</INPUT>
+    <INPUT width="1">I2</INPUT>
+    <INPUT width="1">IB2</INPUT>
+    <INPUT width="1">IL2</INPUT>
+    <INPUT width="1">OEN</INPUT>
+    <INPUT width="1">OENB</INPUT>
+    <INPUT width="1">MODESEL</INPUT>
+    <INPUT width="1">VCOME</INPUT>
+    <OUTPUT width="1">O0</OUTPUT>
+    <OUTPUT width="1">OB0</OUTPUT>
+    <OUTPUT width="1">O1</OUTPUT>
+    <OUTPUT width="1">OB1</OUTPUT>
+    <OUTPUT width="1">O2</OUTPUT>
+    <OUTPUT width="1">OB2</OUTPUT>
+    <INOUT width="1">IO0</INOUT>
+    <INOUT width="1">IOB0</INOUT>
+    <INOUT width="1">IO1</INOUT>
+    <INOUT width="1">IOB1</INOUT>
+    <INOUT width="1">IO2</INOUT>
+    <INOUT width="1">IOB2</INOUT>
   </module>
 
   <module>
@@ -1975,11 +2020,11 @@
     <OUTPUT width="1">DECCO</OUTPUT>
     <OUTPUT width="1">SECCO</OUTPUT>
     <OUTPUT width="8">ECCP</OUTPUT>
-    <PARAMETER type="string">ECC_WRITE_EN<INIT_VAL>FALSE</INIT_VAL>
+    <PARAMETER type="string">ECC_WRITE_EN<INIT_VAL>TRUE</INIT_VAL>
     	<PARAM_VAL>FALSE</PARAM_VAL>
     	<PARAM_VAL>TRUE</PARAM_VAL>
     </PARAMETER>
-    <PARAMETER type="string">ECC_READ_EN<INIT_VAL>FALSE</INIT_VAL>
+    <PARAMETER type="string">ECC_READ_EN<INIT_VAL>TRUE</INIT_VAL>
     	<PARAM_VAL>FALSE</PARAM_VAL>
     	<PARAM_VAL>TRUE</PARAM_VAL>
     </PARAMETER>
@@ -2287,6 +2332,18 @@
     </PARAMETER>
     <PARAMETER type="number">INITP_RAM_0F<INIT_VAL>256'h0000000000000000000000000000000000000000000000000000000000000000</INIT_VAL>
     </PARAMETER>
+  </module>
+
+  <module>
+    <name>SDP136K</name>
+    <INPUT width="1">CLKA</INPUT>
+    <INPUT width="1">CLKB</INPUT>
+    <INPUT width="1">WE</INPUT>
+    <INPUT width="1">RE</INPUT>
+    <INPUT width="11">ADA</INPUT>
+    <INPUT width="11">ADB</INPUT>
+    <INPUT width="68">DI</INPUT>
+    <OUTPUT width="68">DO</OUTPUT>
   </module>
 
   <module>
@@ -3086,6 +3143,106 @@
   </module>
 
   <module>
+    <name>MULTACC</name>
+    <INPUT width="1">CE</INPUT>
+    <INPUT width="1">CLK</INPUT>
+    <INPUT width="6">COFFIN0</INPUT>
+    <INPUT width="6">COFFIN1</INPUT>
+    <INPUT width="6">COFFIN2</INPUT>
+    <INPUT width="10">DATAIN0</INPUT>
+    <INPUT width="10">DATAIN1</INPUT>
+    <INPUT width="10">DATAIN2</INPUT>
+    <INPUT width="1">RSTN</INPUT>
+    <INPUT width="24">CASI</INPUT>
+    <OUTPUT width="24">DATAO</OUTPUT>
+    <OUTPUT width="24">CASO</OUTPUT>
+    <PARAMETER type="number">COFFIN_WIDTH<INIT_VAL>4</INIT_VAL>
+        <PARAM_VAL>4</PARAM_VAL>
+    	<PARAM_VAL>6</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DATAIN_WIDTH<INIT_VAL>8</INIT_VAL>
+        <PARAM_VAL>8</PARAM_VAL>
+    	<PARAM_VAL>10</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">IREG<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">OREG<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">PREG<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">ACC_EN<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">CASI_EN<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">CASO_EN<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>CSHIFT</name>
+    <INPUT width="48">C</INPUT>
+    <INPUT width="2">CLK</INPUT>
+    <INPUT width="2">CE</INPUT>
+    <INPUT width="2">RESET</INPUT>
+    <OUTPUT width="48">DOUT</OUTPUT>
+    <PARAMETER type="string">IREG_CLK<INIT_VAL>BYPASS</INIT_VAL>
+    	<PARAM_VAL>BYPASS</PARAM_VAL>
+    	<PARAM_VAL>CLK0</PARAM_VAL>
+    	<PARAM_VAL>CLK1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">IREG_CE<INIT_VAL>CE0</INIT_VAL>
+    	<PARAM_VAL>CE0</PARAM_VAL>
+    	<PARAM_VAL>CE1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">IREG_RESET<INIT_VAL>RESET0</INIT_VAL>
+    	<PARAM_VAL>RESET0</PARAM_VAL>
+    	<PARAM_VAL>RESET1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">PREG_CLK<INIT_VAL>BYPASS</INIT_VAL>
+    	<PARAM_VAL>BYPASS</PARAM_VAL>
+    	<PARAM_VAL>CLK0</PARAM_VAL>
+    	<PARAM_VAL>CLK1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">PREG_CE<INIT_VAL>CE0</INIT_VAL>
+    	<PARAM_VAL>CE0</PARAM_VAL>
+    	<PARAM_VAL>CE1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">PREG_RESET<INIT_VAL>RESET0</INIT_VAL>
+    	<PARAM_VAL>RESET0</PARAM_VAL>
+    	<PARAM_VAL>RESET1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">OREG_CLK<INIT_VAL>BYPASS</INIT_VAL>
+    	<PARAM_VAL>BYPASS</PARAM_VAL>
+    	<PARAM_VAL>CLK0</PARAM_VAL>
+    	<PARAM_VAL>CLK1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">OREG_CE<INIT_VAL>CE0</INIT_VAL>
+    	<PARAM_VAL>CE0</PARAM_VAL>
+    	<PARAM_VAL>CE1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">OREG_RESET<INIT_VAL>RESET0</INIT_VAL>
+    	<PARAM_VAL>RESET0</PARAM_VAL>
+    	<PARAM_VAL>RESET1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">RESET_MODE<INIT_VAL>SYNC</INIT_VAL>
+        <PARAM_VAL>SYNC</PARAM_VAL>
+    	<PARAM_VAL>ASYNC</PARAM_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
     <name>IDDR</name>
     <INPUT width="1">D</INPUT>
     <INPUT width="1">CLK</INPUT>
@@ -3525,6 +3682,28 @@
   </module>
 
   <module>
+    <name>OSER14</name>
+    <INPUT width="1">D0</INPUT>
+    <INPUT width="1">D1</INPUT>
+    <INPUT width="1">D2</INPUT>
+    <INPUT width="1">D3</INPUT>
+    <INPUT width="1">D4</INPUT>
+    <INPUT width="1">D5</INPUT>
+    <INPUT width="1">D6</INPUT>
+    <INPUT width="1">D7</INPUT>
+    <INPUT width="1">D8</INPUT>
+    <INPUT width="1">D9</INPUT>
+    <INPUT width="1">D10</INPUT>
+    <INPUT width="1">D11</INPUT>
+    <INPUT width="1">D12</INPUT>
+    <INPUT width="1">D13</INPUT>
+    <INPUT width="1">PCLK</INPUT>
+    <INPUT width="1">FCLK</INPUT>
+    <INPUT width="1">RESET</INPUT>
+    <OUTPUT width="1">Q</OUTPUT>
+  </module>
+
+  <module>
     <name>OSER16</name>
     <INPUT width="1">D0</INPUT>
     <INPUT width="1">D1</INPUT>
@@ -3580,21 +3759,118 @@
     <INPUT width="1">FCLKQP</INPUT>
     <INPUT width="1">FCLKQN</INPUT>
     <INPUT width="1">RESET</INPUT>
-    <INPUT width="1">SDTAP</INPUT>
-    <INPUT width="1">VALUE</INPUT>
-    <INPUT width="8">DLYSTEP</INPUT>
+    <INPUT width="1">SDTAP0</INPUT>
+    <INPUT width="1">SDTAP1</INPUT>
+    <INPUT width="1">VALUE0</INPUT>
+    <INPUT width="1">VALUE1</INPUT>
+    <INPUT width="8">DLYSTEP0</INPUT>
+    <INPUT width="8">DLYSTEP1</INPUT>
     <OUTPUT width="32">Q</OUTPUT>
-    <OUTPUT width="1">DF</OUTPUT>
-    <PARAMETER type="number">C_STATIC_DLY<INIT_VAL>0</INIT_VAL>
+    <OUTPUT width="1">DF0</OUTPUT>
+    <OUTPUT width="1">DF1</OUTPUT>
+    <PARAMETER type="number">C_STATIC_DLY_0<INIT_VAL>0</INIT_VAL>
     	<PARAM_VAL>0</PARAM_VAL>
     	<PARAM_VAL>255</PARAM_VAL>
     	<PARAM_VAL>normal</PARAM_VAL>
     </PARAMETER>
-    <PARAMETER type="string">DYN_DLY_EN<INIT_VAL>FALSE</INIT_VAL>
+    <PARAMETER type="string">DYN_DLY_EN_0<INIT_VAL>FALSE</INIT_VAL>
     	<PARAM_VAL>FALSE</PARAM_VAL>
     	<PARAM_VAL>TRUE</PARAM_VAL>
     </PARAMETER>
-    <PARAMETER type="string">ADAPT_EN<INIT_VAL>FALSE</INIT_VAL>
+    <PARAMETER type="string">ADAPT_EN_0<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">C_STATIC_DLY_1<INIT_VAL>0</INIT_VAL>
+    	<PARAM_VAL>0</PARAM_VAL>
+    	<PARAM_VAL>255</PARAM_VAL>
+    	<PARAM_VAL>normal</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">DYN_DLY_EN_1<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">ADAPT_EN_1<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>OSIDES64</name>
+    <INPUT width="1">D</INPUT>
+    <INPUT width="1">PCLK</INPUT>
+    <INPUT width="1">FCLKP</INPUT>
+    <INPUT width="1">FCLKN</INPUT>
+    <INPUT width="1">FCLKQP</INPUT>
+    <INPUT width="1">FCLKQN</INPUT>
+    <INPUT width="1">RESET</INPUT>
+    <INPUT width="1">SDTAP0</INPUT>
+    <INPUT width="1">SDTAP1</INPUT>
+    <INPUT width="1">SDTAP2</INPUT>
+    <INPUT width="1">SDTAP3</INPUT>
+    <INPUT width="1">VALUE0</INPUT>
+    <INPUT width="1">VALUE1</INPUT>
+    <INPUT width="1">VALUE2</INPUT>
+    <INPUT width="1">VALUE3</INPUT>
+    <INPUT width="8">DLYSTEP0</INPUT>
+    <INPUT width="8">DLYSTEP1</INPUT>
+    <INPUT width="8">DLYSTEP2</INPUT>
+    <INPUT width="8">DLYSTEP3</INPUT>
+    <OUTPUT width="64">Q</OUTPUT>
+    <OUTPUT width="1">DF0</OUTPUT>
+    <OUTPUT width="1">DF1</OUTPUT>
+    <OUTPUT width="1">DF2</OUTPUT>
+    <OUTPUT width="1">DF3</OUTPUT>
+    <PARAMETER type="number">C_STATIC_DLY_0<INIT_VAL>0</INIT_VAL>
+    	<PARAM_VAL>0</PARAM_VAL>
+    	<PARAM_VAL>255</PARAM_VAL>
+    	<PARAM_VAL>normal</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">DYN_DLY_EN_0<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">ADAPT_EN_0<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">C_STATIC_DLY_1<INIT_VAL>0</INIT_VAL>
+    	<PARAM_VAL>0</PARAM_VAL>
+    	<PARAM_VAL>255</PARAM_VAL>
+    	<PARAM_VAL>normal</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">DYN_DLY_EN_1<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">ADAPT_EN_1<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">C_STATIC_DLY_2<INIT_VAL>0</INIT_VAL>
+    	<PARAM_VAL>0</PARAM_VAL>
+    	<PARAM_VAL>255</PARAM_VAL>
+    	<PARAM_VAL>normal</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">DYN_DLY_EN_2<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">ADAPT_EN_2<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">C_STATIC_DLY_3<INIT_VAL>0</INIT_VAL>
+    	<PARAM_VAL>0</PARAM_VAL>
+    	<PARAM_VAL>255</PARAM_VAL>
+    	<PARAM_VAL>normal</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">DYN_DLY_EN_3<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="string">ADAPT_EN_3<INIT_VAL>FALSE</INIT_VAL>
     	<PARAM_VAL>FALSE</PARAM_VAL>
     	<PARAM_VAL>TRUE</PARAM_VAL>
     </PARAMETER>
@@ -3753,6 +4029,30 @@
     	<PARAM_VAL>126</PARAM_VAL>
     	<PARAM_VAL>even</PARAM_VAL>
         <PARAM_VAL>3</PARAM_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>OSCB</name>
+    <INPUT width="1">OSCEN</INPUT>
+    <INPUT width="1">FMODE</INPUT>
+    <INPUT width="8">RTRIM</INPUT>
+    <INPUT width="6">RTCTRIM</INPUT>
+    <OUTPUT width="1">OSCOUT</OUTPUT>
+    <OUTPUT width="1">OSCREF</OUTPUT>
+    <PARAMETER type="string">FREQ_MODE<INIT_VAL>25</INIT_VAL>
+    	<PARAM_VAL>25</PARAM_VAL>
+    	<PARAM_VAL>210</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">FREQ_DIV<INIT_VAL>10</INIT_VAL>
+    	<PARAM_VAL>2</PARAM_VAL>
+    	<PARAM_VAL>126</PARAM_VAL>
+        <PARAM_VAL>even</PARAM_VAL>
+        <PARAM_VAL>3</PARAM_VAL>
+    </PARAMETER>
+        <PARAMETER type="string">DYN_TRIM_EN<INIT_VAL>FALSE</INIT_VAL>
+    	<PARAM_VAL>FALSE</PARAM_VAL>
+    	<PARAM_VAL>TRUE</PARAM_VAL>
     </PARAMETER>
   </module>
 
@@ -4933,21 +5233,35 @@
     <INPUT width="1">LOAD</INPUT>
     <INPUT width="1">ADWSEL</INPUT>
     <PARAMETER type="number">MODE<INIT_VAL>2'b00</INIT_VAL>
-	    <PARAM_VAL>00</PARAM_VAL>
-	    <PARAM_VAL>01</PARAM_VAL>
-	    <PARAM_VAL>10</PARAM_VAL>
-	    <PARAM_VAL>11</PARAM_VAL>		    
+	    <PARAM_VAL>2'b00</PARAM_VAL>
+	    <PARAM_VAL>2'b01</PARAM_VAL>
+	    <PARAM_VAL>2'b10</PARAM_VAL>
+	    <PARAM_VAL>2'b11</PARAM_VAL>		    
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>SAMBA</name>
+    <INPUT width="1">SPIAD</INPUT>
+    <INPUT width="1">LOAD</INPUT>
+    <PARAMETER type="number">MODE<INIT_VAL>2'b00</INIT_VAL>
+        <PARAM_VAL>2'b00</PARAM_VAL>
+        <PARAM_VAL>2'b01</PARAM_VAL>
+        <PARAM_VAL>2'b10</PARAM_VAL>
+        <PARAM_VAL>2'b11</PARAM_VAL>
     </PARAMETER>
   </module>
 
   <module>
     <name>OTP</name>
+    <INPUT width="1">CLK</INPUT>
     <INPUT width="1">READ</INPUT>
     <INPUT width="1">SHIFT</INPUT>
     <OUTPUT width="1">DOUT</OUTPUT>
-     <PARAMETER type="number">MODE<INIT_VAL>1'b0</INIT_VAL>
-	    <PARAM_VAL>1'b0</PARAM_VAL>
-	    <PARAM_VAL>1'b1</PARAM_VAL>		    
+     <PARAMETER type="number">MODE<INIT_VAL>2'b01</INIT_VAL>
+	    <PARAM_VAL>2'b00</PARAM_VAL>
+        <PARAM_VAL>2'b01</PARAM_VAL>
+        <PARAM_VAL>2'b10</PARAM_VAL>
     </PARAMETER>
   </module>
 
@@ -4986,6 +5300,28 @@
     <OUTPUT width="1">ECCUNCORR</OUTPUT>
     <OUTPUT width="27">ERR0LOC</OUTPUT>
     <OUTPUT width="27">ERR1LOC</OUTPUT>
+    <OUTPUT width="1">ECCDEC</OUTPUT>
+    <OUTPUT width="1">DSRRD</OUTPUT>
+    <OUTPUT width="1">DSRWR</OUTPUT>
+    <OUTPUT width="1">ASRRESET</OUTPUT>
+    <OUTPUT width="1">ASRINC</OUTPUT>
+    <OUTPUT width="1">REFCLK</OUTPUT>
+  </module>
+
+  <module>
+    <name>CMSERB</name>
+    <INPUT width="1">CLK</INPUT>
+    <INPUT width="3">SEREN</INPUT>
+    <INPUT width="1">ERR0INJECT</INPUT>
+    <INPUT width="1">ERR1INJECT</INPUT>
+    <INPUT width="7">ERRINJ0LOC</INPUT>
+    <INPUT width="7">ERRINJ1LOC</INPUT>
+    <OUTPUT width="1">RUNNING</OUTPUT>
+    <OUTPUT width="1">CRCERR</OUTPUT>
+    <OUTPUT width="1">CRCDONE</OUTPUT>
+    <OUTPUT width="1">ECCCORR</OUTPUT>
+    <OUTPUT width="1">ECCUNCORR</OUTPUT>
+    <OUTPUT width="13">ERRLOC</OUTPUT>
     <OUTPUT width="1">ECCDEC</OUTPUT>
     <OUTPUT width="1">DSRRD</OUTPUT>
     <OUTPUT width="1">DSRWR</OUTPUT>
@@ -5188,6 +5524,127 @@
     <PARAMETER type="number">CSR_FSCAL<INIT_VAL>10'd730</INIT_VAL>
     </PARAMETER>
     <PARAMETER type="number">CSR_OFFSET<INIT_VAL>-12'd1180</INIT_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>ADC_SAR</name>
+    <INPUT width="1">ADCMODE</INPUT>
+    <INPUT width="3">VSENCTL</INPUT>
+    <INPUT width="1">CLK</INPUT>
+    <INPUT width="1">DRSTN</INPUT>
+    <INPUT width="1">ADCREQI</INPUT>
+    <INPUT width="1">MDRP_CLK</INPUT>
+    <INPUT width="8">MDRP_WDATA</INPUT>
+    <INPUT width="1">MDRP_A_INC</INPUT>
+    <INPUT width="2">MDRP_OPCODE</INPUT>
+    <INPUT width="1">ADCENI</INPUT>
+    <INPUT width="1">CLKI</INPUT>
+    <INPUT width="7">CHEN</INPUT>
+    <INPUT width="1">RSTN</INPUT>
+    <INPUT width="1">SOC</INPUT>
+    <OUTPUT width="1">ADCENO</OUTPUT>
+    <OUTPUT width="1">ADCRDY</OUTPUT>
+    <OUTPUT width="14">ADCVALUE</OUTPUT>
+    <OUTPUT width="8">MDRP_RDATA</OUTPUT>
+    <OUTPUT width="1">ADC1BIT</OUTPUT>
+    <OUTPUT width="1">ADCCLKO</OUTPUT>
+    <OUTPUT width="13">ADCBIT</OUTPUT>
+    <OUTPUT width="1">CLKO</OUTPUT>
+    <OUTPUT width="1">EOC</OUTPUT>
+    <PARAMETER type="number">BUF_EN<INIT_VAL>29'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CLK_SEL<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DIV_CTL<INIT_VAL>2'd0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_EN_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">PHASE_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_ADC_MODE<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_VSEN_CTRL<INIT_VAL>3'd0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_SAMPLE_CNT_SEL<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_RATE_CHANGE_CTRL<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_FSCAL<INIT_VAL>10'd730</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_OFFSET<INIT_VAL>-12'd1180</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_CLK_DIV<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_CLKDIV_EN<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CLK_SRC_SEL<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">VREF_BUF_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">COUNT_LEN<INIT_VAL>5'b10100</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DAC_SAMPLE_END<INIT_VAL>5'b10010</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DAC_SAMPLE_START<INIT_VAL>5'b01101</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">SH_SAMPLE_END<INIT_VAL>5'b01011</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">SH_SAMPLE_START<INIT_VAL>5'b00001</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">AUTO_CHOP_EN<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CHOP_CLK_DIV<INIT_VAL>4'b0</INIT_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>LICD</name>
+    <INPUT width="1">ENC_CLK</INPUT>
+    <INPUT width="1">ENC_CE</INPUT>
+    <INPUT width="1">ENC_RST</INPUT>
+    <INPUT width="1">ENC_VIDDE</INPUT>
+    <INPUT width="24">ENC_VIDSAMP2</INPUT>
+    <INPUT width="24">ENC_VIDSAMP1</INPUT>
+    <INPUT width="24">ENC_VIDSAMP0</INPUT>
+    <INPUT width="1">DEC_CLK</INPUT>
+    <INPUT width="1">DEC_CE</INPUT>
+    <INPUT width="1">DEC_RST</INPUT>
+    <INPUT width="1">DEC_VIDDE</INPUT>
+    <INPUT width="96">DEC_DATAI</INPUT>
+    <OUTPUT width="96">ENC_CODE</OUTPUT>
+    <OUTPUT width="1">ENC_CODEVLD</OUTPUT>
+    <OUTPUT width="1">ENC_VIDDEO</OUTPUT>
+    <OUTPUT width="1">DEC_DFETCH</OUTPUT>
+    <OUTPUT width="24">DEC_VIDSAMP2</OUTPUT>
+    <OUTPUT width="24">DEC_VIDSAMP1</OUTPUT>
+    <OUTPUT width="24">DEC_VIDSAMP0</OUTPUT>
+    <OUTPUT width="1">DEC_VIDDEO</OUTPUT>
+    <PARAMETER type="number">STAGE_NUM<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ENCDEC_NUM<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CODE_WIDTH<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">INTERLEAVE_EN<INIT_VAL>3'b000</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">INTERLEAVE_MODE<INIT_VAL>3'b000</INIT_VAL>
     </PARAMETER>
   </module>
 
@@ -5514,6 +5971,342 @@
     <PARAMETER type="number">CSR_FSCAL<INIT_VAL>10'd730</INIT_VAL>
     </PARAMETER>
     <PARAMETER type="number">CSR_OFFSET<INIT_VAL>-12'd1180</INIT_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>ADC_SAR_DB</name>
+    <INPUT width="1">ADC_T</INPUT>
+    <INPUT width="1">ADC_V</INPUT>
+    <INPUT width="1">VREF_BK1</INPUT>
+    <INPUT width="1">VREF_BK2</INPUT>
+    <INPUT width="1">VREF_BK3</INPUT>
+    <INPUT width="1">VREF_BK4</INPUT>
+    <INPUT width="1">VREF_BK5</INPUT>
+    <INPUT width="1">VREF_BK6</INPUT>
+    <INPUT width="1">VREF_BK7</INPUT>
+    <INPUT width="1">VREF_BK8</INPUT>
+    <INPUT width="1">VREF_BK9</INPUT>
+    <INPUT width="1">VREF_BK10</INPUT>
+    <INPUT width="1">VREF_BK11</INPUT>
+    <INPUT width="1">PAD_BK1</INPUT>
+    <INPUT width="1">PAD_BK2_1</INPUT>
+    <INPUT width="1">PAD_BK2_2</INPUT>
+    <INPUT width="1">PAD_BK3</INPUT>
+    <INPUT width="1">PAD_BK4</INPUT>
+    <INPUT width="1">PAD_BK5</INPUT>
+    <INPUT width="1">PAD_BK6</INPUT>
+    <INPUT width="1">PAD_BK7</INPUT>
+    <INPUT width="1">PAD_BK8</INPUT>
+    <INPUT width="1">PAD_BK9</INPUT>
+    <INPUT width="1">PAD_BK10</INPUT>
+    <INPUT width="1">PAD_BK11</INPUT>
+    <INPUT width="1">VCCIO1</INPUT>
+    <INPUT width="1">VCCIO2</INPUT>
+    <INPUT width="1">VCCIO3</INPUT>
+    <INPUT width="1">VCCIO4</INPUT>
+    <INPUT width="1">VCCIO5</INPUT>
+    <INPUT width="1">VCCIO6</INPUT>
+    <INPUT width="1">VCCIO7</INPUT>
+    <INPUT width="1">VCCIO8</INPUT>
+    <INPUT width="1">VCCIO9</INPUT>
+    <INPUT width="1">VCCIO10</INPUT>
+    <INPUT width="1">VCCIO11</INPUT>
+    <INPUT width="1">VCCIO12</INPUT>
+    <INPUT width="1">VCCPLL0</INPUT>
+    <INPUT width="1">VCCPLL1</INPUT>
+    <INPUT width="1">VCCPLL2</INPUT>
+    <INPUT width="1">VCCPLL3</INPUT>
+    <INPUT width="1">VCC</INPUT>
+    <INPUT width="1">VCCC</INPUT>
+    <INPUT width="1">VCCM</INPUT>
+    <INPUT width="1">VCCX</INPUT>
+    <INPUT width="1">VCC_REG</INPUT>
+    <INPUT width="1">VCC_EXT</INPUT>
+    <INPUT width="1">VDDT</INPUT>
+    <INPUT width="1">VDDA</INPUT>
+    <INPUT width="1">VDDHA</INPUT>
+    <INPUT width="1">VDDA_M0</INPUT>
+    <INPUT width="1">VDDA_M1</INPUT>
+    <INPUT width="1">ADCMODE</INPUT>
+    <INPUT width="3">VSENCTL</INPUT>
+    <INPUT width="1">CLK</INPUT>
+    <INPUT width="1">DRSTN</INPUT>
+    <INPUT width="1">ADCREQI</INPUT>
+    <INPUT width="1">MDRP_CLK</INPUT>
+    <INPUT width="8">MDRP_WDATA</INPUT>
+    <INPUT width="1">MDRP_A_INC</INPUT>
+    <INPUT width="2">MDRP_OPCODE</INPUT>
+    <INPUT width="1">ADCENI</INPUT>
+    <INPUT width="1">CLKI</INPUT>
+    <INPUT width="7">CHEN</INPUT>
+    <INPUT width="1">CHOP</INPUT>
+    <INPUT width="1">RSTN</INPUT>
+    <INPUT width="1">SOC</INPUT>
+    <INPUT width="1">PLLCLK</INPUT>
+    <OUTPUT width="1">ADCENO</OUTPUT>
+    <OUTPUT width="1">ADCRDY</OUTPUT>
+    <OUTPUT width="14">ADCVALUE</OUTPUT>
+    <OUTPUT width="8">MDRP_RDATA</OUTPUT>
+    <OUTPUT width="1">ADC1BIT</OUTPUT>
+    <OUTPUT width="1">ADCCLKO</OUTPUT>
+    <OUTPUT width="13">ADCBIT</OUTPUT>
+    <OUTPUT width="1">CLKO</OUTPUT>
+    <OUTPUT width="1">EOC</OUTPUT>
+    <PARAMETER type="number">BUF_EN<INIT_VAL>29'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CLK_SEL<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DIV_CTL<INIT_VAL>2'b10</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_EN_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">PHASE_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">AUTO_DEM_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CAP_CTL<INIT_VAL>3'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CHOP_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DEM_CTL_MANUAL<INIT_VAL>5'b10000</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">GAIN<INIT_VAL>3'b100</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">IBIAS_CTL<INIT_VAL>4'b1000</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">KVBG<INIT_VAL>3'b101</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_ADC_MODE<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_VSEN_CTRL<INIT_VAL>3'd0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_SAMPLE_CNT_SEL<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_RATE_CHANGE_CTRL<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_FSCAL<INIT_VAL>10'd730</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_OFFSET<INIT_VAL>-12'd1180</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_CLK_DIV<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_CLK_EN<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CLK_IF_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CLK_SRC_SEL<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_SH_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CMP_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">BGR_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">IGEN_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">VCMDAC_BUF_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">VREF_BUF_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">COUNT_LEN<INIT_VAL>5'b10100</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DAC_SAMPLE_END<INIT_VAL>5'b10010</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DAC_SAMPLE_START<INIT_VAL>5'b01101</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">SH_SAMPLE_END<INIT_VAL>5'b01011</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">SH_SAMPLE_START<INIT_VAL>5'b00001</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CHOP_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">AUTO_CHOP_EN<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CHOP_CLK_DIV<INIT_VAL>4'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">BGR_TC<INIT_VAL>3'b100</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DAC_VCM_CTL<INIT_VAL>3'b011</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">LATCHCLK_DELAY_SEL<INIT_VAL>3'b010</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ENH_CL_D_N<INIT_VAL>4'b100</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ENH_CL_D_P<INIT_VAL>4'b100</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ENH_CM_D_N<INIT_VAL>4'b0111</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ENH_CM_D_P<INIT_VAL>4'b0111</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">FB_POLAR<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">SAR_IBIAS_CTL<INIT_VAL>3'b100</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">SAR_IBIAS_OPCTL<INIT_VAL>2'b01</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">SH_VCM_CTL<INIT_VAL>3'b011</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">VREF_FLT_R<INIT_VAL>3'b111</INIT_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>ADCA_DB</name>
+    <INPUT width="1">ADCMODE</INPUT>
+    <INPUT width="3">VSENCTL</INPUT>
+    <INPUT width="1">CLK</INPUT>
+    <INPUT width="1">ADCENI</INPUT>
+    <INPUT width="1">PWRON_DYN</INPUT>
+    <INPUT width="1">DRSTN</INPUT>
+    <INPUT width="1">ADCREQI</INPUT>
+    <INPUT width="1">MDRP_CLK</INPUT>
+    <INPUT width="8">MDRP_WDATA</INPUT>
+    <INPUT width="1">MDRP_A_INC</INPUT>
+    <INPUT width="2">MDRP_OPCODE</INPUT>
+    <OUTPUT width="1">ADC1BIT</OUTPUT>
+    <OUTPUT width="1">ADCCLKO</OUTPUT>
+    <OUTPUT width="1">ADCENO</OUTPUT>
+    <OUTPUT width="1">ADCRDY</OUTPUT>
+    <OUTPUT width="14">ADCVALUE</OUTPUT>
+    <OUTPUT width="8">MDRP_RDATA</OUTPUT>
+    <PARAMETER type="number">BUF_EN<INIT_VAL>20'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CLK_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DIV_CTL<INIT_VAL>2'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ADC_EN_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">PHASE_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">AUTO_DEM_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CAP_CTL<INIT_VAL>3'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CHOP_EN<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">DEM_CTL_MANUAL<INIT_VAL>5'd16</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">GAIN<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">IBIAS_CTL<INIT_VAL>4'd8</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">KVBG<INIT_VAL>3'd5</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">PWRON_SEL<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">PWRON<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">LDO_MODE<INIT_VAL>1'b0</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">LDO_FB_CTL<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">TEST_CH_SEL<INIT_VAL>2'b0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">VREF_CTL<INIT_VAL>3'd3</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_ADC_MODE<INIT_VAL>1'b1</INIT_VAL>
+    	<PARAM_VAL>1'b0</PARAM_VAL>
+    	<PARAM_VAL>1'b1</PARAM_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_VSEN_CTRL<INIT_VAL>3'd0</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_SAMPLE_CNT_SEL<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_RATE_CHANGE_CTRL<INIT_VAL>3'd4</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_FSCAL<INIT_VAL>10'd730</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CSR_OFFSET<INIT_VAL>-12'd1180</INIT_VAL>
+    </PARAMETER>
+  </module>
+
+  <module>
+    <name>JPEG_DB</name>
+    <INPUT width="1">ENC_CLK</INPUT>
+    <INPUT width="1">ENC_CE</INPUT>
+    <INPUT width="1">ENC_RST</INPUT>
+    <INPUT width="1">ENC_VIDVS</INPUT>
+    <INPUT width="1">ENC_VIDDE</INPUT>
+    <INPUT width="24">ENC_VIDSAMP2</INPUT>
+    <INPUT width="24">ENC_VIDSAMP1</INPUT>
+    <INPUT width="24">ENC_VIDSAMP0</INPUT>
+    <INPUT width="1">DEC_CLK</INPUT>
+    <INPUT width="1">DEC_CE</INPUT>
+    <INPUT width="1">DEC_RST</INPUT>
+    <INPUT width="1">DEC_VIDVS</INPUT>
+    <INPUT width="1">DEC_VIDDE</INPUT>
+    <INPUT width="96">DEC_DATAI</INPUT>
+    <OUTPUT width="96">ENC_CODE</OUTPUT>
+    <OUTPUT width="1">ENC_CODEVLD</OUTPUT>
+    <OUTPUT width="1">ENC_VIDDEO</OUTPUT>
+    <OUTPUT width="1">DEC_DFETCH</OUTPUT>
+    <OUTPUT width="24">DEC_VIDSAMP2</OUTPUT>
+    <OUTPUT width="24">DEC_VIDSAMP1</OUTPUT>
+    <OUTPUT width="24">DEC_VIDSAMP0</OUTPUT>
+    <OUTPUT width="1">DEC_VIDDEO</OUTPUT>
+    <PARAMETER type="number">STAGE_NUM<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">ENCDEC_NUM<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">CODE_WIDTH<INIT_VAL>2'b00</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">INTERLEAVE_EN<INIT_VAL>3'b000</INIT_VAL>
+    </PARAMETER>
+    <PARAMETER type="number">INTERLEAVE_MODE<INIT_VAL>3'b000</INIT_VAL>
     </PARAMETER>
   </module>
 

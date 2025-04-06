@@ -1,6 +1,6 @@
 
 -- ===========Oooo==========================================Oooo========
--- =  Copyright (C) 2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+-- =  Copyright (C) 2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 -- =                     All rights reserved.
 -- =====================================================================
 --
@@ -12837,11 +12837,12 @@ architecture Behavioral of MULTALU36X18 is
     begin
 		grstn <= GSRO;
 
-		process (ina_reg_sync, ina_reg_async, inb_reg_sync, inb_reg_async, asign_reg0_async, asign_reg0_sync, bsign_reg0_async, bsign_reg0_sync, absign_reg_async, absign_reg_sync, out0_async, out0_sync, out_async, out_sync)
+		process (ina_reg_sync, ina_reg_async, inb_reg_sync, inb_reg_async, inc_reg_async, inc_reg_sync, asign_reg0_async, asign_reg0_sync, bsign_reg0_async, bsign_reg0_sync, absign_reg_async, absign_reg_sync, out0_async, out0_sync, out_async, out_sync)
 		begin
 			if MULT_RESET_MODE = "ASYNC" then
 				ina_reg_0 <= ina_reg_async;
 				inb_reg_0 <= inb_reg_async;
+				inc_reg_0 <= inc_reg_async;
 				asign_reg0 <= asign_reg0_async;
 				bsign_reg0 <= bsign_reg0_async;
 				absign_reg <= absign_reg_async;
@@ -12850,6 +12851,7 @@ architecture Behavioral of MULTALU36X18 is
 			elsif MULT_RESET_MODE = "SYNC" then
 				ina_reg_0 <= ina_reg_sync;
 				inb_reg_0 <= inb_reg_sync;
+				inc_reg_0 <= inc_reg_sync;
 				asign_reg0 <= asign_reg0_sync;
 				bsign_reg0 <= bsign_reg0_sync;
 				absign_reg <= absign_reg_sync;
@@ -13886,14 +13888,14 @@ architecture Behavioral of MULTADDALU18X18 is
 		begin
 			if grstn = '0' then
 				out0_reg_sync <= (others=>'0');
-                absign_0_reg_async <= '0';
+                absign_0_reg_sync <= '0';
 			elsif (CLK'event and CLK = '1') then
                 if RESET = '1' then
 				    out0_reg_sync <= (others=>'0');
-                    absign_0_reg_async <= '0';
+                    absign_0_reg_sync <= '0';
 				elsif CE = '1' then
 					out0_reg_sync <= mult_out0;
-                    absign_0_reg_async <= absign_0_0;
+                    absign_0_reg_sync <= absign_0_0;
 				end if;
 			end if;
 		end process;
@@ -14656,7 +14658,7 @@ architecture Behavioral of MULTALU18X18 is
 		end process;
 
 		DOUT <= dout_sig(53 downto 0);
-		CASO <= dout_sig;
+		CASO <= (dout_sig(53) and absign) & dout_sig(53 downto 0);
 
 end Behavioral;	
 
@@ -15242,8 +15244,8 @@ begin
         end if;
 
         if ((FB_dly0 >= 0 ns) and (clkin_cycle(0) > 0 ns)) then
-            multi_clkin <= FB_dly0 / (clkin_cycle(0));
-            FB_dly <= clkin_cycle(0) - (FB_dly0 - (clkin_cycle(0)) * multi_clkin);
+            --multi_clkin <= FB_dly0 / (clkin_cycle(0));
+            FB_dly <= clkin_cycle(0) - (FB_dly0 - (clkin_cycle(0)) * (FB_dly0 / (clkin_cycle(0))));
         end if;
     end process;
 
@@ -15899,9 +15901,9 @@ architecture Behavioral of DQS is
 
         dqsw0_out <= fclk_in when (DQS_MODE = "X1") else dqsw0_dly_in(conv_integer(WSTEP));
         DQSW0 <= dqsw0_out;
-        DQSW90 <= fclk_in when (wstep_reg = 0) else dqsw270_dly_in(wstep_reg);
+        DQSW90 <= fclk_in when (wstep_reg = 0 or wstep_reg = 256) else dqsw270_dly_in(wstep_reg);
         DQSW270 <= (not dqsw90);
-        DQSR90 <= dqs_r_clean when (rstep_reg = 0) else dqsr90_dly_in(rstep_reg);
+        DQSR90 <= dqs_r_clean when (rstep_reg = 0 or rstep_reg = 256) else dqsr90_dly_in(rstep_reg);
 
         -- dqs write
         process(FCLK,reset_l)  
@@ -17369,8 +17371,8 @@ begin
         end if;
 
         if ((FB_dly0 >= 0 ns) and (clkin_cycle(0) > 0 ns)) then
-            multi_clkin <= FB_dly0 / (clkin_cycle(0));
-            FB_dly <= clkin_cycle(0) - (FB_dly0 - (clkin_cycle(0)) * multi_clkin);
+            --multi_clkin <= FB_dly0 / (clkin_cycle(0));
+            FB_dly <= clkin_cycle(0) - (FB_dly0 - (clkin_cycle(0)) * (FB_dly0 / (clkin_cycle(0))));
         end if;
     end process;
 
@@ -18083,7 +18085,7 @@ signal fine_dyn_b,fine_dyn_c,fine_dyn_d : std_logic_vector(2 downto 0) := "000";
 signal coarse_dyn_b,coarse_dyn_c,coarse_dyn_d : integer := 1;
 signal ps_pulse_pre : std_logic;
 signal clka_dt_dir,clkb_dt_dir : std_logic;
-signal clka_dt_step,clkb_dt_step : integer;
+signal clka_dt_step,clkb_dt_step : integer := 0;
 signal fine_a,fine_b,fine_c,fine_d : integer;
 signal coarse_b,coarse_c,coarse_d : integer;
 signal unit_duty,unit_phase,unit_div,real_fbdiv : real := 1.0;
@@ -18583,7 +18585,7 @@ begin
     clka_dt_delay <= (0.05 ns * clka_dt_step);
     clkb_dt_delay <= (0.05 ns * clkb_dt_step);
 
-    process(clkouta_duty, clkoutb_duty, clka_dt_dir, clkb_dt_dir, clka_dt_step, clkb_dt_step) 
+    process(clkouta_duty, clkoutb_duty, clka_dt_dir, clkb_dt_dir, clka_dt_delay, clkb_dt_delay) 
     begin
         if (clka_dt_dir = '1') then
             tclka_duty <= clkouta_duty + clka_dt_delay;
@@ -18694,7 +18696,7 @@ begin
         end if;
     end process;
 
-    process(coarse_b, fine_b, ODIVB_SEL_reg, clkoutb_period) 
+    process(coarse_b, fine_b, ODIVB_SEL_reg, clkoutb_period,real_phaseb) 
     begin 
         if(coarse_b = ODIVB_SEL_reg) then
             real_phaseb <= (real(fine_b)/8.0);
@@ -18789,7 +18791,7 @@ begin
         end if;
     end process;
 
-    process(coarse_c, fine_c, ODIVC_SEL_reg, clkoutc_period) 
+    process(coarse_c, fine_c, ODIVC_SEL_reg, clkoutc_period,real_phasec) 
     begin
         if(coarse_c = ODIVC_SEL_reg) then
             real_phasec <= (real(fine_c)/ 8.0);
@@ -18876,7 +18878,7 @@ begin
         end if;
     end process;
 
-    process(coarse_d, fine_d, ODIVD_SEL_reg, clkoutd_period)
+    process(coarse_d, fine_d, ODIVD_SEL_reg, clkoutd_period,real_phased)
     begin
         if(coarse_d = ODIVD_SEL_reg) then
             real_phased <= (real(fine_d)/8.0);

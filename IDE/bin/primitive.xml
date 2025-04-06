@@ -3123,6 +3123,7 @@
       <PARAM_VAL>GW1N-4</PARAM_VAL>
       <PARAM_VAL>GW1N-9</PARAM_VAL>
       <PARAM_VAL>GW1NR-1</PARAM_VAL>
+      <PARAM_VAL>GW1AN-1C</PARAM_VAL>
       <PARAM_VAL>GW1NR-4</PARAM_VAL>
       <PARAM_VAL>GW1NR-9</PARAM_VAL>
       <PARAM_VAL>GW1N-4B</PARAM_VAL>
@@ -3486,6 +3487,16 @@
     <OUTPUT width="1">O</OUTPUT>
   </module>
 
+  <module>
+    <name>TLVDS_OEN_BK</name>
+    <INPUT width="1">OEN</INPUT>
+    <PARAMETER type="string">OEN_BANK<INIT_VAL>0</INIT_VAL>
+      <PARAM_VAL>0</PARAM_VAL>
+      <PARAM_VAL>3</PARAM_VAL>
+      <PARAM_VAL>4</PARAM_VAL>
+      <PARAM_VAL>5</PARAM_VAL>
+    </PARAMETER>
+  </module>
 
   <module>
     <name>DHCEN</name>
@@ -4937,6 +4948,7 @@
     <PARAMETER type="string">DEVICE<INIT_VAL>GW2A-18</INIT_VAL>
       <PARAM_VAL>GW1N-1</PARAM_VAL>
       <PARAM_VAL>GW1NR-1</PARAM_VAL>
+      <PARAM_VAL>GW1AN-1C</PARAM_VAL>
       <PARAM_VAL>GW1N-4</PARAM_VAL>
       <PARAM_VAL>GW1N-4B</PARAM_VAL>
       <PARAM_VAL>GW1N-4D</PARAM_VAL>
@@ -6609,6 +6621,11 @@
     <INPUT width="1">IB</INPUT>
     <OUTPUT width="1">OH</OUTPUT>
     <OUTPUT width="1">OL</OUTPUT>
+  </module>
+
+  <module>
+    <name>PWRGRD</name>
+    <INPUT width="1">PDEN</INPUT>
   </module>
 
 </gowin_prim_information>

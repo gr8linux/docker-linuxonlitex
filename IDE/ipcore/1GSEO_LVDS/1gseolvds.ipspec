@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="1G Serial Ethernet Over LVDS" id="1g_serial_ethernet_over_lvds" version= "1.1" category="Soft IP Core|Interface and Interconnect">1G Serial Ethernet Over LVDS</ip>
+    <target module="Giga_Serial_Ethernet_LVDS_Top">giga_serial_ethernet_lvds</target>
+    <docs>
+        <doc type="summary">/doc/1g_serial_ethernet_over_lvds_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5A-25A-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+        <device supported="true">GW5A-60B-*</device>
+        <device supported="true">GW5ART-15A-*</device>
+        <device supported="true">GW5AT-15B-*</device>
+        <device supported="true">GW5ART-15B-*</device>
+        <device supported="true">GW5ANT-15A-*</device>
+        <device supported="true">GW5ANRT-15A-*</device>
+        <device supported="true">GW5AT-15A-*</device>
+        <device supported="true">GW5AS-25A-*</device>
+        <device supported="true">GW5AR-25A-*</device>
+        <device supported="true">GW5A-25B-*</device>
+        <device supported="true">GW5AR-25B-*</device>
+        <device supported="true">GW5AS-25B-*</device>
+    </devices>
+</ipcore>

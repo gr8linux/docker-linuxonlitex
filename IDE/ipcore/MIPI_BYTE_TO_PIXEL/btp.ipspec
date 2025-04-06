@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="MIPI Byte-to-Pixel Converter" id="mipi_byte_to_pixel_converter" version= "1.1" category="Soft IP Core|Interface and Interconnect">MIPI Byte-to-Pixel Converter</ip>
+    <target module="MIPI_Byte_to_Pixel_Converter_Top">mipi_byte_to_pixel_converter</target>
+    <docs>
+        <doc type="summary">/doc/mipi_byte_to_pixel_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">*</device>
+    </devices>
+</ipcore>

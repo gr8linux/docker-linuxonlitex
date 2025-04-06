@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="AXI-Stream FIFO" id="axi_stream_fifo" version= "1.0" category="Soft IP Core|Memory Control|FIFO">AXI-Stream FIFO</ip>
+    <target module="AXI_Stream_FIFO_Top">axi_stream_fifo</target>
+    <docs>
+        <doc type="summary">/doc/gowin_axi_stream_fifo_information.html</doc>
+    </docs>
+    <devices>
+	<device supported="true">*</device>
+        <device supported="false">GW1N-1-*</device>
+        <device supported="false">GW1N-1S-*</device>
+        <device supported="false">GW1NZ-1-*</device>
+        <device supported="false">GW1NR-1-*</device>
+        <device supported="false">GW1AN-1C-*</device>
+	<device supported="false">GW1NZ-1C-*</device>
+    </devices>
+</ipcore>

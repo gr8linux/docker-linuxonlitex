@@ -28,6 +28,7 @@
         <device supported="true">GW1NZ-1C-*</device>
         <device supported="true">GW1NRF-4B-*</device>
         <device supported="true">GW1NR-1-*</device>
+        <device supported="true">GW1AN-1C-*</device>
         <device supported="true">GW1N-2B-*</device>
         <device supported="true">GW1NR-2B-*</device>
         <device supported="true">GW1N-1P5B-*</device>

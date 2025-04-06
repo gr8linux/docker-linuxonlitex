@@ -702,6 +702,39 @@ generate
 endgenerate
 `endif
 
+//////////////OSER14//////////////////////
+`ifdef RATIO_14
+generate
+  genvar j8;
+    for(j8 = 0; j8 < WIDTH; j8 = j8 +1)begin: oser14_gen
+      OSER14 oser14_inst(
+      `ifndef ODELAY_EN
+        .Q(q[j8]),
+      `else
+        .Q(ddr_inst_o[j8]),
+      `endif
+        .D0(din[j8+WIDTH*0]),
+        .D1(din[j8+WIDTH*1]),
+        .D2(din[j8+WIDTH*2]),
+        .D3(din[j8+WIDTH*3]),
+        .D4(din[j8+WIDTH*4]),
+        .D5(din[j8+WIDTH*5]),
+        .D6(din[j8+WIDTH*6]),
+        .D7(din[j8+WIDTH*7]),
+        .D8(din[j8+WIDTH*8]),
+        .D9(din[j8+WIDTH*9]),
+        .D10(din[j8+WIDTH*10]),
+        .D11(din[j8+WIDTH*11]),
+        .D12(din[j8+WIDTH*12]),
+        .D13(din[j8+WIDTH*13]),
+        .PCLK(pclk),
+        .FCLK(fclk),
+        .RESET(reset)
+      );
+    end
+endgenerate
+`endif
+
 endmodule
 `endif
 

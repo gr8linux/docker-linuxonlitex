@@ -11,7 +11,7 @@ always @(posedge clk)begin
             cnt_r<=cnt_r;
         end
         else begin
-            cnt_r<=cnt_r+1;
+            cnt_r<=cnt_r+1'b1;
         end
     end
     else begin

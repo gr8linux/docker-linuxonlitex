@@ -7,5 +7,35 @@
         <doc type="help">/doc/divider_help.html</doc>
     </docs>
     <devices>
+        <device supported="true">*</device>
+        <device supported="false">GW5A-25A-*</device>
+        <device supported="false">GW5AT-60ES-*</device>
+        <device supported="false">GW5AT-60B-*</device>
+        <device supported="false">GW5A-60B-*</device>
+        <device supported="false">GW5ART-15A-*</device>
+        <device supported="false">GW5AT-15B-*</device>
+        <device supported="false">GW5ART-15B-*</device>
+        <device supported="false">GW5ANT-15A-*</device>
+        <device supported="false">GW5ANRT-15A-*</device>
+        <device supported="false">GW5AT-15A-*</device>
+        <device supported="false">GW5AS-25A-*</device>
+        <device supported="false">GW5AR-25A-*</device>
+        <device supported="false">GW5AT-138-*</device>
+        <device supported="false">GW5AT-138B-*</device>
+        <device supported="false">GW5AT-75B-*</device>
+        <device supported="false">GW5AST-138B-*</device>
+        <device supported="false">GW5A-138C-*</device>
+        <device supported="false">GW5AS-138C-*</device>
+        <device supported="false">GW5AST-138C-*</device>
+        <device supported="false">GW5AT-138C-*</device>
+        <device supported="false">GW5AT-75C-*</device>
+        <device supported="false">GW5A-138B-*</device>
+        <device supported="false">GW5AS-138B-*</device>
+        <device supported="false">GW5AT-138-*</device>
+        <device supported="false">GW5A-25B-*</device>
+        <device supported="false">GW5AR-25B-*</device>
+        <device supported="false">GW5AS-25B-*</device>
+        <device supported="false">GW1AN-1C-*</device>
+        <device supported="false">GW1AN-9A-*</device>
     </devices>
 </ipcore>

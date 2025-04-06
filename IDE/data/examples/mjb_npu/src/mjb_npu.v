@@ -72,7 +72,7 @@ module mjb_npu (
   wire                          reg_write;
   wire          [31:0]          iAHB2HRDATA;
   wire                          iAHB2HREADYOUT;
-  wire                          iAHB2HRESP;
+  wire          [1:0]                iAHB2HRESP;
   wire          [1:0]           oAHB2HTRANS;
   wire          [2:0]           oAHB2HBURST;
   wire          [3:0]           oAHB2HPROT;
@@ -226,9 +226,9 @@ module mjb_npu (
     .ceb    (1'b1             ),
     .resetb (1'b0             ),
     .oce    (1'b1             ),
-    .ada    (addr      [15:1] ),
+    .ada    (addr      [15:2] ),
     .din    (luma             ),
-    .adb    (oAHB2HADDR[15:2] ) 
+    .adb    (oAHB2HADDR[15:4] ) 
   );
 
   //NPU top
@@ -240,7 +240,7 @@ module mjb_npu (
     .O_psram_ck_n     (O_psram_ck_n         ),
     .IO_psram_rwds    (IO_psram_rwds        ),
     .IO_psram_dq      (IO_psram_dq          ),
-    .O_psram_reset_n  (                     ),
+    .O_psram_reset_n  (O_psram_reset_n                     ),
     .O_psram_cs_n     (O_psram_cs_n         ),
     //SPI-Flash interface
     .spi_io           (SPI_IO               ),
@@ -295,14 +295,14 @@ module mjb_npu (
          q_pixdata  <= 0;
     end
     else begin
-         q_href_cnt <=  HREF  ? q_href_cnt+1 : 0;
-         q_addr_cnt <= !VSYNC ? 0 : HREF ? q_addr_cnt+1 : q_addr_cnt;
+         q_href_cnt <=  HREF  ? q_href_cnt+1'b1 : 1'b0;
+         q_addr_cnt <= !VSYNC ? 1'b0 : HREF ? q_addr_cnt+1'b1 : q_addr_cnt;
          q_pixdata  <= PIXDATA[9:2];
     end
   end
     
   assign q_wren = HREF & (!q_addr_cnt[0]);
-  assign q_luma = {PIXDATA[9:5],3'b000}/3 + {PIXDATA[4:2],q_pixdata[7:5],2'b00}/2 + {q_pixdata[4:0],3'b000}/9;  //r/3 + g/2 + b/9
+  assign q_luma = {PIXDATA[9:5],3'b000}/3 & {PIXDATA[4:2],q_pixdata[7:5],2'b00}/2 & {q_pixdata[4:0],3'b000}/9;  //r/3 + g/2 + b/9
   assign q_addr = q_addr_cnt[15:1];
   
   //Image output buffer    
@@ -310,18 +310,18 @@ module mjb_npu (
     .douta (         ),
     .doutb (fb_data  ),
     .clka  (PIXCLK   ),
-    .ocea  (1        ),
-    .cea   (1        ),
+    .ocea  (1'b1        ),
+    .cea   (1'b1         ),
     .reseta(~reset_n ),
     .wrea  (q_wren   ),
     .clkb  (clk_10bit),
-    .oceb  (1        ),
-    .ceb   (1        ),
+    .oceb  (1'b1         ),
+    .ceb   (1'b1         ),
     .resetb(~reset_n ),
-    .wreb  (0        ),
+    .wreb  ('b0        ),
     .ada   (q_addr   ),
     .dina  (q_luma   ),
-    .adb   (fb_addr  ),
+    .adb   (fb_addr[15:1]  ),
     .dinb  (8'h00    )
   );
 
@@ -337,7 +337,7 @@ module mjb_npu (
     .line_addr(line_addr)		
   );
 	
-  assign fb_addr = (pix_addr[15:p_scale]<160) && (line_addr[15:p_scale]<120) ? pix_addr[15:p_scale] + (line_addr[15:p_scale]*160) : 0;
+  assign fb_addr = (pix_addr[15:p_scale]<160) && (line_addr[15:p_scale]<120) ? pix_addr[15:p_scale] & (line_addr[15:p_scale]*160) : 1'b0;
   assign pdata = (fb_addr==0) ? rgb : {fb_data,fb_data,fb_data};
     
   wire [23:0] rgb2dvi;

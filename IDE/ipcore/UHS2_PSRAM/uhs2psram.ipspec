@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="UHS2 PSRAM Memory Interface" id="uhs2_psram_memory_interface" version= "1.0" category="Soft IP Core|Memory Control|PSRAM Memory Interface">UHS2 PSRAM Memory Interface</ip>
+    <target module="UHS2_PSRAM_Memory_Interface_Top">uhs2_psram_memory_interface</target>
+    <docs>
+        <doc type="summary">/doc/gowin_uhs2_psram_memory_interface_information.html</doc>
+    </docs>
+    <devices>
+        <device supported="true">GW5AR-25A-UBGA256P-*</device>
+        <device supported="true">GW5AR-25B-UBGA256P-*</device>
+        <device supported="true">GW5ART-15A-WLCSP90P-*</device>
+        <device supported="true">GW5ART-15A-MBGA132P-*</device>
+        <device supported="true">GW5ART-15B-WLCSP90P-*</device>
+        <device supported="true">GW5ART-15B-MBGA132P-*</device>
+        <device supported="true">GW5ANRT-15A-MBGA132P-*</device>
+        <device supported="true">GW5ART-15A-WLCSP90PF-*</device>
+        <device supported="true">GW5ART-15A-CS126P-*</device>
+        <device supported="true">GW5ART-15B-WLCSP90PF-*</device>
+        <device supported="true">GW5ART-15B-CS126P-*</device>
+    </devices>
+</ipcore>

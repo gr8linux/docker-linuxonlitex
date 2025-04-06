@@ -1,0 +1,27 @@
+<?xml version="1" encoding="UTF-8"?>
+<!DOCTYPE gowin-fpga-project>
+<Project>
+    <Template>FPGA</Template>
+    <Version>5</Version>
+    <Device name="GW1N-2C" pn="GW1N-UV2LQ144XC6/I5">gw1n2c-012</Device>
+    <FileList>
+        <File path="src/define.sv" type="file.verilog" enable="1"/>
+        <File path="src/ex.sv" type="file.verilog" enable="1"/>
+        <File path="src/ex_mem.sv" type="file.verilog" enable="1"/>
+        <File path="src/hilo_reg.sv" type="file.verilog" enable="1"/>
+        <File path="src/id.sv" type="file.verilog" enable="1"/>
+        <File path="src/id_ex.sv" type="file.verilog" enable="1"/>
+        <File path="src/if_id.sv" type="file.verilog" enable="1"/>
+        <File path="src/mem.sv" type="file.verilog" enable="1"/>
+        <File path="src/mem_wb.sv" type="file.verilog" enable="1"/>
+        <File path="src/mips.sv" type="file.verilog" enable="1"/>
+        <File path="src/pc_reg.sv" type="file.verilog" enable="1"/>
+        <File path="src/regfile.sv" type="file.verilog" enable="1"/>
+        <File path="src/rom.sv" type="file.verilog" enable="1"/>
+        <File path="src/cpu.cst" type="file.cst" enable="1"/>
+        <File path="src/cpu.sdc" type="file.sdc" enable="1"/>
+        <File path="src/cpu.rao" type="file.gao" enable="1"/>
+        <File path="src/cpu.gpa" type="file.gpa" enable="1"/>
+        <File path="src/rom.hex" type="file.other" enable="1"/>
+    </FileList>
+</Project>

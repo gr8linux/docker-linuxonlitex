@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ipcore>
+    <ip label="USB 3.0 PHY" id="usb3_0_phy" version="1.3" category="Serdes|USB3.X">USB 3.0 PHY</ip>
+    <target module="USB3_0_PHY_Top">usb3_0_phy</target>
+    <docs>
+        <doc type="summary">/doc/usb_3_0_phy_infomation.html</doc>
+    </docs>
+    <devices>
+	<device supported="true">GW5AT-138-*</device>
+        <device supported="true">GW5AT-138B-*</device>
+        <device supported="true">GW5AT-75B-*</device>
+        <device supported="true">GW5AST-138B-*</device>
+        <device supported="true">GW5AST-138C-*</device>
+        <device supported="true">GW5AT-138C-*</device>
+        <device supported="true">GW5AT-75C-*</device>
+        <device supported="true">GW5AT-60ES-*</device>
+        <device supported="true">GW5AT-60B-*</device>
+    </devices>
+</ipcore>

@@ -1,0 +1,23 @@
+-type SERDES
+-path /n9k/sim/users/changhui/selfwork/IDE_test/project1/jesd204b_demo/src/serdes/
+-file_type vlg
+-file_name serdes
+-mod_name Serdes_Top
+-series GW5AST
+-device GW5AST-138
+-device_version B
+-package FCPBGA676A
+-part_number GW5AST-LV138FPG676AES
+
+
+-protocol_module_name0 JESD204B_Top
+-JESD204B_Topprotocol_module_type jesd
+-JESD204B_TopReferenceClockSource Q1REFCLK0
+-JESD204B_TopPLLSource QPLL1
+-JESD204B_TopNumberoflanes 2
+-JESD204B_TopQ1Lane0 true
+-JESD204B_TopQ1Lane1 true
+-JESD204B_TopCOREMode BothReceiveandTransmit
+-JESD204B_TopEnableDRP false
+-JESD204B_TopDRPPorts false
+-JESD204B_TopPCSWidth 32

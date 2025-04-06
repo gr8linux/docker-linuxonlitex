@@ -1,5 +1,5 @@
 // ===========Oooo==========================================Oooo========
-// =  Copyright (C)2014-2023 Gowin Semiconductor Technology Co.,Ltd.
+// =  Copyright (C)2014-2024 Gowin Semiconductor Technology Co.,Ltd.
 // =                     All rights reserved.
 // =====================================================================
 //
@@ -1834,6 +1834,12 @@ parameter ID = "";
 
 endmodule
 
+module TLVDS_OEN_BK(OEN);
+input OEN;
+parameter OEN_BANK =""; //0,3,4,5
+
+parameter ID = ""; //for gowin parser firmcore
+endmodule
 
 module DLL (STEP, LOCK, UPDNCNTL, STOP, CLKIN, RESET) ;
 
@@ -3861,6 +3867,12 @@ module SAMB(SPIAD, LOADN_SPIAD);
 input [23:0] SPIAD;
 input LOADN_SPIAD;
 parameter ID = "";
+endmodule
+
+module PWRGRD(PDEN);
+input PDEN; //power down enable, active low
+
+parameter ID = ""; //for gowin parser firmcore
 endmodule
 
 /*bellow module are not primitive, for black box in synthesising*/
