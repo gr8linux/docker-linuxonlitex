@@ -54,9 +54,6 @@ RUN gpg --export --armor 99E82A75642AC823 | apt-key add -
 RUN echo "deb https://repo.scala-sbt.org/scalasbt/debian all main" | tee /etc/apt/sources.list.d/sbt.list
 RUN apt-get update && apt-get install -y sbt
 
-# Copy the IDE folder into the Docker image
-RUN mkdir /IDE 
-COPY ./IDE /IDE
 
 # Build and install openFPGALoader
 
@@ -92,17 +89,23 @@ WORKDIR /root
 WORKDIR /home/
 # Just clone the linux-on-litex repo on /home 
 RUN git clone https://github.com/litex-hub/linux-on-litex-vexriscv.git
+# Clone litex-boards
+RUN git clone https://github.com/litex-hub/litex-boards.git
+
 ENV JAVA_OPTS="-Xmx4g -Xms2g -XX:MaxMetaspaceSize=512m"
+ENV PATH="/gowin/IDE/bin:${PATH}"
 # Add the USB tools to the docker 
 RUN apt-get update && apt-get install -y usbutils vim
 # Fix the python link
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Fix the issue over video core 
-WORKDIR /root/litex/litex
+#WORKDIR /root/litex/litex
 
 # Let the /home/linux-on-litex-vexriscv be the default when login to the docker
 
 WORKDIR /home/linux-on-litex-vexriscv
 
 # Define the entry point or any other custom instructions
+# Flexible entrypoint
+#ENTRYPOINT ["./make.py"]
