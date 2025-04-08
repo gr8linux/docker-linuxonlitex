@@ -35,7 +35,7 @@ This Dockerfile assumes you've put your Gowin IDE files inside the IDE folder (I
    ```
 To run it as of a privileged
 ```
-docker run -it --rm --privileged dockerlinuxonlitex
+docker run -it --rm --privileged dockerlinuxonlitex -v /path/to/your/Gowin:/gowin 
 # After you login 
 lsusb
 # Or after the build you can load the file by openFPGALoader
@@ -56,12 +56,16 @@ docker run -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex
 Or if you like to load it directly
 ```
 
-docker run --privileged -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex python -m litex_boards.targets.sipeed_tang_primer_20k --l2-size 512  --build --cpu-type vexriscv_smp --cpu-variant linux --build  --with-spi-sdcard --with-wishbone-memory --load
+docker run --privileged -it --rm  -v .:/home/linux-on-litex-vexriscv/build -v /path/to/your/Gowin:/gowin  dockerlinuxonlitex python -m litex_boards.targets.sipeed_tang_primer_20k --l2-size 512  --build --cpu-type vexriscv_smp --cpu-variant linux --build  --with-spi-sdcard --with-wishbone-memory --load
 ```
 Or just let linux-on-litex make file do that for you
 
 ```
-docker run --privileged -it --rm  -v .:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex ./make.py --board=sipeed_tang_primer_20k --toolchain=gowin --build --load
+docker run --privileged -it --rm \
+  -v $(pwd)/output:/home/linux-on-litex-vexriscv/build \
+  -v /path/to/your/Gowin:/gowin \
+  linuxonlitex \
+  --board=sipeed_tang_primer_20k --toolchain=gowin --build --load
 ```
 **What is next**
 
@@ -79,4 +83,35 @@ Just search Sipeed tang primer 20k
 You need to download it from the Gowin site:
 
 [Download eda tools](https://www.gowinsemi.com/en/support/download_eda/)
+
+**Examples of Using the Dockerfile**
+
+Here are some examples of how you can use the Dockerfile to build and run the container:
+
+1. **Build the Docker Image**:
+   ```
+   docker build -t dockerlinuxonlitex .
+   ```
+
+2. **Run the Container with a Mounted Volume**:
+   ```
+   docker run -it --rm -v $(pwd)/output:/home/linux-on-litex-vexriscv/build dockerlinuxonlitex
+   ```
+
+3. **Run the Container in Privileged Mode**:
+   ```
+   docker run --privileged -it --rm -v $(pwd)/output:/home/linux-on-litex-vexriscv/build -v /path/to/your/Gowin:/gowin dockerlinuxonlitex
+   ```
+
+4. **Run a Specific Command Inside the Container**:
+   ```
+   docker run -it --rm dockerlinuxonlitex ./make.py --board=sipeed_tang_primer_20k --toolchain=gowin --build
+   ```
+
+5. **Load the Built File Directly**:
+   ```
+   docker run --privileged -it --rm -v $(pwd)/output:/home/linux-on-litex-vexriscv/build -v /path/to/your/Gowin:/gowin dockerlinuxonlitex ./make.py --board=sipeed_tang_primer_20k --toolchain=gowin --build --load
+   ```
+
+These examples demonstrate how to leverage the Dockerfile to create a consistent and isolated environment for building and deploying Linux on the Sipeed Tang Primer 20k FPGA board.
 

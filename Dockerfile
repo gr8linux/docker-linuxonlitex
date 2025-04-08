@@ -90,7 +90,9 @@ WORKDIR /home/
 # Just clone the linux-on-litex repo on /home 
 RUN git clone https://github.com/litex-hub/linux-on-litex-vexriscv.git
 # Clone litex-boards
-RUN git clone https://github.com/litex-hub/litex-boards.git
+WORKDIR /root
+RUN rm -fr /root/litex-boards
+RUN git clone https://github.com/gr8linux/litex-boards.git
 
 ENV JAVA_OPTS="-Xmx4g -Xms2g -XX:MaxMetaspaceSize=512m"
 ENV PATH="/gowin/IDE/bin:${PATH}"
